@@ -5,6 +5,7 @@ You need `node` with support for `ES6`, and start a `mysql` server before runnin
 ```
 $ [mysql] > CREATE DATABASE mydatabase
 ```
+1. `npm install`
 1. Migrate:
 ```
 $ npm run migrate
