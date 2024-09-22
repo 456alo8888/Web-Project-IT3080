@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -17,11 +18,19 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 
 // Route to add a user through the API
-app.post('/users', (req, res) => {
+app.post('/users', async (req, res) => {
     const { username, password } = req.body;
+    const saltRounds = 10;
+    let hashedPassword = null;
+    try {
+        hashedPassword = await bcrypt.hash(password, saltRounds)
+    } catch (error) {
+        res.status(500).send('Hash failed');
+        return;
+    }
     const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
 
-    db.query(query, [username, password], (err, result) => {
+    db.query(query, [username, hashedPassword], (err, result) => {
         if (err) {
             console.error(err);
             res.status(500).send('Error adding user');
