@@ -1,15 +1,22 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const db = require('./database');
+import dotenv from 'dotenv';
+import express from 'express';
+import bodyParser from 'body-parser';
+import path from 'path';
+import connection from './database.js';
 
+if (dotenv.config().error) 
+    throw new Error('Failed to initialize dotenv')
+
+const PORT = process.env.PORT;
 const app = express();
+const db = connection();
+
 app.use(bodyParser.json());
 
-// Phục vụ các file tĩnh trong thư mục 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files in the 'public' directory
+app.use(express.static(path.join(import.meta.dirname, 'public')));
 
-// Route để thêm người dùng thông qua API
+// Route to add a user through the API
 app.post('/users', (req, res) => {
     const { username, password } = req.body;
     const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
@@ -24,7 +31,7 @@ app.post('/users', (req, res) => {
     });
 });
 
-// Route để lấy danh sách người dùng
+// Route to get the list of users
 app.get('/users', (req, res) => {
     const query = 'SELECT * FROM users';
 
@@ -38,7 +45,7 @@ app.get('/users', (req, res) => {
     });
 });
 
-const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
