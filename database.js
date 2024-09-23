@@ -1,8 +1,7 @@
-import mysql from 'mysql';
+import mysql2 from 'mysql2';
 
 export default function connection() {
-    console.log(`User is ${process.env.DB_USER}`)
-    const connection = mysql.createConnection({
+    const connection = mysql2.createConnection({
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         user: process.env.DB_USER,
@@ -11,10 +10,8 @@ export default function connection() {
     });
 
     connection.connect((err) => {
-        if (err) {
+        if (err)
             throw new Error(`Failed to connect to database: ${err.stack}`);
-        }
-        console.log(`Connected to database as id ${connection.threadId}`);
     });
 
     return connection;
