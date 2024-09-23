@@ -25,12 +25,12 @@ app.post('/users', async (req, res) => {
     try {
         hashedPassword = await bcrypt.hash(password, saltRounds)
     } catch (error) {
-        res.status(500).send('Hash failed');
+        res.status(500).send(`Password hashing failed: ${error}`);
         return;
     }
     const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
 
-    db.query(query, [username, hashedPassword], (err, result) => {
+    db.query(query, [username, hashedPassword], (err) => {
         if (err) {
             console.error(err);
             res.status(500).send('Error adding user');
