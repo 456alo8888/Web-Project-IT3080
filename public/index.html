@@ -1,94 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up and User List</title>
     <style>
-        table {
-            width: 50%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
+      table {
+        width: 50%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Sign Up</h1>
     <form id="signup-form">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Sign Up</button>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required /><br /><br />
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+      /><br /><br />
+      <button type="submit">Sign Up</button>
     </form>
 
     <h1>User List</h1>
     <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-            </tr>
-        </thead>
-        <tbody id="user-list">
-        </tbody>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+        </tr>
+      </thead>
+      <tbody id="user-list"></tbody>
     </table>
 
     <script>
-        document.getElementById('signup-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+      document
+        .getElementById("signup-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
 
-            fetch('http://localhost:3000/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                loadUserList();
+          fetch("http://localhost:3000/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+              loadUserList();
             })
             .catch((error) => {
-                console.error('Error:', error);
+              console.error("Error:", error);
             });
         });
 
-        function loadUserList() {
-            fetch('http://localhost:3000/users')
-                .then(response => response.json())
-                .then(data => {
-                    const userList = document.getElementById('user-list');
-                    userList.innerHTML = '';
-                    data.forEach(user => {
-                        const row = document.createElement('tr');
-                        const idCell = document.createElement('td');
-                        const usernameCell = document.createElement('td');
-                        idCell.textContent = user.id;
-                        usernameCell.textContent = user.username;
-                        row.appendChild(idCell);
-                        row.appendChild(usernameCell);
-                        userList.appendChild(row);
-                    });
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
+      function loadUserList() {
+        fetch("http://localhost:3000/users")
+          .then((response) => response.json())
+          .then((data) => {
+            const userList = document.getElementById("user-list");
+            userList.innerHTML = "";
+            data.forEach((user) => {
+              const row = document.createElement("tr");
+              const idCell = document.createElement("td");
+              const usernameCell = document.createElement("td");
+              idCell.textContent = user.id;
+              usernameCell.textContent = user.username;
+              row.appendChild(idCell);
+              row.appendChild(usernameCell);
+              userList.appendChild(row);
+            });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
 
-        // Load user list when page loads
-        window.onload = loadUserList;
+      // Load user list when page loads
+      window.onload = loadUserList;
     </script>
-</body>
+  </body>
 </html>
