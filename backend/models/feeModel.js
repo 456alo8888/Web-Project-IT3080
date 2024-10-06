@@ -16,7 +16,7 @@ const feeSchema = new Schema({
             },
             cost: {
                 type: Number,
-                required: true,  // Fee is required in each cost entry
+                required: true,
                 min: 0,
             },
             payed: {

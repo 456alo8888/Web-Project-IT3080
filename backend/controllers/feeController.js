@@ -17,15 +17,18 @@ const createFee = async (req, res) => {
 
         const {name, feeType, feepayInfo, deadline} = req.body
         
+        const parsedFeepayInfo = JSON.parse(feepayInfo)
 
-        if (!name || !feeType || !feepayInfo || !deadline) {
+        if (!name || !feeType || !parsedFeepayInfo || !deadline) {
             return res.json({success: false, message: "Thiếu thông tin"})
         }
+
+        
 
         const newFee = new feeModel({
             name: name,
             feeType: feeType,
-            feepayInfo: feepayInfo,
+            feepayInfo: parsedFeepayInfo,
             deadline: deadline,
         })
 
@@ -136,8 +139,10 @@ const allFee = async (req, res) => {
 try {
     
     const fees = await feeModel.find({})
-
+    console.log(fees);
+    
     return res.json({success: true, fees})
+
 
 } catch (error) {
     console.log(error);

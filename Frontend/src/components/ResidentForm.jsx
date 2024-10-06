@@ -5,7 +5,7 @@ import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { ResidentContext } from '../context/ResidentContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons';
 import ResidentInfo from './ResidentInfo';
 
 const ResidentForm = () => {
@@ -19,20 +19,40 @@ const ResidentForm = () => {
     const [numMember, setNumMember] = useState()
 
 
+
+    const [filterResidents, setFilterResidents] = useState([])
+    const [search, setSearch] = useState('')
+
     const { backendUrl, updateresidenttoken, token } = useContext(AppContext)
     const { showResidentForm, setShowResidentForm, getAllResidents, residents } = useContext(ResidentContext)
 
 
 
-    useEffect( () => {
+    const applyFilter = () => {
+        
+        if (search) {
+            setFilterResidents(residents.filter(re => re.room.includes(search) || re.name.toLowerCase().includes(search)))
+        } else {
+            setFilterResidents(residents)
+        }
+
+
+    }
+
+    useEffect(() => {
 
         if (token) {
             getAllResidents()
         }
 
-
     }, [token])
 
+
+    useEffect(() => {
+
+        applyFilter()
+
+    }, [search])
 
 
     const handleSubmit = async (e) => {
@@ -84,11 +104,21 @@ const ResidentForm = () => {
         }
     }
 
+    const handleSearch = (e) => {
+        e.preventDefault
+
+
+    }
+
     return (
         <div className='mb-4 w-full h-screen relative'>
             <div className='flex justify-between py-4 items-center'>
                 <p className='text-2xl font-bold text-gray-600'>Thông tin cư dân</p>
-                <div onClick={(e) => setShowResidentForm(!showResidentForm)} className={`${showResidentForm ? 'backdrop-blur-md shadow-custom-green' : ''} inline-flex z-20 items-center gap-4 mr-2 bg-secondary p-2 px-8 rounded-full text-white text-xl shadow hover:opacity-80 hover:-translate-x-2 transition-all ease-in-out`}  >
+                <div className={` focus-within:shadow-custom-green  relative w-1/3 rounded-full z-10 transition-all `}>
+                    <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className='peer w-full p-2 px-4 border-2 outline-none  text-gray-500 rounded-full focus:border-secondary transition-all' placeholder='Tìm kiếm: ex 101, meo meo' />
+                    <FontAwesomeIcon icon={faMagnifyingGlass} className='absolute top-3 right-3 text-xl text-gray-500 peer-focus:-translate-x-2 peer-focus:scale-110 transition-all' />
+                </div>
+                <div onClick={(e) => setShowResidentForm(!showResidentForm)} className={`${showResidentForm ? 'backdrop-blur-md shadow-custom-green' : ''} inline-flex items-center gap-4 mr-2 bg-secondary p-2 px-8 rounded-full text-white text-xl shadow hover:opacity-80 hover:-translate-x-2 transition-all ease-in-out cursor-pointer select-none`}  >
                     <p className='text-center font-semibold'>Thêm cư dân</p>
                     <FontAwesomeIcon icon={faPlus} className={showResidentForm ? 'rotate-[225deg] -translate-x-2 scale-125 transition-all duration-500 ease-in-out' : 'transition-all duration-500 ease-in-out'} />
                 </div>
@@ -150,7 +180,7 @@ const ResidentForm = () => {
             </form>
 
             <section className={`grid grid-cols-2 gap-8 gap-x-12 p-8 h-[85%] z-0 overflow-y-auto bg-white border rounded-xl transition-all duration-700 ${showResidentForm ? 'blur-md bg-gray-300 opacity-60' : ''} `}>
-                {residents.map((resident, index) => (
+                {filterResidents.map((resident, index) => (
                     <ResidentInfo key={index} resident={resident} />
                 ))}
             </section>

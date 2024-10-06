@@ -1,5 +1,5 @@
 import axios from "axios";
-import React,{ createContext, useState } from "react";
+import React,{ createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export const ResidentContext = createContext();
@@ -32,10 +32,16 @@ const ResidentContextProvider = (props) => {
 
     }
 
+    useEffect(() => {
+
+        getAllResidents();
+
+    }, [])
 
     const value = {
         showResidentForm, setShowResidentForm,
         getAllResidents, residents,
+        
     }
 
     return (

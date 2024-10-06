@@ -118,17 +118,17 @@ const ResidentInfo = ({ resident }) => {
       <div className='flex flex-col justify-between items-start text-gray-500 text-xl'>
         <img src={resident.image} alt="avatar" className='max-w-[150px]  object-cover' />
         <div className='flex justify-between w-[120px] m-4 mx-4 p-1'>
-          <FontAwesomeIcon icon={faTrashCan} className='cursor-pointer' onClick={deleteResident} />
+          <FontAwesomeIcon icon={faTrashCan} className='cursor-pointer hover:opacity-80 hover:scale-110 transition-all' onClick={deleteResident} />
           {isEdit ?
             <div className='flex gap-3'>
               <button onClick={handleGiveUp}>
-                <FontAwesomeIcon icon={faXmark} className='text-red-400 cursor-pointer' />
+                <FontAwesomeIcon icon={faXmark} className='text-red-400 cursor-pointer hover:opacity-80 hover:scale-110 transition-all' />
               </button>
               <button type='submit'>
-                <FontAwesomeIcon icon={faCheck} className='text-primary cursor-pointer' type='submit' />
+                <FontAwesomeIcon icon={faCheck} className='text-primary cursor-pointer hover:opacity-80 hover:scale-110 transition-all' type='submit' />
               </button>
             </div>
-            : <FontAwesomeIcon icon={faPen} onClick={(e) => setIsEdit(true)} className='cursor-pointer' />}
+            : <FontAwesomeIcon icon={faPen} onClick={(e) => setIsEdit(true)} className='cursor-pointer hover:opacity-80 hover:scale-110 transition-all' />}
         </div>
       </div>
       <div className='flex flex-col grow min-h-[80%] p-4'>

@@ -16,11 +16,22 @@ const App = () => {
 
   return (
     <>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition:Bounce
+      />
+
       {!token ? (
-        <>
-          <Login />
-          <ToastContainer />
-        </>
+        <Login />
       ) : (
         <div className='flex bg-gray-100 transition-all'>
           <SideBar />
@@ -32,12 +43,11 @@ const App = () => {
               <Route path='/resident' element={<Resident />} />
               <Route path='/account' element={<Admin />} />
             </Routes>
-            <ToastContainer />
           </div>
         </div>
       )}
     </>
   );
-}
+};
 
 export default App
