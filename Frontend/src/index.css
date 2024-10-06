@@ -10,4 +10,10 @@
   scroll-behavior: smooth;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+}
+
+.active li {
+  background-color: rgba(126, 188, 110, 0.75) !important;
+  color: white;
 }

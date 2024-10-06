@@ -1,29 +1,83 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './Login.css'
 import { assets } from '../assets/assets.js'
+import { AppContext } from '../context/AppContext.jsx';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 
 const Login = () => {
+
+    const {username, setUsername, token, setToken, setUpdatefeetoken, setCreatefeetoken, setUpdateresidenttoken, setRoottoken, backendUrl } = useContext(AppContext)
+    const [passwordVisible, setPasswordVisible] = useState(false)
+    const [password, setPassword] = useState('')
+
+    const onSubmitHandler = async (e) => {
+        e.preventDefault();
+        try {
+
+            const { data } = await axios.post(backendUrl + '/api/admin/login', { username, password })
+
+            
+            if (data.success) {
+
+                localStorage.setItem('username', username);
+
+                localStorage.setItem("token", data.token);
+                setToken(data.token);
+                localStorage.setItem("updatefeetoken", data.updatefeetoken);
+                setUpdatefeetoken(data.updatefeetoken);
+                localStorage.setItem("createfeetoken", data.createfeetoken);
+                setCreatefeetoken(data.createfeetoken);
+                localStorage.setItem("updateresidenttoken", data.updateresidenttoken);
+                setUpdateresidenttoken(data.updateresidenttoken);
+                localStorage.setItem("roottoken", data.roottoken);
+                setRoottoken(data.roottoken);
+            } else {
+                toast.error(data.message)
+            }
+
+
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message)
+        }
+
+    };
+
+    useEffect(() => {
+
+    }, [])
+
     return (
         <div className='login-background flex justify-center items-center  '>
             <div className="flex login-container min-w-[60%] min-h-[72%] bg-white opacity-90 shadow-2xl  ">
-                <div className="form-container flex-2 max-w-[420px] px-14 pt-10">
+                <form onSubmit={onSubmitHandler} className="form-container flex-2 max-w-[420px] px-14 pt-10">
                     <p className="text-4xl text-primary font-bold tracking-wide mb-1 ">Đăng nhập</p>
                     <p className="text-sm text-gray-400  ">chào mừng ban quản trị <br />
                         để được cấp tài khoản, hãy liên hệ với root</p>
                     <div className='mt-8'>
                         <p className="text-base font-semibold text-gray-500 mb-2">Tên tài khoản</p>
-                        <input type="text" className='transition-all p-2 px-4 border-2 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none rounded-lg w-[100%] text-gray-500 placeholder-grey-100' placeholder='ex:taolaadmin' />
+                        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className='transition-all p-2 px-4 border-2 focus:border-primary  focus:ring-primary outline-none rounded-lg w-[100%] text-gray-500 ' placeholder='ex:taolaROOT' required />
                     </div>
                     <div className='mt-4 mb-4'>
                         <p className="text-base font-semibold text-gray-500 mb-2">Mật khẩu</p>
-                        <input type='password' className='transition-all p-2 px-4 border-2 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none rounded-lg w-[100%] text-gray-500 text-base placeholder-grey-100 placeholder-text-sm' placeholder='ex:123456' />
+                        <div className='relative'>
+                            <input type={passwordVisible ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} className=' transition-all p-2 px-4 border-2 focus:border-primary  focus:ring-primary outline-none rounded-lg w-[100%] text-gray-500 text-base placeholder-text-sm' placeholder='ex:12345678' required />
+                            <FontAwesomeIcon
+                                icon={passwordVisible ? faEye : faEyeSlash}
+                                className="absolute top-3 right-3 cursor-pointer text-gray-400"
+                                onClick={() => setPasswordVisible(!passwordVisible)}
+                            />
+                        </div>
                     </div>
-                    <label class="inline-flex items-center">
-                        <input type="checkbox" class="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full focus:ring-blue-500" />
-                        <span class="ml-2">Tôi đồng ý với các điều khoản</span>
+                    <label className="inline-flex items-center">
+                        <input type="checkbox" className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full " required />
+                        <span className="ml-2">Tôi đồng ý với các điều khoản</span>
                     </label>
-                    <button className='w-full mt-4 p-3 bg-primary rounded-2xl hover:opacity-[90%] hover:-translate-y-1 hover:shadow-[5px_5px_15px_rgba(0,0,0,0.3)] transition-all transition-1  text-xl font-bold text-white tracking-wide'>Submit</button>
+                    <button type='submit' className='w-full mt-4 p-3 bg-primary rounded-2xl hover:opacity-[90%] hover:-translate-y-1 hover:shadow-[5px_5px_15px_rgba(0,0,0,0.3)] transition-all transition-1  text-xl font-bold text-white tracking-wide'>Submit</button>
                     <div className="flex justify-center items-center p-2">
                         <p className='text-sm'>Tại đây có? <span className='ml-1 text-primary cursor-pointer hover:underline hover:'>Đổi mật khẩu</span></p>
                     </div>
@@ -31,14 +85,14 @@ const Login = () => {
                         <p className='text-xs'>một sản phẩm của</p>
                         <img src={assets.logo} className='max-w-20  object-cover' alt="logo" />
                     </div>
-                </div>
+                </form>
 
-                <div className="bg-[rgba(126,188,110,0.55)] flex-3 grow flex flex-col relative">
-                    <img src={assets.logo_website} className='absolute w-28 object-cover -top-2 right-2' alt="logo_website" />
-                    <img src={assets.meme} alt="meme" className='-ml-4' />
-                    <div className='px-16 -mt-[84px] hover:-translate-y-2 transition-all'>
-                    <p className='text-4xl  font-bold tracking-wide text-white mb-2 leading-relaxed '>Giải pháp <br /> quản trị chung cư</p>
-                    <p className='text-gray-700'>chuyên nghiệp, dễ dàng, hiệu quả</p>
+                <div className="bg-[rgba(126,188,110,0.55)] flex-3 grow flex flex-col relative group">
+                    <img src={assets.logo_website} className='absolute w-[124px] object-cover -top-2 right-2' alt="logo_website" />
+                    <img src={assets.meme} alt="meme" className='-ml-4 group-hover:scale-[110%] group-hover:-translate-y-4 transition-all duration-500 ease-in-out' />
+                    <div className='px-16 -mt-[84px] group-hover:scale-[105%] group-hover:-translate-y-2 group-hover:translate-x-4 transition-all duration-500 '>
+                        <p className='text-4xl  font-bold tracking-wide text-white mb-2 leading-relaxed '>Giải pháp <br /> quản trị chung cư</p>
+                        <p className='text-gray-700'>chuyên nghiệp, dễ dàng, hiệu quả</p>
                     </div>
                 </div>
             </div>
