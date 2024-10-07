@@ -17,3 +17,22 @@
   background-color: rgba(126, 188, 110, 0.75) !important;
   color: white;
 }
+
+/* Add this to your global CSS file */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;  /* Scrollbar track color */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;     /* Scrollbar thumb color */
+  border-radius: 10px;   /* Make the thumb rounded */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;      /* Scrollbar thumb color on hover */
+}

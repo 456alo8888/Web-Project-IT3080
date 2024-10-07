@@ -33,7 +33,7 @@ const Fee = () => {
 
   //for load fee data and filter
   const deleteFee = async (_id) => {
-    const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa cư dân này?')
+    const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa khoản thu này?')
     if (confirmDelete) {
       try {
 
@@ -251,15 +251,15 @@ const Fee = () => {
   }
 
   return (
-    <div className='mb-4 w-full h-screen relative p-2 px-8'>
+    <div className='w-full h-screen relative p-2 px-8'>
 
       <div className='flex justify-between py-4 items-center'>
         <p className='text-2xl font-bold text-gray-600'>Danh sách khoản thu</p>
         <div className={` focus-within:shadow-custom-green  relative w-1/3 rounded-full z-10 transition-all `}>
-          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className='peer w-full p-2 px-4 border-2 outline-none  text-gray-500 rounded-full focus:border-secondary transition-all' placeholder='Tìm kiếm: ex 101, meo meo' />
+          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className='peer w-full p-2 px-4 border-2 outline-none  text-gray-500 rounded-full focus:border-secondary transition-all' placeholder='ex: tiền điện, tiền nước' />
           <FontAwesomeIcon icon={faMagnifyingGlass} className='absolute top-3 right-3 text-xl text-gray-500 peer-focus:-translate-x-2 peer-focus:scale-110 transition-all' />
         </div>
-        <div onClick={(e) => setShowCreateFee(!showCreateFee)} className={`${showCreateFee ? 'backdrop-blur-md shadow-custom-green' : ''} inline-flex items-center gap-4 mr-2 bg-secondary p-2 px-8 rounded-full text-white text-xl shadow hover:opacity-80 hover:-translate-x-2 transition-all ease-in-out cursor-pointer select-none`}  >
+        <div onClick={(e) => setShowCreateFee(!showCreateFee)} className={`${showCreateFee ? 'backdrop-blur-sm shadow-custom-green' : ''} inline-flex items-center gap-4 mr-2 bg-secondary p-2 px-8 rounded-full text-white text-xl shadow hover:opacity-80 hover:-translate-x-2 transition-all ease-in-out cursor-pointer select-none`}  >
           <p className='text-center font-semibold'>Tạo khoản thu mới</p>
           <FontAwesomeIcon icon={faPlus} className={showCreateFee ? 'rotate-[225deg] -translate-x-2 scale-125 transition-all duration-500 ease-in-out' : 'transition-all duration-500 ease-in-out'} />
         </div>
@@ -322,7 +322,7 @@ const Fee = () => {
       </form>
 
     {/* main section */}
-      <section className={`p-8 py-6 h-[85%] z-0 bg-white border rounded-xl transition-all duration-700 ${showCreateFee ? 'blur-md bg-gray-300 opacity-60' : ''} `}>
+      <section className={`p-8 py-6 h-[85%] z-0  bg-white border rounded-xl transition-all duration-700 ${showCreateFee ? 'blur-sm bg-gray-300 opacity-60' : ''} `}>
 
             {/* filter */}
         <div className='flex justify-between items-center mb-4 select-none'>
@@ -334,7 +334,7 @@ const Fee = () => {
           <div className='flex px-6 gap-8'>
             <div onClick={(e) => toggleFilter('THANG_NAY')} className={`${filters.includes('THANG_NAY') ? 'bg-secondary border-none text-white' : ''}  inline-flex items-center gap-4 p-2 px-4 rounded-full text-gray-500 border-2 hover:-translate-x-2 cursor-pointer transition-all`}>
               <FontAwesomeIcon icon={faFilter} />
-              <span>Tháng này</span>
+              <span>Tạo trong tháng này</span>
             </div>
             <div onClick={(e) => toggleFilter('DA_HOAN_THANH')}  className={`${filters.includes('DA_HOAN_THANH') ? 'bg-secondary border-none text-white' : ''}  inline-flex items-center gap-4 p-2 px-4 rounded-full text-gray-500 border-2 hover:-translate-x-2 cursor-pointer transition-all`}>
               <FontAwesomeIcon icon={faFilter} />
@@ -354,9 +354,9 @@ const Fee = () => {
           <div className='font-medium'>Phí</div>
           <div className='font-medium text-center'>Hoàn thành</div>
           <div className='font-medium text-center'>Ngày tạo</div>
-          <div className='font-medium text-center'>Hạn nộp</div>
+          <div className='font-medium ml-4'>Hạn nộp</div>
         </div>
-        <div className='flex flex-col max-h-[520px] overflow-y-auto'>
+        <div className='flex flex-col max-h-[60vh] overflow-y-auto'>
           {filterFees.map((fee, index) => (
             <div key={index} className={`group grid grid-cols-[1fr_1.2fr_0.8fr_0.8fr_1fr_1fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
               <div className='max-w-[130px] break-words text-sm text-gray-400'> {fee._id} </div>
@@ -367,7 +367,7 @@ const Fee = () => {
                   ? <div className='max-w-[130px] text-center p-2 px-2 bg-sky-50 text-sky-400 text-sm font-semibold rounded-full'> Hóa đơn </div>
                   : <div className='max-w-[130px] text-center p-2 px-2 bg-violet-50 text-violet-400 text-sm font-semibold rounded-full'> Tự nguyện </div>} </div>
               <div className='text-center font-medium'>
-                <span className='font-medium text-primary'> {fee.feepayInfo.filter((e) => e.payed >= e.cost && e.cost > 0).length} </span>
+                <span className='font-medium text-primary'> {fee.feepayInfo.filter((e) => e.payed >= e.cost && e.payed > 0).length} </span>
                 / <span className='font-medium text-gray-500'> {fee.feepayInfo.length} </span></div>
               <div className='text-center text-gray-400 '> {formatDate(fee.createdAt)} </div>
               <div className='text-center text-gray-400'>{isExpired(fee.deadline)

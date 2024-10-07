@@ -42,24 +42,24 @@ const SideBar = () => {
       <hr className='w-1/2 border-2 rounded-lg border-primary -mt-2 mb-2' />
       <ul>
         <NavLink to='/'>
-          <li className='px-8 flex justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
+          <li className='px-8 flex hover:gap-4 justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
             <FontAwesomeIcon icon={faTableColumns} className='' />
             Bảng quản lí</li>
         </NavLink>
         <NavLink to='/fee'>
-          <li className='px-8 flex justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
+          <li className='px-8 flex hover:gap-4 justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
             <FontAwesomeIcon icon={faPiggyBank} />Khoản thu</li>
         </NavLink>
         <NavLink to='/resident'>
-          <li className='px-8 flex justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
+          <li className='px-8 flex hover:gap-4 justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
             <FontAwesomeIcon icon={faPerson} />Cư dân</li>
         </NavLink>
         <NavLink to='/history'>
-          <li className='px-8 flex justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
+          <li className='px-8 flex hover:gap-4 justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
             <FontAwesomeIcon icon={faClockRotateLeft} />Lịch sử</li>
         </NavLink >
         <NavLink to='/admin'>
-          <li className='px-8 flex justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
+          <li className='px-8 flex hover:gap-4 justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-white hover:bg-[rgba(126,188,110,0.32)] transition-all'>
             <FontAwesomeIcon icon={faUserTie} />Admin</li>
         </NavLink>
       </ul>
@@ -76,7 +76,7 @@ const SideBar = () => {
         </ul>
       </section>
 
-      <div onClick={logout} className='px-8 flex justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-primary hover:bg-[rgba(126,188,110,0.32)] transition-all cursor-pointer'>
+      <div onClick={logout} className='px-8 flex hover:gap-4 justify-start items-center gap-2 text-base font-semibold text-gray-500 py-3  my-4  rounded-lg hover:text-primary hover:bg-[rgba(126,188,110,0.32)] transition-all cursor-pointer'>
         <FontAwesomeIcon icon={faRightFromBracket} />Đăng xuất</div>
 
 

@@ -53,7 +53,7 @@ const Login = () => {
 
     return (
         <div className='login-background flex justify-center items-center  '>
-            <div className="flex login-container min-w-[60%] min-h-[72%] bg-white opacity-90 shadow-2xl  ">
+            <div className="flex login-container min-w-[60%] min-h-[72%] bg-white opacity-90 shadow-2xl overflow-visible ">
                 <form onSubmit={onSubmitHandler} className="form-container flex-2 max-w-[420px] px-14 pt-10">
                     <p className="text-4xl text-primary font-bold tracking-wide mb-1 ">Đăng nhập</p>
                     <p className="text-sm text-gray-400  ">chào mừng ban quản trị <br />
@@ -75,7 +75,7 @@ const Login = () => {
                     </div>
                     <label className="inline-flex items-center">
                         <input type="checkbox" className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full " required />
-                        <span className="ml-2">Tôi đồng ý với các điều khoản</span>
+                        <span className="ml-2">Tôi đồng ý với các <span className='text-primary '>điều khoản</span> </span>
                     </label>
                     <button type='submit' className='w-full mt-4 p-3 bg-primary rounded-2xl hover:opacity-[90%] hover:-translate-y-1 hover:shadow-[5px_5px_15px_rgba(0,0,0,0.3)] transition-all transition-1  text-xl font-bold text-white tracking-wide'>Submit</button>
                     <div className="flex justify-center items-center p-2">
@@ -87,10 +87,10 @@ const Login = () => {
                     </div>
                 </form>
 
-                <div className="bg-[rgba(126,188,110,0.55)] flex-3 grow flex flex-col relative group">
-                    <img src={assets.logo_website} className='absolute w-[124px] object-cover -top-2 right-2' alt="logo_website" />
-                    <img src={assets.meme} alt="meme" className='-ml-4 group-hover:scale-[110%] group-hover:-translate-y-4 transition-all duration-500 ease-in-out' />
-                    <div className='px-16 -mt-[84px] group-hover:scale-[105%] group-hover:-translate-y-2 group-hover:translate-x-4 transition-all duration-500 '>
+                <div className="bg-[rgba(126,188,110,0.55)] flex-3 grow flex flex-col relative group overflow-visible">
+                    <img src={assets.logo_website} className='absolute w-[124px] object-cover -top-4 -right-2' alt="logo_website" />
+                    <img src={assets.meme} alt="meme" className='-ml-4 z-10 group-hover:scale-[115%] group-hover:-translate-y-4 scale-110 transition-all duration-500 ease-in-out' />
+                    <div className='px-16 -mt-[84px] z-20 group-hover:scale-[110%] group-hover:-translate-y-2 group-hover:translate-x-4 transition-all duration-500 '>
                         <p className='text-4xl  font-bold tracking-wide text-white mb-2 leading-relaxed '>Giải pháp <br /> quản trị chung cư</p>
                         <p className='text-gray-700'>chuyên nghiệp, dễ dàng, hiệu quả</p>
                     </div>

@@ -174,14 +174,16 @@ const changeAuthority = async (req, res) => {
 
         const { username, updateFeeAuth, createFeeAuth, updateResidentAuth } = req.body
 
+        console.log(req.body);
+        
 
         const admin = await adminModel.findOneAndUpdate(
             { username: username },
             {
                 $set: {
-                    updateFeeAuthority: updateFeeAuth === 'true' ? true : false,
-                    createFeeAuthority: createFeeAuth === 'true' ? true : false,
-                    updateResidentAuthority: updateResidentAuth === 'true' ? true : false
+                    updateFeeAuthority: updateFeeAuth === true ? true : false,
+                    createFeeAuthority: createFeeAuth === true ? true : false,
+                    updateResidentAuthority: updateResidentAuth === true ? true : false
                 },
 
             },
@@ -209,7 +211,6 @@ const allAdmin = async (req, res) => {
     try {
 
         const {roottoken} = req.headers
-        console.log(req.headers);
         
         if(!roottoken) {
             return res.json({success:false, message: "Bạn không có quyền"})

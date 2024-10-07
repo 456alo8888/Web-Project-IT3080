@@ -179,7 +179,7 @@ const ResidentForm = () => {
                 </div>
             </form>
 
-            <section className={`grid grid-cols-2 gap-8 gap-x-12 p-8 h-[85%] z-0 overflow-y-auto bg-white border rounded-xl transition-all duration-700 ${showResidentForm ? 'blur-md bg-gray-300 opacity-60' : ''} `}>
+            <section className={`grid grid-cols-2 gap-8 gap-x-12 p-8 h-[85%] z-0 overflow-y-auto bg-white border rounded-xl transition-all duration-700 ${showResidentForm ? 'blur-sm bg-gray-300 opacity-60' : ''} `}>
                 {filterResidents.map((resident, index) => (
                     <ResidentInfo key={index} resident={resident} />
                 ))}

@@ -6,6 +6,7 @@ const historySchema = new mongoose.Schema({
     feeCost: {type: Number, required: true},
     room: {type: String, required: true},
     roomPayed: {type: Number, required: true},
+    username: {type: String, required: true},
     updateAt: {type: Date, default: Date.now},
 })
 

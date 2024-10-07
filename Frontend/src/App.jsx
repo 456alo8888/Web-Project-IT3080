@@ -41,7 +41,7 @@ const App = () => {
               <Route path='/fee' element={<Fee />} />
               <Route path='/history' element={<History />} />
               <Route path='/resident' element={<Resident />} />
-              <Route path='/account' element={<Admin />} />
+              <Route path='/admin' element={<Admin />} />
             </Routes>
           </div>
         </div>

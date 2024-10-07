@@ -56,10 +56,10 @@ const updateFee = async (req, res) => {
             return res.json({success:false, message: "Bạn không có quyền cập nhật khoản thu"})
         }
 
-        const {feeId, room, payed} = req.body
+        const {feeId, room, payed, username} = req.body
 
-        if (!feeId || !room || !payed) {
-            return res.json({success: true, message: "Thiếu thông tin"})
+        if (!feeId || !room || !payed || !username) {
+            return res.json({success: false, message: "Thiếu thông tin"})
         }
 
         if (payed < 0) {
@@ -91,6 +91,7 @@ const updateFee = async (req, res) => {
             feeCost: roomEntry.cost,
             room: room,
             roomPayed: payed,
+            username: username,
         })
 
         await historyRecord.save()
