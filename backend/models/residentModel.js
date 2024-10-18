@@ -1,37 +1,49 @@
-import mysql from 'mysql2/promise';
+import { DataTypes } from 'sequelize';
+import sequelize from 'backend/config/mySQL.js';
 
-// MySQL table creation query
-const createTableQuery = `
-CREATE TABLE residents (
-   room VARCHAR(255) NOT NULL UNIQUE,
-   name VARCHAR(255) NOT NULL,
-   gender VARCHAR(10) NOT NULL,
-   age INT NOT NULL CHECK (age >= 18),
-   phone VARCHAR(20) NOT NULL UNIQUE,
-   cccd VARCHAR(20) NOT NULL UNIQUE,
-   image VARCHAR(255) NOT NULL,
-   numMember INT NOT NULL,
-   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-);
-`;
+const Resident = sequelize.define('Resident', {
+   room: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+   },
+   name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+   },
+   gender: {
+      type: DataTypes.STRING,
+      allowNull: false,
+   },
+   age: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+         min: 18,
+      },
+   },
+   phone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+   },
+   cccd: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+   },
+   image: {
+      type: DataTypes.STRING,
+      allowNull: false,
+   },
+   numMember: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+   },
+   createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+   },
+});
 
-// Query to create a resident
-const createResident = async (connection, residentData) => {
-   const { room, name, gender, age, phone, cccd, image, numMember } = residentData;
-   const query = `INSERT INTO residents (room, name, gender, age, phone, cccd, image, numMember) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-
-   try {
-       await connection.execute(query, [room, name, gender, age, phone, cccd, image, numMember]);
-       console.log("Resident created successfully");
-   } catch (error) {
-       if (error.code === 'ER_DUP_ENTRY') {
-           console.error("Error: Duplicate entry for room, phone, or CCCD");
-       } else {
-           console.error('Error creating resident:', error);
-       }
-       throw error;
-   }
-};
-
-export { createTableQuery, createResident };
+export default Resident;
