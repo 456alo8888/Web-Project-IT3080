@@ -1,22 +1,32 @@
-import mysql2 from 'mysql2/promise'
+import { DataTypes } from 'sequelize';
+import sequelize from 'backend/config/mySQL.js'; 
 
-//Table
-CREATE TABLE admins (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    updateFeeAuthority BOOLEAN NOT NULL,
-    createFeeAuthority BOOLEAN NOT NULL,
-    updateResidentAuthority BOOLEAN NOT NULL,
-    isRoot BOOLEAN DEFAULT FALSE
-);
+const Admin = sequelize.define('Admin', {
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  updateFeeAuthority: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+  createFeeAuthority: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+  updateResidentAuthority: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+  isRoot: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+});
 
-//Querry
-const createAdmin = async (connection, adminData) => {
-    const { username, password, updateFeeAuthority, createFeeAuthority, updateResidentAuthority, isRoot } = adminData;
-    const query = `INSERT INTO admins (username, password, updateFeeAuthority, createFeeAuthority, updateResidentAuthority, isRoot)
-                   VALUES (?, ?, ?, ?, ?, ?)`;
-    await connection.execute(query, [username, password, updateFeeAuthority, createFeeAuthority, updateResidentAuthority, isRoot]);
-};
-
-export { createTableQuery, createAdmin };
+export default Admin;
