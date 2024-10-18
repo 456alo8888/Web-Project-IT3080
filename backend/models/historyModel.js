@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from 'backend/config/mySQL.js';
 import Fee from 'backend/models/feeModel.js';
 
-const historySchema = sequelize.define('historySchema', {
+const History = sequelize.define('History', {
     feeID: {
         type: DataTypes.INTEGER,
         allowNull : false,
