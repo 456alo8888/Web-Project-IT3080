@@ -1,7 +1,7 @@
 {
   "name": "my-web-app",
   "version": "1.0.0",
-  "type": "module",
+  "type":"module",
   "module": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -22,14 +22,14 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.11.3",
     "path": "^0.12.7",
-    "sequelize": "^6.37.4",
-    "sequelize-cli": "^6.6.2"
+    "sequelize": "^6.37.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.0",
     "eslint": "^9.11.0",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.9.0",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "sequelize-cli": "^6.6.2"
   }
 }
