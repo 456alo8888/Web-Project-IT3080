@@ -1,8 +1,10 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+import { Model } from 'sequelize';
+
+/**
+ * @param {import('sequelize').Sequelize} sequelize
+ * @param {import('sequelize').DataTypes} DataTypes
+ */
+export default (sequelize, DataTypes) => {
   class Fee extends Model {
     /**
      * Helper method for defining associations.
@@ -13,15 +15,21 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Fee.init({
-    name: DataTypes.STRING,
-    fee_type: DataTypes.STRING,
-    created_by_id: DataTypes.INTEGER,
-    total: DataTypes.FLOAT,
-    house_count: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Fee',
-  });
+
+  Fee.init(
+    {
+      name: DataTypes.STRING,
+      feeType: DataTypes.STRING,
+      createdById: DataTypes.INTEGER,
+      total: DataTypes.FLOAT,
+      houseCount: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: 'Fee',
+      underscored: true,
+    }
+  );
+
   return Fee;
 };

@@ -1,8 +1,10 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+import { Model } from 'sequelize';
+
+/**
+ * @param {import('sequelize').Sequelize} sequelize
+ * @param {import('sequelize').DataTypes} DataTypes
+ */
+export default (sequelize, DataTypes) => {
   class Membership extends Model {
     /**
      * Helper method for defining associations.
@@ -13,12 +15,18 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Membership.init({
-    resident_id: DataTypes.INTEGER,
-    room_id: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Membership',
-  });
+
+  Membership.init(
+    {
+      residentId: DataTypes.INTEGER,
+      roomId: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: 'Membership',
+      underscored: true,
+    }
+  );
+
   return Membership;
 };

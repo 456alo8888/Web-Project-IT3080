@@ -1,8 +1,10 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+import { Model } from 'sequelize';
+
+/**
+ * @param {import('sequelize').Sequelize} sequelize
+ * @param {import('sequelize').DataTypes} DataTypes
+ */
+export default (sequelize, DataTypes) => {
   class Admin extends Model {
     /**
      * Helper method for defining associations.
@@ -13,19 +15,25 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Admin.init({
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
-    update_fee_authority: DataTypes.BOOLEAN,
-    update_resident_authority: DataTypes.BOOLEAN,
-    create_fee_authority: DataTypes.BOOLEAN,
-    receive_authority: DataTypes.BOOLEAN,
-    is_root: DataTypes.BOOLEAN,
-    first_name: DataTypes.STRING,
-    last_name: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Admin',
-  });
+
+  Admin.init(
+    {
+      username: DataTypes.STRING,
+      password: DataTypes.STRING,
+      updateFeeAuthority: DataTypes.BOOLEAN,
+      updateResidentAuthority: DataTypes.BOOLEAN,
+      createFeeAuthority: DataTypes.BOOLEAN,
+      receiveAuthority: DataTypes.BOOLEAN,
+      isRoot: DataTypes.BOOLEAN,
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
+    },
+    {
+      sequelize,
+      modelName: 'Admin',
+      underscored: true,
+    }
+  );
+
   return Admin;
 };
