@@ -8,6 +8,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons';
 import ResidentInfo from './ResidentInfo';
 
+function splitFullName(fullName) {
+    const nameParts = fullName.trim().split(/\s+/); // Split by any whitespace
+  
+    const firstName = nameParts[0] || '';
+    const middleName = nameParts.length > 2 ? nameParts.slice(1, -1).join(' ') : '';
+    const lastName = nameParts[nameParts.length - 1] || '';
+  
+    return { firstName, middleName, lastName };
+  }
+
 const ResidentForm = () => {
     const [residentImg, setResidentImg] = useState('')
     const [room, setRoom] = useState('')
@@ -65,16 +75,20 @@ const ResidentForm = () => {
                 return toast.error("Chưa chọn ảnh cư dân")
             }
 
+            const { firstName, middleName, lastName } = splitFullName(name)
+
             const formData = new FormData()
 
             formData.append('image', residentImg)
             formData.append('room', room)
-            formData.append('name', name)
+            formData.append('firstName', firstName)
+            formData.append('lastName', lastName)
+            formData.append('middleName', middleName)
             formData.append('gender', gender)
             formData.append('age', Number(age))
             formData.append('numMember', Number(numMember))
-            formData.append('cccd', cccd)
-            formData.append('phone', phone)
+            formData.append('idCardNumber', cccd)
+            formData.append('phoneNumber', phone)
 
             const { data } = await axios.post(backendUrl + '/api/resident/create-resident', formData, { headers: { updateresidenttoken } })
 

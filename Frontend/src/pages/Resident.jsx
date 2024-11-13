@@ -1,5 +1,5 @@
 import React from 'react'
-import ResidentForm from '../components/residentForm'
+import ResidentForm from '../components/ResidentForm'
 
 const Resident = () => {
   return (

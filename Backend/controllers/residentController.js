@@ -1,7 +1,6 @@
 import { v2 as cloudinary } from "cloudinary"
-import residentModel from "../models/residentModel.js"
-
-
+import db from "../models/index.js"
+const { Resident, Room } = db
 
 const createResident = async (req, res) => {
 
@@ -13,16 +12,22 @@ const createResident = async (req, res) => {
             return res.json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
         }
 
-        const { room, name, gender, age, cccd, phone, numMember } = req.body
+        const { room, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber } = req.body
         const imageFile = req.file
         console.log(req.body);
-        console.log(req.file);
+        // console.log(req.file);
 
-        if (!room || !name || !gender || !age || !cccd || !phone || !numMember) {
+        if (!room || !firstName || !lastName || !age || !gender || !phoneNumber || !idCardNumber) {
             return res.json({ success: false, message: "Thiếu dữ liệu" })
         }
 
-        if (cccd.length !== 12) {
+        const roomRecord = await Room.findOne({ where: { roomNumber: room } })
+        if (!roomRecord) {
+            return res.json({ success: false, message: "Phòng không tồn tại"})
+        }
+        const roomId = roomRecord.id
+
+        if (idCardNumber.length !== 12) {
             return res.json({ success: false, message: "CCCD phải có đúng 12 số" })
         }
 
@@ -30,19 +35,12 @@ const createResident = async (req, res) => {
         const imageUrl = imageUpload.secure_url
 
         const residentData = {
-            room,
-            name,
-            gender,
-            age,
-            cccd,
-            phone,
-            image: imageUrl,
-            numMember,
-            createdAt: Date.now(),
+            roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, imageUrl
         }
 
-        const newResident = new residentModel(residentData)
-        await newResident.save()
+        if (!Resident.create(residentData)) {
+            res.status(500).json({ success: false, message: "Lỗi hệ thống", })
+        }
 
         res.json({ success: true, message: "Thêm cư dân thành công" })
 
@@ -65,20 +63,30 @@ const updateResident = async (req, res) => {
             return res.json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
         }
 
-        const { room, name, gender, age, cccd, phone, numMember } = req.body
-        const updateData = req.body
+        const { room, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber } = req.body
 
-        if (cccd && cccd.length !== 12) {
+        const roomRecord = Room.findOne({ where: { roomNumber: room } })
+        if (!roomRecord) {
+            return res.json({ success: false, message: "Phòng không tồn tại"})
+        }
+        const roomId = roomRecord.id
+
+        if (idCardNumber.length !== 12) {
             return res.json({ success: false, message: "CCCD phải có đúng 12 số" })
         }
 
-        const updatedResident = await residentModel.findOneAndUpdate({ room: room }, updateData, {
-            new: true,
-            runValidators: true
-        })
-
-        if (!updatedResident) {
-            return res.json({ success: false, message: "Không tìm thấy cư dân" })
+        const [updatedRows] = await Resident.update(
+            {
+                roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, imageUrl
+            }, 
+            { 
+                where : { idCardNumber },
+                returning: true,
+                plain: true,
+            } 
+        )
+        if (!updatedRows) {
+            return res.status(400).json({ success: false, message: 'Không tìm thấy cư dân'})
         }
 
         res.json({ success: true, message: "Cập nhật thành công" })
@@ -101,17 +109,11 @@ const deleteResident = async (req, res) => {
             return res.json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
         }
 
-        const { room } = req.body
+        const { idCardNumber } = req.body
 
-        const deletedResident = await residentModel.findOneAndDelete({ room: room });
-
-        if (!deletedResident) {
-            return res.json({ success: false, message: "Không tìm thấy cư dân" })
-        }
+        await Resident.destroy({ idCardNumber });
 
         return res.json({ success: true, message: "Xóa cư dân thành công" })
-
-
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: error.message })
@@ -121,17 +123,13 @@ const deleteResident = async (req, res) => {
 
 
 const allResident = async (req, res) => {
-
     try {
-        
-        const residents = await residentModel.find({})
-        return res.json({success: true, residents})
-
+        const residents = await Resident.findAll();
+        return res.json({ success: true, residents });
     } catch (error) {
         console.log(error);
-        return res.json({success: false, message: error.message})
+        return res.json({ success: false, message: error.message });
     }
-
 }
 
 

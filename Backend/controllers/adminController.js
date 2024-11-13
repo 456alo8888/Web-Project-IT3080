@@ -1,10 +1,16 @@
 import bcrypt from 'bcrypt'
-import adminModel from '../models/adminModel.js'
+import db from '../models/index.js'
 import jwt from 'jsonwebtoken'
 
 
+const { Admin } = db
+
 //API for signup
 
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
 const signup = async (req, res) => {
 
     try {
@@ -15,11 +21,11 @@ const signup = async (req, res) => {
             return res.json({ success: false, message: "Bạn không có quyền tạo admin mới" })
         }
 
-        const { username, password, updateFeeAuth, createFeeAuth, updateResidentAuth } = req.body
+        const { username, password, updateFeeAuth, createFeeAuth, updateResidentAuth, receiveAuthority } = req.body
 
-        console.log(req.body);
+        // console.log(req.body);
 
-        if (!username || !password || !updateFeeAuth | !createFeeAuth || !updateResidentAuth) {
+        if (!username || !password || !updateFeeAuth | !createFeeAuth || !updateResidentAuth || !receiveAuthority) {
             return res.json({ success: false, message: "Thiếu dữ liệu" })
         }
 
@@ -37,10 +43,10 @@ const signup = async (req, res) => {
             updateFeeAuthority: updateFeeAuth === 'true' ? true : false,
             createFeeAuthority: createFeeAuth === 'true' ? true : false,
             updateResidentAuthority: updateResidentAuth === 'true' ? true : false,
+            receiveAuthority: receiveAuthority === 'true' ? true : false
         }
 
-        const newAdmin = new adminModel(adminData)
-        await newAdmin.save()
+        Admin.create(adminData)
 
         return res.json({ success: true, message: "Thêm ADMIN thành công" })
 
@@ -58,7 +64,7 @@ const login = async (req, res) => {
 
         const { username, password } = req.body
 
-        const admin = await adminModel.findOne({ username: username })
+        const admin = await Admin.findOne({ where: { username } })
 
         if (!admin) {
             return res.json({ success: false, message: "Username không tồn tại" })
@@ -75,11 +81,19 @@ const login = async (req, res) => {
         const updatefeetoken = admin.updateFeeAuthority ? 'yes' : ''
         const createfeetoken = admin.createFeeAuthority ? 'yes' : ''
         const updateresidenttoken = admin.updateResidentAuthority ? 'yes' : ''
+        const receiveAuthority = admin.receiveAuthority ? 'yes' : ''
         const roottoken = admin.isRoot ? 'yes' : ''
 
-
-
-        return res.json({ success: true, message: "Đăng nhập thành công", token, updatefeetoken, createfeetoken, updateresidenttoken, roottoken })
+        return res.json({ 
+            success: true, 
+            message: "Đăng nhập thành công", 
+            token, 
+            updatefeetoken, 
+            createfeetoken, 
+            updateresidenttoken, 
+            roottoken,
+            receiveAuthority
+        })
 
     } catch (error) {
         console.log(error);
@@ -145,7 +159,7 @@ const deleteAdmin = async (req, res) => {
 
         const deletedAdmin = await adminModel.findOneAndDelete({ username: username })
 
-        console.log(deletedAdmin);
+        // console.log(deletedAdmin);
 
         if (!deletedAdmin) {
             return res.json({ success: false, message: "User không tồn tại" })
@@ -174,7 +188,7 @@ const changeAuthority = async (req, res) => {
 
         const { username, updateFeeAuth, createFeeAuth, updateResidentAuth } = req.body
 
-        console.log(req.body);
+        // console.log(req.body);
         
 
         const admin = await adminModel.findOneAndUpdate(

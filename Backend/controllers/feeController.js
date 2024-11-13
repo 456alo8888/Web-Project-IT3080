@@ -1,157 +1,157 @@
-import feeModel from "../models/feeModel.js";
-import historyModel from "../models/historyModel.js";
+// import feeModel from "../models/feeModel.js";
+// import historyModel from "../models/historyModel.js";
 
 
 
 
-const createFee = async (req, res) => {
+// const createFee = async (req, res) => {
 
-    try {
+//     try {
 
-        const {createfeetoken} = req.headers
+//         const {createfeetoken} = req.headers
         
-        if(!createfeetoken) {
-            return res.json({success:false, message: "Bạn không có quyền thêm khoản thu"})
-        }
+//         if(!createfeetoken) {
+//             return res.json({success:false, message: "Bạn không có quyền thêm khoản thu"})
+//         }
 
 
-        const {name, feeType, feepayInfo, deadline} = req.body
+//         const {name, feeType, feepayInfo, deadline} = req.body
         
-        const parsedFeepayInfo = JSON.parse(feepayInfo)
+//         const parsedFeepayInfo = JSON.parse(feepayInfo)
 
-        if (!name || !feeType || !parsedFeepayInfo || !deadline) {
-            return res.json({success: false, message: "Thiếu thông tin"})
-        }
+//         if (!name || !feeType || !parsedFeepayInfo || !deadline) {
+//             return res.json({success: false, message: "Thiếu thông tin"})
+//         }
 
-        
-
-        const newFee = new feeModel({
-            name: name,
-            feeType: feeType,
-            feepayInfo: parsedFeepayInfo,
-            deadline: deadline,
-        })
-
-        const savedFee = await newFee.save()
-        console.log(savedFee);
         
 
-        return res.json({success: true, message: "Thêm khoản thu thành công"})
+//         const newFee = new feeModel({
+//             name: name,
+//             feeType: feeType,
+//             feepayInfo: parsedFeepayInfo,
+//             deadline: deadline,
+//         })
+
+//         const savedFee = await newFee.save()
+//         console.log(savedFee);
+        
+
+//         return res.json({success: true, message: "Thêm khoản thu thành công"})
 
         
-    } catch (error) {
-        console.log(error);
-        return res.json({ success: false, message: error.message })
-    }
+//     } catch (error) {
+//         console.log(error);
+//         return res.json({ success: false, message: error.message })
+//     }
     
-}
+// }
 
-const updateFee = async (req, res) => {
+// const updateFee = async (req, res) => {
 
-    try {
+//     try {
 
-        const {updatefeetoken} = req.headers
+//         const {updatefeetoken} = req.headers
         
-        if(!updatefeetoken) {
-            return res.json({success:false, message: "Bạn không có quyền cập nhật khoản thu"})
-        }
+//         if(!updatefeetoken) {
+//             return res.json({success:false, message: "Bạn không có quyền cập nhật khoản thu"})
+//         }
 
-        const {feeId, room, payed, username} = req.body
+//         const {feeId, room, payed, username} = req.body
 
-        if (!feeId || !room || !payed || !username) {
-            return res.json({success: false, message: "Thiếu thông tin"})
-        }
+//         if (!feeId || !room || !payed || !username) {
+//             return res.json({success: false, message: "Thiếu thông tin"})
+//         }
 
-        if (payed < 0) {
-            return res.json({success: false, message: "Khoản đóng góp phải lớn hơn 0"})
-        }
+//         if (payed < 0) {
+//             return res.json({success: false, message: "Khoản đóng góp phải lớn hơn 0"})
+//         }
 
-        const feeDocument = await feeModel.findById(feeId)
+//         const feeDocument = await feeModel.findById(feeId)
 
-        if(!feeDocument) {
-            return res.json({success: false, message: "Khoản thu không tồn tại"})
-        }
+//         if(!feeDocument) {
+//             return res.json({success: false, message: "Khoản thu không tồn tại"})
+//         }
 
-        const roomEntry = feeDocument.feepayInfo.find(r => r.room === room)
+//         const roomEntry = feeDocument.feepayInfo.find(r => r.room === room)
 
-        if (!roomEntry) {
-            return res.json({success: false, message: "Phòng không tồn tại"})
-        }
-
-
-        roomEntry.payed = payed;
-
-        await feeDocument.save()
+//         if (!roomEntry) {
+//             return res.json({success: false, message: "Phòng không tồn tại"})
+//         }
 
 
+//         roomEntry.payed = payed;
 
-        const historyRecord = new historyModel({
-            feeId: feeId,
-            feeName: feeDocument.name,
-            feeCost: roomEntry.cost,
-            room: room,
-            roomPayed: payed,
-            username: username,
-        })
+//         await feeDocument.save()
 
-        await historyRecord.save()
+
+
+//         const historyRecord = new historyModel({
+//             feeId: feeId,
+//             feeName: feeDocument.name,
+//             feeCost: roomEntry.cost,
+//             room: room,
+//             roomPayed: payed,
+//             username: username,
+//         })
+
+//         await historyRecord.save()
 
 
         
-        return res.json({success: true, message: "Cập nhật thành công"})
+//         return res.json({success: true, message: "Cập nhật thành công"})
 
-    } catch (error) {
-        console.log(error);
-        return res.json({ success: false, message: error.message })
-    }
+//     } catch (error) {
+//         console.log(error);
+//         return res.json({ success: false, message: error.message })
+//     }
     
-}
+// }
 
-const deleteFee = async (req, res) => {
+// const deleteFee = async (req, res) => {
 
-    try {
+//     try {
 
-        const {createfeetoken} = req.headers
+//         const {createfeetoken} = req.headers
         
-        if(!createfeetoken) {
-            return res.json({success:false, message: "Bạn không có quyền xóa khoản thu"})
-        }
+//         if(!createfeetoken) {
+//             return res.json({success:false, message: "Bạn không có quyền xóa khoản thu"})
+//         }
 
-        const {feeId} = req.body
+//         const {feeId} = req.body
 
-        if(!feeId) {
-            return res.json({success: false, message: "Khoản thu không tồn tại"})
-        }
+//         if(!feeId) {
+//             return res.json({success: false, message: "Khoản thu không tồn tại"})
+//         }
 
-        await feeModel.findByIdAndDelete(feeId)
+//         await feeModel.findByIdAndDelete(feeId)
 
-        return res.json({success: true, message: "Xóa khoản thu thành công"})
+//         return res.json({success: true, message: "Xóa khoản thu thành công"})
 
-    } catch (error) {
-        console.log(error);
-        return res.json({ success: false, message: error.message })
-    }
+//     } catch (error) {
+//         console.log(error);
+//         return res.json({ success: false, message: error.message })
+//     }
     
-}
+// }
 
 
-const allFee = async (req, res) => {
+// const allFee = async (req, res) => {
     
-try {
+// try {
     
-    const fees = await feeModel.find({})
-    console.log(fees);
+//     const fees = await feeModel.find({})
+//     console.log(fees);
     
-    return res.json({success: true, fees})
+//     return res.json({success: true, fees})
 
 
-} catch (error) {
-    console.log(error);
-    return res.json({success: false, message: error.message})
+// } catch (error) {
+//     console.log(error);
+//     return res.json({success: false, message: error.message})
     
-}
+// }
 
-}
+// }
 
 
-export {createFee, updateFee, deleteFee, allFee}
+// export {createFee, updateFee, deleteFee, allFee}

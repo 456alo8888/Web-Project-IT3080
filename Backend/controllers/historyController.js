@@ -1,22 +1,22 @@
-import historyModel from "../models/historyModel.js";
+// import historyModel from "../models/historyModel.js";
 
 
 
-const allHistory = async (req, res) => {
+// const allHistory = async (req, res) => {
 
-    try {
+//     try {
 
-        const histories = await historyModel.find({})
+//         const histories = await historyModel.find({})
 
-        return res.json({ success: true, histories })
+//         return res.json({ success: true, histories })
 
-    } catch (error) {
-        console.log(error);
-        return res.json({ success: false, message: error.message })
-    }
+//     } catch (error) {
+//         console.log(error);
+//         return res.json({ success: false, message: error.message })
+//     }
 
-}
+// }
 
 
 
-export { allHistory }
+// export { allHistory }
