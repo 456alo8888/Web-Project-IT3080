@@ -7,9 +7,12 @@ import { toast } from 'react-toastify';
 import { AppContext } from '../context/AppContext';
 import { ResidentContext } from '../context/ResidentContext';
 
-
+function buildName(first, mid, last) {
+  return (first ? first + ' ' : '') + (mid ? mid + ' ' : '') + last
+}
 
 const ResidentInfo = ({ resident }) => {
+  console.log("wtf", resident)
 
   const { backendUrl, updateresidenttoken } = useContext(AppContext)
   const { getAllResidents } = useContext(ResidentContext)
@@ -17,13 +20,12 @@ const ResidentInfo = ({ resident }) => {
   const [isEdit, setIsEdit] = useState(false)
 
   const [updateResident, setUpdateResident] = useState({
-    room: resident.room,
-    numMember: resident.numMember,
-    name: resident.name,
+    roomNumber: resident.roomNumber,
+    name: buildName(resident.firstName, resident.middleName, resident.lastName),
     age: resident.age,
     gender: resident.gender,
-    cccd: resident.cccd,
-    phone: resident.phone,
+    idCardNumber: resident.idCardNumber,
+    phoneNumber: resident.phoneNumber,
   })
 
 
@@ -40,13 +42,12 @@ const ResidentInfo = ({ resident }) => {
   const resetForm = () => {
 
     setUpdateResident({
-      room: resident.room,
-      numMember: resident.numMember,
-      name: resident.name,
+      roomNumber: resident.roomNumber,
+      name: buildName(resident.firstName, resident.middleName, resident.lastName),
       age: resident.age,
       gender: resident.gender,
-      cccd: resident.cccd,
-      phone: resident.phone,
+      idCardNumber: resident.idCardNumber,
+      phoneNumber: resident.phoneNumber,
     })
 
   }
@@ -64,13 +65,12 @@ const ResidentInfo = ({ resident }) => {
     try {
 
       const formData = new FormData()
-      formData.append('room', updateResident.room)
+      formData.append('roomNumber', updateResident.roomNumber)
       formData.append('name', updateResident.name)
       formData.append('gender', updateResident.gender)
       formData.append('age', Number(updateResident.age))
-      formData.append('numMember', Number(updateResident.numMember))
-      formData.append('cccd', updateResident.cccd)
-      formData.append('phone', updateResident.phone)
+      formData.append('idCardNumber', updateResident.idCardNumber)
+      formData.append('phoneNumber', updateResident.phoneNumber)
 
       const { data } = await axios.post(backendUrl + '/api/resident/update-resident', formData, { headers: { updateresidenttoken } })
 
@@ -139,24 +139,17 @@ const ResidentInfo = ({ resident }) => {
               <input required type="text" name='room' value={updateResident.room} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[40px] rounded-sm' placeholder={resident.room} />
             </div>
             :
-            <p><span className='font-semibold text-lg mr-2'>Số phòng:</span> {resident.room} </p>
+            <p><span className='font-semibold text-lg mr-2'>Số phòng:</span> {resident.roomNumber} </p>
           }
-          {isEdit ?
-            <div className='flex'>
-              <span className='font-semibold'>Thành viên:</span>
-              <input required type="number" name='numMember' value={updateResident.numMember} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[20px] rounded-sm' placeholder={resident.numMember} />
-            </div>
-            :
-            <p><span className='font-semibold text-lg mr-2'>Thành viên:</span> {resident.numMember} </p>
-          }        </div>
+        </div>
         <div className='text-lg mb-2'>
           {isEdit ?
             <div className='flex'>
               <span className='font-semibold'>Tên:</span>
-              <input required type="text" name='name' value={updateResident.name} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[240px] rounded-sm' placeholder={resident.name} />
+              <input required type="text" name='name' value={updateResident.name} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[240px] rounded-sm' placeholder={buildName(resident.firstName, resident.middleName, resident.lastName)} />
             </div>
             :
-            <p><span className='font-semibold text-lg mr-2'>Tên:</span> {resident.name} </p>
+            <p><span className='font-semibold text-lg mr-2'>Tên:</span> {updateResident.name} </p>
           }
         </div>
         <div className='flex justify-between text-lg mb-2'>
@@ -184,20 +177,20 @@ const ResidentInfo = ({ resident }) => {
           {isEdit ?
             <div className='flex'>
               <span className='font-semibold'>CCCD:</span>
-              <input required type="text" name='cccd' value={updateResident.cccd} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[200px] rounded-sm' placeholder={resident.cccd} />
+              <input required type="text" name='cccd' value={updateResident.idCardNumber} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[200px] rounded-sm' placeholder={resident.idCardNumber} />
             </div>
             :
-            <p><span className='font-semibold text-lg mr-2'>CCCD:</span> {resident.cccd} </p>
+            <p><span className='font-semibold text-lg mr-2'>CCCD:</span> {resident.idCardNumber} </p>
           }
         </div>
         <div className='text-lg mb-2'>
           {isEdit ?
             <div className='flex'>
               <span className='font-semibold'>Số điện thoại:</span>
-              <input required type="text" name='phone' value={updateResident.phone} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[130px] rounded-sm' placeholder={resident.phone} />
+              <input required type="text" name='phone' value={updateResident.phoneNumber} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[130px] rounded-sm' placeholder={resident.phoneNumber} />
             </div>
             :
-            <p><span className='font-semibold text-lg mr-2'>Số điện thoại:</span> {resident.phone} </p>
+            <p><span className='font-semibold text-lg mr-2'>Số điện thoại:</span> {resident.phoneNumber} </p>
           }
         </div>
 

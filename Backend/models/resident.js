@@ -12,7 +12,7 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Resident.belongsTo(models.Room, { foreignKey: 'roomId' });
     }
   }
 
@@ -26,6 +26,7 @@ export default (sequelize, DataTypes) => {
       phoneNumber: DataTypes.STRING,
       idCardNumber: DataTypes.STRING,
       roomId: DataTypes.INTEGER,
+      image: DataTypes.STRING(2083),
     },
     {
       sequelize,

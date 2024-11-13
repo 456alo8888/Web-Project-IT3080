@@ -32,10 +32,10 @@ const createResident = async (req, res) => {
         }
 
         const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
-        const imageUrl = imageUpload.secure_url
+        const image = imageUpload.secure_url
 
         const residentData = {
-            roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, imageUrl
+            roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, image
         }
 
         if (!Resident.create(residentData)) {
@@ -75,9 +75,12 @@ const updateResident = async (req, res) => {
             return res.json({ success: false, message: "CCCD phải có đúng 12 số" })
         }
 
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
+        const image = imageUpload.secure_url
+
         const [updatedRows] = await Resident.update(
             {
-                roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, imageUrl
+                roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, image
             }, 
             { 
                 where : { idCardNumber },
@@ -124,7 +127,18 @@ const deleteResident = async (req, res) => {
 
 const allResident = async (req, res) => {
     try {
-        const residents = await Resident.findAll();
+        const residents = (await Resident.findAll({
+            include: {
+                model: Room,
+                attributes: ['room_number']
+            },
+            raw: true,
+            nest: true,
+        })).map(resi => ({
+            ...resi,
+            roomNumber: resi.Room.room_number,
+            Room: undefined
+        }))
         return res.json({ success: true, residents });
     } catch (error) {
         console.log(error);

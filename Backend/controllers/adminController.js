@@ -230,7 +230,7 @@ const allAdmin = async (req, res) => {
             return res.json({success:false, message: "Bạn không có quyền"})
         }
 
-        const admins = await adminModel.find({})
+        const admins = await Admin.findAll()
 
         return res.json({success: true, admins})
 

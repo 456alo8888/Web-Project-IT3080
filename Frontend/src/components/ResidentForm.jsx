@@ -26,8 +26,6 @@ const ResidentForm = () => {
     const [age, setAge] = useState('')
     const [cccd, setCccd] = useState('')
     const [phone, setPhone] = useState('')
-    const [numMember, setNumMember] = useState()
-
 
 
     const [filterResidents, setFilterResidents] = useState([])
@@ -41,7 +39,12 @@ const ResidentForm = () => {
     const applyFilter = () => {
         
         if (search) {
-            setFilterResidents(residents.filter(re => re.room.includes(search) || re.name.toLowerCase().includes(search)))
+            setFilterResidents(residents.filter(
+                re => re.roomNumber.includes(search) 
+                || re.firstName.toLowerCase().includes(search)
+                || re.middleName.toLowerCase().includes(search)
+                || re.lastName.toLowerCase().includes(search)
+            ))
         } else {
             setFilterResidents(residents)
         }
@@ -86,7 +89,6 @@ const ResidentForm = () => {
             formData.append('middleName', middleName)
             formData.append('gender', gender)
             formData.append('age', Number(age))
-            formData.append('numMember', Number(numMember))
             formData.append('idCardNumber', cccd)
             formData.append('phoneNumber', phone)
 
@@ -101,7 +103,6 @@ const ResidentForm = () => {
                 setAge('')
                 setCccd('')
                 setPhone('')
-                setNumMember(1)
 
                 getAllResidents();
 
@@ -164,10 +165,6 @@ const ResidentForm = () => {
                                 <option value="male">Nam</option>
                                 <option value="female">Nữ</option>
                             </select>
-                        </div>
-                        <div className='w-[40%] mr-4'>
-                            <p className='mb-2 text-gray-500 font-medium'>Số thành viên</p>
-                            <input type="number" onChange={(e) => setNumMember(e.target.value)} value={numMember} className='w-full p-2 pr-0 px-4 border bg-gray-50 focus:border-secondary outline-none rounded-md text-gray-500 tracking-wider transition-all' placeholder='ex: 3' required />
                         </div>
                         <div className='w-full'>
                             <p className='mb-2 text-gray-500 font-medium'>Số căn cước công dân</p>

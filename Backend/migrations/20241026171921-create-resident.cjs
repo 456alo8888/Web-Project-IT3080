@@ -45,6 +45,10 @@ module.exports = {
         //   key: 'id'
         // }
       },
+      image: {
+        type: Sequelize.STRING(2083),
+        allowNull: false
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

@@ -39,7 +39,8 @@ const AppContextProvider = (props) => {
     }
 
     useEffect(() => {
-        getAllAdmins()
+        if (roottoken)
+            getAllAdmins()
     }, [])
 
 
