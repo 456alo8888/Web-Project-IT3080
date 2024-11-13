@@ -34,12 +34,13 @@ const ResidentForm = () => {
     const { backendUrl, updateresidenttoken, token } = useContext(AppContext)
     const { showResidentForm, setShowResidentForm, getAllResidents, residents } = useContext(ResidentContext)
 
-
-
+    console.log('RESIDENTS:', residents );
+    
+    
     const applyFilter = () => {
         if (search) {
             setFilterResidents(residents.filter(
-                re => re.roomNumber?.toLowerCase().includes(search) 
+                re => re.roomNumber.includes(search) 
                 || re.firstName?.toLowerCase().includes(search)
                 || re.middleName?.toLowerCase().includes(search)
                 || re.lastName?.toLowerCase().includes(search)
@@ -60,14 +61,14 @@ const ResidentForm = () => {
 
 
     useEffect(() => {
-
+        
         applyFilter()
-
+        
     }, [search, residents])
-
-
+    
+    
     const handleSubmit = async (e) => {
-
+        
         e.preventDefault();
 
         try {
