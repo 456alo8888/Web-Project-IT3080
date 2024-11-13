@@ -1,5 +1,7 @@
 'use strict';
 
+const bcrypt = require('bcrypt')
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -13,10 +15,10 @@ module.exports = {
      * }], {});
     */
 
-    return queryInterface.bulkInsert('Admins', [
+    return queryInterface.bulkInsert('admins', [
       {
         username: 'ROOT',
-        password: '12345678',
+        password: await bcrypt.hash("12345678", 10),
         update_fee_authority: true,
         update_resident_authority: true,
         create_fee_authority: true,
@@ -24,8 +26,8 @@ module.exports = {
         is_root: true,
         first_name: 'ROOT',
         last_name: 'ROOT',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       },
     ]);
   },
@@ -38,6 +40,6 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
 
-    return queryInterface.bulkDelete('Admins', null, {});
+    return queryInterface.bulkDelete('admins', null, {});
   }
 };
