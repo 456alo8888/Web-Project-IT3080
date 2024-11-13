@@ -20,6 +20,8 @@ const ResidentContextProvider = (props) => {
 
             if(data.success) {
                 setResidents(data.residents.sort((a, b) => Number(a.room)-Number(b.room)))
+                console.log("resident", residents);
+                
             } else {
                 toast.error(data.message)
             }

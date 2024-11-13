@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { faSlack } from '@fortawesome/free-brands-svg-icons';
 import { faCheck, faPen, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

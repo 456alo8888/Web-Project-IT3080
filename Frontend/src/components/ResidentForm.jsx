@@ -39,7 +39,7 @@ const ResidentForm = () => {
     const applyFilter = () => {
         if (search) {
             setFilterResidents(residents.filter(
-                re => re.roomNumber?.toLowerserCase().includes(search) 
+                re => re.roomNumber?.toLowerCase().includes(search) 
                 || re.firstName?.toLowerCase().includes(search)
                 || re.middleName?.toLowerCase().includes(search)
                 || re.lastName?.toLowerCase().includes(search)
