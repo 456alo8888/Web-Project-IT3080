@@ -37,13 +37,12 @@ const ResidentForm = () => {
 
 
     const applyFilter = () => {
-        
         if (search) {
             setFilterResidents(residents.filter(
-                re => re.roomNumber.includes(search) 
-                || re.firstName.toLowerCase().includes(search)
-                || re.middleName.toLowerCase().includes(search)
-                || re.lastName.toLowerCase().includes(search)
+                re => re.roomNumber?.toLowerserCase().includes(search) 
+                || re.firstName?.toLowerCase().includes(search)
+                || re.middleName?.toLowerCase().includes(search)
+                || re.lastName?.toLowerCase().includes(search)
             ))
         } else {
             setFilterResidents(residents)
@@ -53,7 +52,6 @@ const ResidentForm = () => {
     }
 
     useEffect(() => {
-
         if (token) {
             getAllResidents()
         }

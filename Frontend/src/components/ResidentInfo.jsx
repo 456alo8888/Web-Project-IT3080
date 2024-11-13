@@ -134,7 +134,7 @@ const ResidentInfo = ({ resident }) => {
           {isEdit ?
             <div className='flex'>
               <span className='font-semibold'>Số phòng:</span>
-              <input required type="text" name='room' value={updateResident.room} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[40px] rounded-sm' placeholder={resident.room} />
+              <input required type="text" name='room' value={updateResident.roomNumber} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[70px] rounded-sm' placeholder={resident.roomNumber} />
             </div>
             :
             <p><span className='font-semibold text-lg mr-2'>Số phòng:</span> {resident.roomNumber} </p>
@@ -168,7 +168,7 @@ const ResidentInfo = ({ resident }) => {
               </select>
             </div>
             :
-            <p><span className='font-semibold text-lg mr-2'>Giới tính:</span> {resident.gender === ' male' ? 'Nam' : 'Nữ' } </p>
+            <p><span className='font-semibold text-lg mr-2'>Giới tính:</span> {resident.gender === 'male' ? 'Nam' : 'Nữ' } </p>
           }
         </div>
         <div className='text-lg mb-2'>
@@ -185,7 +185,7 @@ const ResidentInfo = ({ resident }) => {
           {isEdit ?
             <div className='flex'>
               <span className='font-semibold'>Số điện thoại:</span>
-              <input required type="text" name='phone' value={updateResident.phoneNumber} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[130px] rounded-sm' placeholder={resident.phoneNumber} />
+              <input required type="text" name='phone' value={updateResident.phoneNumber} onChange={handleChange} className='px-1 ml-2 outline-none border focus:border-secondary max-w-[180px] rounded-sm' placeholder={resident.phoneNumber} />
             </div>
             :
             <p><span className='font-semibold text-lg mr-2'>Số điện thoại:</span> {resident.phoneNumber} </p>

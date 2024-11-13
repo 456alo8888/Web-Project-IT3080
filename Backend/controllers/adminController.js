@@ -14,6 +14,7 @@ const { Admin } = db
 const signup = async (req, res) => {
 
     try {
+        console.log(req.body)
 
         const { roottoken } = req.headers
 
@@ -21,11 +22,11 @@ const signup = async (req, res) => {
             return res.json({ success: false, message: "Bạn không có quyền tạo admin mới" })
         }
 
-        const { username, password, updateFeeAuth, createFeeAuth, updateResidentAuth, receiveAuthority } = req.body
+        const { username, password, updateFeeAuth, createFeeAuth, updateResidentAuth, receiveAuthority, name } = req.body
 
         // console.log(req.body);
 
-        if (!username || !password || !updateFeeAuth | !createFeeAuth || !updateResidentAuth || !receiveAuthority) {
+        if (!username || !password || !updateFeeAuth | !createFeeAuth || !updateResidentAuth || !receiveAuthority || !name) {
             return res.json({ success: false, message: "Thiếu dữ liệu" })
         }
 
@@ -38,8 +39,9 @@ const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10)
 
         const adminData = {
-            username: username,
+            username,
             password: hashedPassword,
+            name,
             updateFeeAuthority: updateFeeAuth === 'true' ? true : false,
             createFeeAuthority: createFeeAuth === 'true' ? true : false,
             updateResidentAuthority: updateResidentAuth === 'true' ? true : false,
@@ -81,7 +83,7 @@ const login = async (req, res) => {
         const updatefeetoken = admin.updateFeeAuthority ? 'yes' : ''
         const createfeetoken = admin.createFeeAuthority ? 'yes' : ''
         const updateresidenttoken = admin.updateResidentAuthority ? 'yes' : ''
-        const receiveAuthority = admin.receiveAuthority ? 'yes' : ''
+        const receivetoken = admin.receiveAuthority ? 'yes' : ''
         const roottoken = admin.isRoot ? 'yes' : ''
 
         return res.json({ 
@@ -92,7 +94,7 @@ const login = async (req, res) => {
             createfeetoken, 
             updateresidenttoken, 
             roottoken,
-            receiveAuthority
+            receivetoken
         })
 
     } catch (error) {
@@ -116,7 +118,7 @@ const changePassword = async (req, res) => {
             return res.json({ success: false, message: "Mật khẩu mới phải trên 7 kí tự" })
         }
 
-        const admin = await adminModel.findOne({ username: username });
+        const admin = await Admin.findOne({ where: { username: username } });
 
         if (!admin) {
             return res.json({ success: false, message: "Không tìm thấy admin" })
@@ -157,7 +159,7 @@ const deleteAdmin = async (req, res) => {
 
         const { username } = req.body
 
-        const deletedAdmin = await adminModel.findOneAndDelete({ username: username })
+        const deletedAdmin = await Admin.destroy({ where: { username: username } })
 
         // console.log(deletedAdmin);
 
@@ -186,27 +188,26 @@ const changeAuthority = async (req, res) => {
         }
 
 
-        const { username, updateFeeAuth, createFeeAuth, updateResidentAuth } = req.body
+        const { username, updateFeeAuth, createFeeAuth, updateResidentAuth, receiveAuthority } = req.body
 
         // console.log(req.body);
-        
 
-        const admin = await adminModel.findOneAndUpdate(
-            { username: username },
+        const admin = await Admin.update(
             {
-                $set: {
-                    updateFeeAuthority: updateFeeAuth === true ? true : false,
-                    createFeeAuthority: createFeeAuth === true ? true : false,
-                    updateResidentAuthority: updateResidentAuth === true ? true : false
-                },
-
+                updateFeeAuthority: !!updateFeeAuth,
+                createFeeAuthority: !!createFeeAuth,
+                updateResidentAuthority: !!updateResidentAuth,
+                receiveAuthority: !!receiveAuthority,
             },
-            { new: true, runValidators: true },
-        )
-
-
-        if (!admin) {
-            return res.json({ success: false, message: "User không tồn tại" })
+            {
+                where: { username },
+                returning: true,
+                plain: true,
+            }
+        );
+        
+        if (!admin[1]) {
+            return res.json({ success: false, message: "Không tìm thấy admin" });
         }
 
         return res.json({ success: true, message: "Cập nhật quyền admin thành công" })

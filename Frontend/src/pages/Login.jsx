@@ -33,6 +33,8 @@ const Login = () => {
                 setCreatefeetoken(data.createfeetoken);
                 localStorage.setItem("updateresidenttoken", data.updateresidenttoken);
                 setUpdateresidenttoken(data.updateresidenttoken);
+                localStorage.setItem("receivetoken", data.receivetoken);
+                setUpdatefeetoken(data.receivetoken);
                 localStorage.setItem("roottoken", data.roottoken);
                 setRoottoken(data.roottoken);
             } else {

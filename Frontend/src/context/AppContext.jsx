@@ -13,6 +13,7 @@ const AppContextProvider = (props) => {
     const [updatefeetoken, setUpdatefeetoken] = useState(localStorage.getItem('updatefeetoken') ? localStorage.getItem('updatefeetoken') : '');
     const [createfeetoken, setCreatefeetoken] = useState(localStorage.getItem('createfeetoken') ? localStorage.getItem('createfeetoken') : '');
     const [updateresidenttoken, setUpdateresidenttoken] = useState(localStorage.getItem('updateresidenttoken') ? localStorage.getItem('updateresidenttoken') : '');
+    const [receivetoken, setReceivetoken] = useState(localStorage.getItem('receivetoken') ? localStorage.getItem('receivetoken') : '');
     const [roottoken, setRoottoken] = useState(localStorage.getItem('roottoken') ? localStorage.getItem('roottoken') : '');
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
@@ -48,7 +49,12 @@ const AppContextProvider = (props) => {
 
     const value = {
         username, setUsername,
-        token, setToken, updatefeetoken, setUpdatefeetoken, createfeetoken, setCreatefeetoken, updateresidenttoken, setUpdateresidenttoken, roottoken, setRoottoken,
+        token, setToken, 
+        updatefeetoken, setUpdatefeetoken, 
+        createfeetoken, setCreatefeetoken, 
+        updateresidenttoken, setUpdateresidenttoken, 
+        receivetoken, setReceivetoken, 
+        roottoken, setRoottoken,
         backendUrl,
         admins, getAllAdmins,
 

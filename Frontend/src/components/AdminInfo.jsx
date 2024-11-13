@@ -13,12 +13,13 @@ const AdminInfo = ({ admin }) => {
     const [updateAuth, setUpdateAuth] = useState({
         updateFeeAuthority: admin.updateFeeAuthority,
         createFeeAuthority: admin.createFeeAuthority,
-        updateResidentAuthority: admin.updateResidentAuthority
+        updateResidentAuthority: admin.updateResidentAuthority,
+        receiveAuthority: admin.receiveAuthority,
     })
 
     const deleteAdmin = async () => {
 
-        const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa cư dân này?')
+        const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa admin này?')
         if (confirmDelete) {
             try {
 
@@ -51,7 +52,8 @@ const AdminInfo = ({ admin }) => {
                 username: admin.username,
                 updateFeeAuth: updateAuth.updateFeeAuthority,
                 createFeeAuth: updateAuth.createFeeAuthority,
-                updateResidentAuth: updateAuth.updateResidentAuthority
+                updateResidentAuth: updateAuth.updateResidentAuthority,
+                receiveAuthority: updateAuth.receiveAuthority
             }, { headers: { roottoken } })
 
             if (data.success) {
@@ -73,6 +75,10 @@ const AdminInfo = ({ admin }) => {
 
     return (
         <div className=' relative flex flex-col gap-4 p-6 hover:border-secondary border-2 rounded-xl h-[32vh] transition-all'>
+            <div className=' flex text-gray-600 text-lg'>
+                <p className='font-semibold'>Họ tên: </p>
+                <p className='text-gray-500 ml-4 font-semibold border-b-2 min-w-[200px]'>{admin.name}</p>
+            </div>
             <div className=' flex text-gray-600 text-lg'>
                 <p className='font-semibold'>Tên tài khoản: </p>
                 <p className='text-gray-500 ml-4 font-semibold border-b-2 min-w-[200px]'>{admin.username}</p>
@@ -111,6 +117,18 @@ const AdminInfo = ({ admin }) => {
                 : <div className={`${admin.updateResidentAuthority ? 'text-primary' : ''} font-semibold text-gray-400 min-h-[27px]`}>
                     <FontAwesomeIcon icon={faCheck} />
                     <span className='font-semibold ml-4'>Quyền cập nhật dân cư</span>
+                </div>
+            }
+            {isEdit ?
+                <div>
+                    <label className="inline-flex items-center">
+                        <input type="checkbox" checked={updateAuth.receiveAuthority} onChange={(e) => setUpdateAuth({...updateAuth, receiveAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full " />
+                        <span className={`${updateAuth.receiveAuthority ? 'text-primary' : 'text-gray-400'} ml-4 font-semibold transition-all`}>Quyền nhận khoản thu và tạo hóa đơn</span>
+                    </label>
+                </div>
+                : <div className={`${admin.receiveAuthority ? 'text-primary' : ''} font-semibold text-gray-400 min-h-[27px]`}>
+                    <FontAwesomeIcon icon={faCheck} />
+                    <span className='font-semibold ml-4'>Quyền nhận khoản thu và tạo hóa đơn</span>
                 </div>
             }
 

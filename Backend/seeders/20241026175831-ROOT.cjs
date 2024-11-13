@@ -24,8 +24,7 @@ module.exports = {
         create_fee_authority: true,
         receive_authority: true,
         is_root: true,
-        first_name: 'ROOT',
-        last_name: 'ROOT',
+        name: 'ROOT',
         created_at: new Date(),
         updated_at: new Date()
       },

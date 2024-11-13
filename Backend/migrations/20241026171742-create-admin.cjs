@@ -48,11 +48,7 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
-      first_name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      last_name: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false
       },

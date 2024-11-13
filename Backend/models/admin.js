@@ -25,8 +25,7 @@ export default (sequelize, DataTypes) => {
       createFeeAuthority: DataTypes.BOOLEAN,
       receiveAuthority: DataTypes.BOOLEAN,
       isRoot: DataTypes.BOOLEAN,
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
+      name: DataTypes.STRING,
     },
     {
       sequelize,
