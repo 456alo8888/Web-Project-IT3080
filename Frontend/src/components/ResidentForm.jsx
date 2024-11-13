@@ -109,11 +109,6 @@ const ResidentForm = () => {
             } else {
                 toast.error(data.message)
             }
-
-            console.log(data);
-
-
-
         } catch (error) {
             toast.error(error.message)
         }

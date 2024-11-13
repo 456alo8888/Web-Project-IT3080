@@ -12,8 +12,6 @@ function buildName(first, mid, last) {
 }
 
 const ResidentInfo = ({ resident }) => {
-  console.log("wtf", resident)
-
   const { backendUrl, updateresidenttoken } = useContext(AppContext)
   const { getAllResidents } = useContext(ResidentContext)
 
@@ -95,7 +93,7 @@ const ResidentInfo = ({ resident }) => {
     if (confirmDelete) {
       try {
 
-        const { data } = await axios.post(backendUrl + '/api/resident/delete-resident', { room: resident.room }, { headers: { updateresidenttoken } })
+        const { data } = await axios.post(backendUrl + '/api/resident/delete-resident', { idCardNumber: resident.idCardNumber }, { headers: { updateresidenttoken } })
 
         if (data.success) {
           toast.success(data.message);
