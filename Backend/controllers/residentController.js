@@ -114,7 +114,7 @@ const deleteResident = async (req, res) => {
 
         const { idCardNumber } = req.body
 
-        await Resident.destroy({ idCardNumber });
+        await Resident.destroy({ where: { idCardNumber } });
 
         return res.json({ success: true, message: "Xóa cư dân thành công" })
     } catch (error) {

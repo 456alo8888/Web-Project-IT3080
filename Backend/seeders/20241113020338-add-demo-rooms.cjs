@@ -6,7 +6,7 @@ module.exports = {
     const rooms = [];
     for (let i = 1; i <= 150; i++) {
       rooms.push({
-        room_number: i,
+        room_number: `${i}-A`,
         head_resident_id: 0, // You can set this to a valid resident ID or leave it null
         created_at: new Date(),
         updated_at: new Date()

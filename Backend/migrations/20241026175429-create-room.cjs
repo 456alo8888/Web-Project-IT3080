@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       room_number: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       head_resident_id: {
         type: Sequelize.INTEGER,
