@@ -63,7 +63,7 @@ const ResidentForm = () => {
 
         applyFilter()
 
-    }, [search])
+    }, [search, residents])
 
 
     const handleSubmit = async (e) => {

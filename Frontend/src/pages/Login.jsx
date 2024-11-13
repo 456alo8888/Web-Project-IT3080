@@ -10,17 +10,19 @@ import axios from 'axios';
 
 const Login = () => {
 
-    const {username, setUsername, token, setToken, setUpdatefeetoken, setCreatefeetoken, setUpdateresidenttoken, setRoottoken, backendUrl } = useContext(AppContext)
+    const { username, setUsername, token, setToken, setUpdatefeetoken, setCreatefeetoken, setUpdateresidenttoken, setRoottoken, backendUrl } = useContext(AppContext)
     const [passwordVisible, setPasswordVisible] = useState(false)
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
+        setLoading(true)
         try {
 
             const { data } = await axios.post(backendUrl + '/api/admin/login', { username, password })
 
-            
+
             if (data.success) {
 
                 localStorage.setItem('username', username);
@@ -33,8 +35,6 @@ const Login = () => {
                 setCreatefeetoken(data.createfeetoken);
                 localStorage.setItem("updateresidenttoken", data.updateresidenttoken);
                 setUpdateresidenttoken(data.updateresidenttoken);
-                localStorage.setItem("receivetoken", data.receivetoken);
-                setUpdatefeetoken(data.receivetoken);
                 localStorage.setItem("roottoken", data.roottoken);
                 setRoottoken(data.roottoken);
             } else {
@@ -45,6 +45,8 @@ const Login = () => {
         } catch (error) {
             console.log(error);
             toast.error(error.message)
+        } finally {
+            setLoading(false)
         }
 
     };
@@ -79,7 +81,9 @@ const Login = () => {
                         <input type="checkbox" className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full " required />
                         <span className="ml-2">Tôi đồng ý với các <span className='text-primary '>điều khoản</span> </span>
                     </label>
-                    <button type='submit' className='w-full mt-4 p-3 bg-primary rounded-2xl hover:opacity-[90%] hover:-translate-y-1 hover:shadow-[5px_5px_15px_rgba(0,0,0,0.3)] transition-all transition-1  text-xl font-bold text-white tracking-wide'>Submit</button>
+                    <button type='submit' className='w-full flex justify-center items-center min-h-[52px]  mt-4 p-3 bg-primary rounded-2xl hover:opacity-[90%] hover:-translate-y-1 hover:shadow-[5px_5px_15px_rgba(0,0,0,0.3)] transition-all transition-1 '>
+                        {loading ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div> : <span className='font-bold  text-xl  text-white tracking-wide'>Đăng nhập</span>}
+                    </button>
                     <div className="flex justify-center items-center p-2">
                         <p className='text-sm'>Tại đây có? <span className='ml-1 text-primary cursor-pointer hover:underline hover:'>Đổi mật khẩu</span></p>
                     </div>
