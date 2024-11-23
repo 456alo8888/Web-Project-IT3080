@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = (await import(`${__dirname}/../config/config.js`)).default[env];
+const config = (await import(`file:///${__dirname}/../config/config.js`)).default[env];
 const db = {};
 
 let sequelize;
@@ -29,7 +29,7 @@ const files = fs.readdirSync(__dirname)
   });
 
 for (const file of files) {
-  const model = (await import(path.join(__dirname, file))).default(sequelize, Sequelize.DataTypes);
+  const model = (await import(`file:///${path.join(__dirname, file)}`)).default(sequelize, Sequelize.DataTypes);
   db[model.name] = model;
 }
 
