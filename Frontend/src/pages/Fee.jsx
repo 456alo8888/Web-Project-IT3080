@@ -145,7 +145,7 @@ const Fee = () => {
 
     setFeepayInfo((prev) =>
       prev.map((resident, i) =>
-        i === index ? { ...resident, cost: Number(newValue) } : resident
+        i === index ? { ...resident, cost: newValue } : resident
       )
     );
 
