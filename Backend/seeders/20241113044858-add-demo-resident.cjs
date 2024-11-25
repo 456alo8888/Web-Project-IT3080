@@ -6,9 +6,7 @@ module.exports = {
    
    for (let i = 0; i < 100; i++) {
      residents.push({
-       first_name: faker.person.firstName(),
-       middle_name: faker.person.firstName(),
-       last_name: faker.person.lastName(),
+       name: faker.person.fullName(),
        age: faker.number.int({ min: 18, max: 80 }),
        gender: faker.helpers.arrayElement(['male', 'female']),
        phone_number: faker.phone.number(),

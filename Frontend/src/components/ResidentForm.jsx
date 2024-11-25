@@ -8,15 +8,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons';
 import ResidentInfo from './ResidentInfo';
 
-function splitFullName(fullName) {
-    const nameParts = fullName.trim().split(/\s+/); // Split by any whitespace
+// function splitFullName(fullName) {
+//     const nameParts = fullName.trim().split(/\s+/); // Split by any whitespace
   
-    const firstName = nameParts[0] || '';
-    const middleName = nameParts.length > 2 ? nameParts.slice(1, -1).join(' ') : '';
-    const lastName = nameParts[nameParts.length - 1] || '';
+//     const firstName = nameParts[0] || '';
+//     const middleName = nameParts.length > 2 ? nameParts.slice(1, -1).join(' ') : '';
+//     const lastName = nameParts[nameParts.length - 1] || '';
   
-    return { firstName, middleName, lastName };
-  }
+//     return { firstName, middleName, lastName };
+//   }
 
 const ResidentForm = () => {
     const [residentImg, setResidentImg] = useState('')
@@ -41,9 +41,7 @@ const ResidentForm = () => {
         if (search) {
             setFilterResidents(residents.filter(
                 re => re.roomNumber.includes(search) 
-                || re.firstName?.toLowerCase().includes(search)
-                || re.middleName?.toLowerCase().includes(search)
-                || re.lastName?.toLowerCase().includes(search)
+                || re.name?.toLowerCase().includes(search)
             ))
         } else {
             setFilterResidents(residents)
@@ -77,15 +75,17 @@ const ResidentForm = () => {
                 return toast.error("Chưa chọn ảnh cư dân")
             }
 
-            const { firstName, middleName, lastName } = splitFullName(name)
+            // const { firstName, middleName, lastName } = splitFullName(name)
 
             const formData = new FormData()
 
             formData.append('image', residentImg)
             formData.append('room', room)
-            formData.append('firstName', firstName)
-            formData.append('lastName', lastName)
-            formData.append('middleName', middleName)
+            // formData.append('firstName', firstName)
+            // formData.append('lastName', lastName)
+            // formData.append('middleName', middleName)
+
+            formData.append('name', name)
             formData.append('gender', gender)
             formData.append('age', Number(age))
             formData.append('idCardNumber', cccd)

@@ -12,12 +12,12 @@ const createResident = async (req, res) => {
             return res.json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
         }
 
-        const { room, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber } = req.body
+        const { room,name, age, gender, phoneNumber, idCardNumber } = req.body
         const imageFile = req.file
         console.log(req.body);
         // console.log(req.file);
 
-        if (!room || !firstName || !lastName || !age || !gender || !phoneNumber || !idCardNumber) {
+        if (!room || !name || !age || !gender || !phoneNumber || !idCardNumber) {
             return res.json({ success: false, message: "Thiếu dữ liệu" })
         }
 
@@ -35,7 +35,7 @@ const createResident = async (req, res) => {
         const image = imageUpload.secure_url
 
         const residentData = {
-            roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, image
+            roomId, name, age, gender, phoneNumber, idCardNumber, image
         }
 
         if (!Resident.create(residentData)) {
@@ -63,7 +63,7 @@ const updateResident = async (req, res) => {
             return res.json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
         }
 
-        const { room, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber } = req.body
+        const { room, name , age, gender, phoneNumber, idCardNumber } = req.body
 
         const roomRecord = Room.findOne({ where: { roomNumber: room } })
         if (!roomRecord) {
@@ -80,7 +80,7 @@ const updateResident = async (req, res) => {
 
         const [updatedRows] = await Resident.update(
             {
-                roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, image
+                roomId, name, age, gender, phoneNumber, idCardNumber, image
             }, 
             { 
                 where : { idCardNumber },

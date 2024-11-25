@@ -18,9 +18,7 @@ export default (sequelize, DataTypes) => {
 
   Resident.init(
     {
-      firstName: DataTypes.STRING,
-      middleName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
+      name: DataTypes.STRING,
       age: DataTypes.INTEGER,
       gender: DataTypes.STRING,
       phoneNumber: DataTypes.STRING,
