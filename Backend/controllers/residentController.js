@@ -1,6 +1,23 @@
 import { v2 as cloudinary } from "cloudinary"
 import db from "../models/index.js"
 const { Resident, Room } = db
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET_KEY
+});
+
+const uploadImage = async (imagePath) => {
+    try {
+        const result = await cloudinary.uploader.upload(imagePath);
+        return result.secure_url;
+    } catch (error) {
+        throw new Error('Image upload failed');
+    }
+};
 
 const createResident = async (req, res) => {
 
@@ -15,12 +32,11 @@ const createResident = async (req, res) => {
         const { room,name, age, gender, phoneNumber, idCardNumber } = req.body
         const imageFile = req.file
         console.log(req.body);
-        // console.log(req.file);
+        console.log(req.file);
 
         if (!imageFile) {
             return res.json({ success: false, message: "Thiếu ảnh" })
         }
-
         if (!room || !name || !age || !gender || !phoneNumber || !idCardNumber) {
             return res.json({ success: false, message: "Thiếu dữ liệu" })
         }
@@ -35,7 +51,10 @@ const createResident = async (req, res) => {
             return res.json({ success: false, message: "CCCD phải có đúng 12 số" })
         }
 
-        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { 
+            resource_type: "image",
+            format: "png"
+        })
         const image = imageUpload.secure_url
 
         const residentData = {
@@ -56,55 +75,44 @@ const createResident = async (req, res) => {
 
 };
 
-
 const updateResident = async (req, res) => {
-
     try {
+        const { updateresidenttoken } = req.headers;
 
-        const {updateresidenttoken} = req.headers
-
-        if(!updateresidenttoken) {
-            return res.json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
+        if (!updateresidenttoken) {
+            return res.json({ success: false, message: "Bạn không có quyền cập nhật dân cư" });
         }
 
-        const { room, name , age, gender, phoneNumber, idCardNumber } = req.body
+        const { room, name, age, gender, phoneNumber, idCardNumber } = req.body;
+        const image = req.file;
 
-        const roomRecord = Room.findOne({ where: { roomNumber: room } })
+        const roomRecord = await Room.findOne({ where: { roomNumber: room } });
         if (!roomRecord) {
-            return res.json({ success: false, message: "Phòng không tồn tại"})
-        }
-        const roomId = roomRecord.id
-
-        if (idCardNumber.length !== 12) {
-            return res.json({ success: false, message: "CCCD phải có đúng 12 số" })
+            return res.json({ success: false, message: "Phòng không tồn tại" });
         }
 
-        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
-        const image = imageUpload.secure_url
-
-        const [updatedRows] = await Resident.update(
-            {
-                roomId, name, age, gender, phoneNumber, idCardNumber, image
-            }, 
-            { 
-                where : { idCardNumber },
-                returning: true,
-                plain: true,
-            } 
-        )
-        if (!updatedRows) {
-            return res.status(400).json({ success: false, message: 'Không tìm thấy cư dân'})
+        const resident = await Resident.findOne({ where: { id: req.params.id } });
+        if (!resident) {
+            return res.json({ success: false, message: "Cư dân không tồn tại" });
         }
 
-        res.json({ success: true, message: "Cập nhật thành công" })
+        let updatedData = { name, age, gender, phoneNumber, idCardNumber, roomId: roomRecord.id };
 
+        if (image) {
+            const imageUrl = await uploadImage(image.path);
+            updatedData.imageUrl = imageUrl;
+        }
+
+        await resident.update(updatedData);
+
+        res.json({ success: true, message: "Cập nhật cư dân thành công" });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
-
+        res.json({ success: false, message: error.message });
     }
+};
 
-}
+
 
 const deleteResident = async (req, res) => {
 
@@ -150,5 +158,15 @@ const allResident = async (req, res) => {
     }
 }
 
+const roomList = async (req, res) => {
+    try {
+        const rooms = await Room.findAll({ attributes: ['roomNumber'] });
+        return res.json({ success: true, rooms });
+    } catch (error) {
+        console.log(error);
+        return res.json({ success: false, message: error.message });
+    }
+}
 
-export { createResident, updateResident, deleteResident, allResident }
+
+export { createResident, updateResident, deleteResident, allResident , roomList }
