@@ -17,6 +17,10 @@ const createResident = async (req, res) => {
         console.log(req.body);
         // console.log(req.file);
 
+        if (!imageFile) {
+            return res.json({ success: false, message: "Thiếu ảnh" })
+        }
+
         if (!room || !name || !age || !gender || !phoneNumber || !idCardNumber) {
             return res.json({ success: false, message: "Thiếu dữ liệu" })
         }

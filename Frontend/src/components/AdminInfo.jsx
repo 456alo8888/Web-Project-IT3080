@@ -74,7 +74,7 @@ const AdminInfo = ({ admin }) => {
 
 
     return (
-        <div className=' relative flex flex-col gap-4 p-6 hover:border-secondary border-2 rounded-xl h-[32vh] transition-all'>
+        <div className=' relative flex flex-col gap-4 p-6 hover:border-secondary hover:shadow-custom-green border-2 rounded-xl max-h-[46vh] transition-all'>
             <div className=' flex text-gray-600 text-lg'>
                 <p className='font-semibold'>Họ tên: </p>
                 <p className='text-gray-500 ml-4 font-semibold border-b-2 min-w-[200px]'>{admin.name}</p>
@@ -86,7 +86,7 @@ const AdminInfo = ({ admin }) => {
             {isEdit ?
                 <div>
                     <label className="inline-flex items-center">
-                        <input type="checkbox" checked={updateAuth.updateFeeAuthority} onChange={(e) => setUpdateAuth({...updateAuth, updateFeeAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full " />
+                        <input type="checkbox" checked={updateAuth.updateFeeAuthority} onChange={(e) => setUpdateAuth({...updateAuth, updateFeeAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-gray-200 border-gray-300 rounded-full " />
                         <span className={`${updateAuth.updateFeeAuthority ? 'text-primary' : 'text-gray-400'} ml-4 font-semibold transition-all`}>Quyền cập nhật khoản thu </span>
                     </label>
                 </div>
@@ -98,7 +98,7 @@ const AdminInfo = ({ admin }) => {
             {isEdit ?
                 <div>
                     <label className="inline-flex items-center">
-                        <input type="checkbox" checked={updateAuth.createFeeAuthority} onChange={(e) => setUpdateAuth({...updateAuth, createFeeAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full " />
+                        <input type="checkbox" checked={updateAuth.createFeeAuthority} onChange={(e) => setUpdateAuth({...updateAuth, createFeeAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-gray-200 border-gray-300 rounded-full " />
                         <span className={`${updateAuth.createFeeAuthority ? 'text-primary' : 'text-gray-400'} ml-4 font-semibold transition-all`}>Quyền tao khoản thu </span>
                     </label>
                 </div>
@@ -110,7 +110,7 @@ const AdminInfo = ({ admin }) => {
             {isEdit ?
                 <div>
                     <label className="inline-flex items-center">
-                        <input type="checkbox" checked={updateAuth.updateResidentAuthority} onChange={(e) => setUpdateAuth({...updateAuth, updateResidentAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full " />
+                        <input type="checkbox" checked={updateAuth.updateResidentAuthority} onChange={(e) => setUpdateAuth({...updateAuth, updateResidentAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-gray-200 border-gray-300 rounded-full " />
                         <span className={`${updateAuth.updateResidentAuthority ? 'text-primary' : 'text-gray-400'} ml-4 font-semibold transition-all`}>Quyền cập nhật dân cư </span>
                     </label>
                 </div>
@@ -122,7 +122,7 @@ const AdminInfo = ({ admin }) => {
             {isEdit ?
                 <div>
                     <label className="inline-flex items-center">
-                        <input type="checkbox" checked={updateAuth.receiveAuthority} onChange={(e) => setUpdateAuth({...updateAuth, receiveAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full " />
+                        <input type="checkbox" checked={updateAuth.receiveAuthority} onChange={(e) => setUpdateAuth({...updateAuth, receiveAuthority: e.target.checked}) } className="transition-all h-4 w-4 accent-primary text-gray-200 border-gray-300 rounded-full " />
                         <span className={`${updateAuth.receiveAuthority ? 'text-primary' : 'text-gray-400'} ml-4 font-semibold transition-all`}>Quyền nhận khoản thu và tạo hóa đơn</span>
                     </label>
                 </div>
