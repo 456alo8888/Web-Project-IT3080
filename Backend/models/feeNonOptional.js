@@ -23,8 +23,9 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Fee',
+      modelName: 'FeeNonOptional',
       underscored: true,
+      tableName: 'fees_non_optional'
     }
   );
 

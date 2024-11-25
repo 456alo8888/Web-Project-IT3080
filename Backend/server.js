@@ -4,7 +4,7 @@ import 'dotenv/config'
 import connectCloudinary from './config/cloudinary.js'
 import adminRouter from './routes/adminRoute.js'
 import residentRouter from './routes/residentRoute.js'
-// import feeRouter from './routes/feeRoute.js'
+import feeRouter from './routes/feeRoute.js'
 // import historyRouter from './routes/historyRoute.js'
 
 //App Config
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 //api endpoint
 app.use('/api/admin', adminRouter)
 app.use('/api/resident', residentRouter)
-// app.use('/api/fee', feeRouter)
+app.use('/api/fees', feeRouter)
 // app.use('/api/history', historyRouter)
 
 
