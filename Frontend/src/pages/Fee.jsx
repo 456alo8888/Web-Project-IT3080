@@ -84,7 +84,7 @@ const Fee = () => {
       if (filters.includes('THANG_NAY')) {
         searchFee = searchFee.filter(fee => {
           const deadlineDay = new Date(fee.deadline)
-          return deadlineDay.getFullYear === today.getFullYear && deadlineDay.getMonth === today.getMonth
+          return deadlineDay.getFullYear() === today.getFullYear() && deadlineDay.getMonth === today.getMonth()
         })
       }
 

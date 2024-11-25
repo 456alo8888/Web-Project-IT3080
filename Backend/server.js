@@ -9,6 +9,7 @@ import residentRouter from './routes/residentRoute.js'
 
 //App Config
 const app = express()
+
 const port = process.env.PORT || 4000
  
 
