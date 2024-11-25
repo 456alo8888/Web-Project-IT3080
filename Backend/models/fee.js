@@ -12,7 +12,8 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Fee.hasOne(models.FeeOptional, { foreignKey: 'id' });
+      Fee.hasOne(models.FeeNonOptional, { foreignKey: 'id' });
     }
   }
 

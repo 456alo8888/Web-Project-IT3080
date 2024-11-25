@@ -128,7 +128,7 @@ export async function getNonOptionalTypes(req, res) {
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
-export const parseCsv = async (req, res) => {
+export async function parseCsv(req, res) {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'Không có file' });
@@ -188,5 +188,36 @@ export const parseCsv = async (req, res) => {
     console.error('Error processing CSV:', error);
     // Return an error response
     res.status(500).json({ message: error });
+  }
+};
+
+export async function getAllFees(req, res) {
+  try {
+    const feeAttributes = ['id', 'name', 'isOptional', 'deadline', 'houseCount', 'paidCount', 'createdAt'];
+    // Fetch all fees with their associated variant data
+    const fees = await Fee.findAll({
+      attributes: feeAttributes,
+      include: [{
+        model: FeeOptional,
+        attributes: ['lowerBound'],
+      }],
+    });
+    const data = fees.map((f) => ({
+      isOptional: f.isOptional,
+      deadline: f.deadline,
+      name: f.name,
+      id: f.id,
+      createdAt: f.createdAt,
+      count: f.isOptional ? null : f.houseCount,
+      finished: f.paidCount,
+      ...(f.isOptional ? { lowerBound: f.lowerBound } : {})
+    }));
+    res.status(200).json({
+      message: 'OK',
+      data: data,
+    });
+  } catch (error) {
+    console.error('Error fetching fees:', error);
+    res.status(500).json({ message: error});
   }
 };
