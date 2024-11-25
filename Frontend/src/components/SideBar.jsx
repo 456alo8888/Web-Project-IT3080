@@ -68,14 +68,14 @@ const SideBar = () => {
 
       <hr className='w-1/2 border-2 rounded-lg border-primary mt-2 mb-[1vh]' />
 
-      <section className='mt-[1vh] max-h-[25vh] text-center'>
+      <section className='mt-[1vh] max-h-[20vh] text-center'>
         <p className='text-gray-600 font-semibold text-[2vh]'>@{username}</p>
         <ul className='mt-[1vh] mb-1'>
-          <li className={`flex items-center gap-2 text-[1.7vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${updatefeetoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${updatefeetoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Cập nhật khoản thu</li>
-          <li className={`flex items-center gap-2 text-[1.7vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${createfeetoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${createfeetoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Tạo khoản thu mới</li>
-          <li className={`flex items-center gap-2 text-[1.7vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${updateresidenttoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${updateresidenttoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Cập nhật dân cư</li>
-          <li className={`flex items-center gap-2 text-[1.7vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${receivetoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${receivetoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Nhận khoản thu</li>
-          <li className={`flex items-center gap-2 text-[1.7vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${roottoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${roottoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Thêm, xóa admin</li>
+          <li className={`flex items-center gap-2 text-[1.5vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${updatefeetoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${updatefeetoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Cập nhật khoản thu</li>
+          <li className={`flex items-center gap-2 text-[1.5vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${createfeetoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${createfeetoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Tạo khoản thu mới</li>
+          <li className={`flex items-center gap-2 text-[1.5vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${updateresidenttoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${updateresidenttoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Cập nhật dân cư</li>
+          <li className={`flex items-center gap-2 text-[1.5vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${receivetoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${receivetoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Nhận khoản thu</li>
+          <li className={`flex items-center gap-2 text-[1.5vh] font-semibold my-[1vh] hover:-translate-y-1 transition-all ${roottoken ? 'text-primary' : 'text-gray-500'}`}><p className={`w-2 h-2 ${roottoken ? 'bg-primary' : 'bg-gray-500'} rounded-full`}></p> Thêm, xóa admin</li>
         </ul>
       </section>
 
