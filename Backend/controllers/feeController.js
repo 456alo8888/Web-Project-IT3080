@@ -1,6 +1,8 @@
-import db from '../models/index.js'
+import db from '../models/index.js';
+import csvParser from 'csv-parser';
+import fs from 'fs';
 
-const { Fee, FeeOptional, FeeNonOptional, Admin, FeeType, Bill } = db;
+const { Fee, FeeOptional, FeeNonOptional, Admin, FeeType, Bill, Room } = db;
 
 async function createOptionalFee(req, res, adminId, deadline) {
   const { name, lowerBound } = req.body;
@@ -106,3 +108,85 @@ export async function createFee(req, res) {
     return res.status(500).json({ message: error });
   }
 }
+
+export async function getNonOptionalTypes(req, res) {
+  try {
+    const feeTypes = await FeeType.findAll({
+      attributes: ['id', 'name'],
+    });
+
+    res.status(200).json({
+      data: feeTypes,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error });
+  }
+}
+
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+export const parseCsv = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Không có file' });
+    }
+
+    const filePath = req.file.path;
+    const records = [];
+
+    fs.createReadStream(filePath)
+      .pipe(csvParser())
+      .on('data', (row) => {
+        // Push each row to records array
+        records.push(row);
+      })
+      .on('end', async () => {
+        // Delete the file after reading
+        fs.unlinkSync(filePath);
+
+        // Validate required columns
+        if (!records.every((record) => 'room' in record && 'value' in record)) {
+          return res.status(400).json({ message: 'File phải có cột "room" và "value"' });
+        }
+
+        // Fetch all rooms from the database
+        const rooms = await Room.findAll({
+          attributes: ['id', 'roomName'],
+        });
+
+        // Create a map for room name to ID
+        const roomMap = rooms.reduce((map, room) => {
+          map[room.roomName] = room.id;
+          return map;
+        }, {});
+
+        // Process the records and match with room IDs
+        const data = records.map((record) => ({
+          id: roomMap[record.room] || null, // Use null if the room name doesn't exist in the database
+          name: record.room,
+          value: parseInt(record.value), // Convert value to a number
+        }));
+
+        // Check if any room name was unmatched
+        if (data.some((entry) => entry.id === null)) {
+          return res.status(400).json({
+            message: 'Có một số phòng không tồn tại',
+            data,
+          });
+        }
+
+        // Respond with the processed data
+        res.status(200).json({
+          message: 'File OK',
+          data,
+        });
+      });
+  } catch (error) {
+    console.error('Error processing CSV:', error);
+    // Return an error response
+    res.status(500).json({ message: error });
+  }
+};
