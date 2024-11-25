@@ -1,27 +1,21 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
+  /**
+   * @param {import('sequelize').QueryInterface} queryInterface
+   * @param {typeof import('sequelize')} Sequelize
+   * @returns {Promise<void>}
+   */
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('memberships', {
+    await queryInterface.createTable('rooms', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      resident_id: {
-        type: Sequelize.INTEGER,
-        // references: {
-        //   model: 'Residents',
-        //   key: 'id'
-        // }
-      },
-      room_id: {
-        type: Sequelize.INTEGER,
-        // references: {
-        //   model: 'Rooms',
-        //   key: 'id'
-        // }
+      room_name: {
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,
@@ -34,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('memberships');
+    await queryInterface.dropTable('rooms');
   }
 };

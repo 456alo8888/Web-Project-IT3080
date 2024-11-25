@@ -5,7 +5,7 @@ import { Model } from 'sequelize';
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
-  class Fee extends Model {
+  class FeeNonOptional extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -16,14 +16,10 @@ export default (sequelize, DataTypes) => {
     }
   }
 
-  Fee.init(
+  FeeNonOptional.init(
     {
-      name: DataTypes.STRING,
-      isOptional: DataTypes.BOOLEAN,
-      createdById: DataTypes.INTEGER,
-      deadline: DataTypes.DATE,
-      houseCount: DataTypes.INTEGER,
-      paidCount: DataTypes.INTEGER
+      date: DataTypes.DATE,
+      type: DataTypes.INTEGER,
     },
     {
       sequelize,
@@ -32,5 +28,5 @@ export default (sequelize, DataTypes) => {
     }
   );
 
-  return Fee;
+  return FeeNonOptional;
 };

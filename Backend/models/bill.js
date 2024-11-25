@@ -19,9 +19,8 @@ export default (sequelize, DataTypes) => {
   Bill.init(
     {
       roomId: DataTypes.INTEGER,
-      billName: DataTypes.STRING,
-      deadline: DataTypes.DATE,
-      cost: DataTypes.FLOAT,
+      feeId: DataTypes.INTEGER,
+      value: DataTypes.INTEGER,
     },
     {
       sequelize,

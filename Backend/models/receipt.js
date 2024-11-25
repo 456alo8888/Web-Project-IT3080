@@ -20,7 +20,7 @@ export default (sequelize, DataTypes) => {
     {
       adminId: DataTypes.INTEGER,
       residentId: DataTypes.INTEGER,
-      moneyAmount: DataTypes.FLOAT,
+      value: DataTypes.FLOAT,
       billId: DataTypes.INTEGER,
     },
     {

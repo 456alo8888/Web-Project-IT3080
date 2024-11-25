@@ -18,7 +18,7 @@ export default (sequelize, DataTypes) => {
 
   Room.init(
     {
-      roomNumber: DataTypes.INTEGER,
+      roomName: DataTypes.STRING,
       headResidentId: DataTypes.INTEGER,
     },
     {

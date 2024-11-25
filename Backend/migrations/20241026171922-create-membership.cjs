@@ -1,8 +1,13 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
+  /**
+   * @param {import('sequelize').QueryInterface} queryInterface
+   * @param {typeof import('sequelize')} Sequelize
+   * @returns {Promise<void>}
+   */
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('donation_receipts', {
+    await queryInterface.createTable('memberships', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,28 +16,21 @@ module.exports = {
       },
       resident_id: {
         type: Sequelize.INTEGER,
-        // references: {
-        //   model: 'Residents',
-        //   key: 'id'
-        // }
+        references: {
+          model: 'residents',
+          key: 'id'
+        },
+        allowNull: false,
+        onDelete: 'CASCADE'
       },
-      fee_name: {
-        type: Sequelize.STRING,
-        // references: {
-        //   model: 'Fees',
-        //   key: 'name'
-        // }
-      },
-      admin_id: {
+      room_id: {
         type: Sequelize.INTEGER,
-        // references: {
-        //   model: 'Admins',
-        //   key: 'id'
-        // }
-      },
-      money_amount: {
-        type: Sequelize.FLOAT,
-        allowNull: false
+        references: {
+          model: 'rooms',
+          key: 'id'
+        },
+        allowNull: false,
+        onDelete: 'CASCADE',
       },
       created_at: {
         allowNull: false,
@@ -45,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('donation_receipts');
+    await queryInterface.dropTable('memberships');
   }
 };
