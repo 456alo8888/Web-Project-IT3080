@@ -28,7 +28,7 @@ const FeeContextProvider = (props) => {
 
         try {
 
-            const { data } = await axios.get(backendUrl + '/api/fee/all-fee')
+            const { data } = await axios.get(backendUrl + '/api/fees')
 
             if (data.success) {
                 setFees(data.fees.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))

@@ -7,19 +7,16 @@ import residentRouter from './routes/residentRoute.js'
 import feeRouter from './routes/feeRoute.js'
 import roomRouter from './routes/roomRoute.js'
 
-//App Config
-const app = express()
-
-const port = process.env.PORT || 4000
- 
+// App Config
+const app = express();
+const port = process.env.PORT || 4000;
 
 // Database and image storage
-connectCloudinary()
+connectCloudinary();
 
-
-//middlewares
-app.use(cors())
-app.use(express.json())
+// Middlewares
+app.use(cors());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
@@ -30,9 +27,8 @@ app.use('/api/resident', residentRouter)
 app.use('/api/fees', feeRouter)
 app.use('/api/rooms', roomRouter)
 
+app.get('/', (req, res) => {
+  res.send("API Working");
+});
 
-app.get('/', (req, res)=>{
-    res.send("API Working")
-})
-
-app.listen(port, () => console.log('Server started on PORT: ' + port))
+app.listen(port, () => console.log('Server started on PORT: ' + port));

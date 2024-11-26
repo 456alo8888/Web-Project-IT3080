@@ -10,6 +10,7 @@ import SideBar from './components/SideBar'
 import { AppContext } from './context/AppContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import ResidentInRoomId from './components/ResidentInRoomId'
 
 const App = () => {
   const { token, setToken } = useContext(AppContext);
@@ -41,6 +42,7 @@ const App = () => {
               <Route path='/fee' element={<Fee />} />
               <Route path='/history' element={<History />} />
               <Route path='/resident' element={<Resident />} />
+              <Route path='/resident/:id' element={<ResidentInRoomId />} />
               <Route path='/admin' element={<Admin />} />
             </Routes>
           </div>

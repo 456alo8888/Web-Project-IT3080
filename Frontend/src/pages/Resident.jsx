@@ -3,7 +3,7 @@ import ResidentForm from '../components/ResidentForm'
 
 const Resident = () => {
   return (
-    <div className='px-8 py-2'>
+    <div className=''>
       <ResidentForm />
     </div>
   )

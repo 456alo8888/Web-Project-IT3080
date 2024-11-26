@@ -18,6 +18,10 @@
   color: white;
 }
 
+.custom-checkbox {
+  @apply h-4 w-4 accent-primary border-gray-300;
+}
+
 /* Add this to your global CSS file */
 ::-webkit-scrollbar {
   width: 8px;
