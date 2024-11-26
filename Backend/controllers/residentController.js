@@ -74,6 +74,7 @@ const createResident = async (req, res) => {
 };
 
 
+
 const updateResident = async (req, res) => {
     try {
         const { updateresidenttoken } = req.headers;
@@ -83,34 +84,41 @@ const updateResident = async (req, res) => {
         }
 
         const { room, name, age, gender, phoneNumber, idCardNumber } = req.body;
-        const image = req.file;
 
+        // Tìm phòng theo roomNumber
         const roomRecord = await Room.findOne({ where: { roomNumber: room } });
         if (!roomRecord) {
             return res.json({ success: false, message: "Phòng không tồn tại" });
         }
-        console.log(roomRecord.toJSON());
+
+        // Tìm cư dân theo id trong path params
         const resident = await Resident.findOne({ where: { id: req.params.id } });
         if (!resident) {
             return res.json({ success: false, message: "Cư dân không tồn tại" });
         }
 
-        let updatedData = { name, age, gender, phoneNumber, idCardNumber, roomId: roomRecord.id };
+        // Tạo đối tượng dữ liệu cập nhật
+        const updatedData = {
+            name,
+            age,
+            gender,
+            phoneNumber,
+            idCardNumber,
+            roomId: roomRecord.id
+        };
 
-        if (image) {
-            const imageUrl = await uploadImage(image.path);
-            updatedData.imageUrl = imageUrl;
-        }
-
+        // Cập nhật cư dân với dữ liệu mới
         await resident.update(updatedData);
 
         res.json({ success: true, message: "Cập nhật cư dân thành công" });
     } catch (error) {
+        if (error.name === 'SequelizeValidationError') {
+            return res.json({ success: false, message: "Validation error", errors: error.errors });
+        }
         console.log(error);
         res.json({ success: false, message: error.message });
     }
 };
-
 
 
 
@@ -173,6 +181,9 @@ const changeHeadResident = async (req, res) => {
 
         const { residentId } = req.body; // Extract the residentId from the request body
 
+
+        // const
+
         // Find the resident by residentId
         const resident = await Resident.findOne({ where: { id: residentId } });
         if (!resident) {
@@ -230,5 +241,47 @@ const roomList = async (req, res) => {
     }
 };
 
-export { allResident, createResident, deleteResident, updateResident, roomList, changeHeadResident };
+
+const roomResident = async (req, res) => {
+    try {
+        const { roomId } = req.params; // Extract the roomId parameter from the request parameters
+
+        // Find the room by roomId to get the headResidentId
+        const room = await Room.findOne({
+            where: { id: roomId },
+            attributes: ['headResidentId']
+        });
+
+        if (!room) {
+            return res.json({ success: false, message: "Phòng không tồn tại" });
+        }
+
+        // Find all residents of the specified room
+        const residents = await Resident.findAll({
+            where: { roomId },
+            attributes: ['id', 'name', 'age', 'gender', 'phoneNumber', 'idCardNumber'], // Select specific attributes
+            raw: true,
+            nest: true,
+        });
+
+        // Format the response
+        const formattedResidents = residents.map(resi => ({
+            id: resi.id,
+            name: resi.name,
+            age: resi.age,
+            gender: resi.gender,
+            phoneNumber: resi.phoneNumber,
+            idCardNumber: resi.idCardNumber,
+        }));
+
+        return res.json({ success: true, headResidentId: room.headResidentId, residents: formattedResidents });
+    } catch (error) {
+        console.log(error);
+        return res.json({ success: false, message: error.message });
+    }
+};
+
+// export { allResident, createResident, deleteResident, updateResident, roomList, changeHeadResident, roomResident };
+
+export { allResident, createResident, deleteResident, updateResident, roomList, changeHeadResident, roomResident };
 

@@ -1,5 +1,5 @@
 import express from 'express'
-import { allResident, createResident, deleteResident, updateResident, roomList , changeHeadResident} from '../controllers/residentController.js'
+import { allResident, createResident, deleteResident, updateResident, roomList , changeHeadResident , roomResident} from '../controllers/residentController.js'
 import upload from '../middlewares/multer.js'
 
 const residentRouter = express.Router()
@@ -10,4 +10,5 @@ residentRouter.delete('/delete-resident/:id', upload.none(), deleteResident)
 residentRouter.get('/all-resident', upload.none(), allResident)
 residentRouter.get('/room-list', upload.none(), roomList)
 residentRouter.put('/change-head-resident',upload.none(), changeHeadResident);
+residentRouter.get('/resident-from-room/:roomId' , upload.none(), roomResident);
 export default residentRouter
