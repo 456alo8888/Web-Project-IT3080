@@ -12,7 +12,8 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Room.hasMany(models.Resident, { foreignKey: 'roomId' });
+      Room.hasMany(models.Resident);
+      Room.hasOne(models.Bill)
     }
   }
 

@@ -14,6 +14,8 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       Fee.hasOne(models.FeeOptional, { foreignKey: 'id' });
       Fee.hasOne(models.FeeNonOptional, { foreignKey: 'id' });
+
+      Fee.hasMany(models.Bill);
     }
   }
 

@@ -1,6 +1,7 @@
 import db from '../models/index.js';
 import csvParser from 'csv-parser';
 import fs from 'fs';
+import { Op } from 'sequelize';
 
 const { Fee, FeeOptional, FeeNonOptional, Admin, FeeType, Bill, Room } = db;
 
@@ -221,3 +222,43 @@ export async function getAllFees(req, res) {
     res.status(500).json({ message: error});
   }
 };
+
+export async function getNonOptionalFeeInfo(req, res) {
+  try {
+    const { id: idsRaw } = req.query;
+    if (!idsRaw) {
+      return res.status(200).json([]);
+    }
+    const ids = JSON.parse(`[${idsRaw}]`);
+    
+    const fees = await Fee.findAll({
+      where: { id: { [Op.in]: ids } },
+      include: [{
+        model: Bill,
+        attributes: ['roomId', 'value'],
+        include: [{
+          model: Room,
+          attributes: ['roomName'],
+        }],
+      }],
+    });
+
+    const data = fees.map((f) => ({
+      deadline: f.deadline,
+      name: f.name,
+      id: f.id,
+      createdAt: f.createdAt,
+      count: f.houseCount,
+      finished: f.paidCount,
+      values: f.Bills.map((b) => ({
+        roomId: b.roomId,
+        room: b.Room.roomName,
+        value: b.value
+      })),
+    }));
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error('Error get fee info:', error);
+    res.status(500).json({ message: error});
+  }
+}
