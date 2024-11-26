@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //api endpoint
 app.use('/api/admin', adminRouter)
-app.use('/api/resident', residentRouter)
+app.use('/api/residents', residentRouter)
 app.use('/api/fees', feeRouter)
 app.use('/api/rooms', roomRouter)
 
