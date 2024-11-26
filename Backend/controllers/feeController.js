@@ -3,7 +3,14 @@ import csvParser from 'csv-parser';
 import fs from 'fs';
 import { Op } from 'sequelize';
 
-const { Fee, FeeOptional, FeeNonOptional, Admin, FeeType, Bill, Room, Resident, Receipt } = db;
+const { 
+  Fee, FeeOptional, FeeNonOptional, 
+  Admin, 
+  FeeType, Bill, 
+  Room, 
+  Resident, 
+  Receipt, DonationReceipt 
+} = db;
 
 async function createOptionalFee(req, res, adminId, deadline) {
   const { name, lowerBound } = req.body;
@@ -320,7 +327,6 @@ export async function addRoomPaymentOfFee(req, res) {
     }
     const fee = await Fee.findOne({ 
       where: { id: feeId },
-      attributes: ['name', 'createdAt', 'id', 'paidCount'],
       include: [
         { 
           model: FeeOptional,
@@ -329,6 +335,7 @@ export async function addRoomPaymentOfFee(req, res) {
         { 
           model: Bill,
           where: { roomId },
+          required: false,
           attributes: ['value', 'id'],
           include: [{
             model: Room,
@@ -373,6 +380,38 @@ export async function addRoomPaymentOfFee(req, res) {
         createdAt: receipt.createdAt
       };
       return res.status(200).json(data);
+    } else {
+      if (fee.FeeOptional.lowerBound == null || fee.FeeOptional.lowerBound > value) {
+        return res.status(400).json({ message: 'Không đủ số tiền' });
+      }
+      if (await DonationReceipt.findOne({ where: { feeId: fee.id, roomId } })) {
+        return res.status(400).json({ message: 'Phòng đã nộp khoản phí này'});
+      }
+      const room = await Room.findOne({ where: { id: roomId } });
+      if (!room) {
+        return res.status(400).json({ message: 'Phòng không tồn tại' });
+      }
+      const resident = await Resident.findOne({ where: { id: residentId } });
+      if (!resident || resident.roomId != roomId) {
+        return res.status(400).json({ message: 'Cư dân không thuộc phòng này' });
+      }
+      const receipt = await DonationReceipt.create({
+        adminId,
+        residentId,
+        value,
+        feeId,
+        roomId
+      });
+      fee.paidCount++;
+      await fee.save();
+      return res.status(200).json({
+        name: fee.name,
+        resident: resident.name,
+        admin: admin.name,
+        room: room.roomName,
+        value,
+        createdAt: receipt.createdAt
+      })
     }
 
   } catch (error) {
