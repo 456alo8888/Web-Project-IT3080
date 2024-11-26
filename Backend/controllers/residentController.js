@@ -1,7 +1,6 @@
 import { v2 as cloudinary } from "cloudinary"
 import db from "../models/index.js"
 const { Resident, Room } = db
-const cloudinary = require('cloudinary').v2;
 
 // Configure Cloudinary
 cloudinary.config({
@@ -52,8 +51,7 @@ const createResident = async (req, res) => {
         }
 
         const imageUpload = await cloudinary.uploader.upload(imageFile.path, { 
-            resource_type: "image",
-            format: "png"
+            resource_type: "image"
         })
         const image = imageUpload.secure_url
 
@@ -75,6 +73,7 @@ const createResident = async (req, res) => {
 
 };
 
+
 const updateResident = async (req, res) => {
     try {
         const { updateresidenttoken } = req.headers;
@@ -90,7 +89,7 @@ const updateResident = async (req, res) => {
         if (!roomRecord) {
             return res.json({ success: false, message: "Phòng không tồn tại" });
         }
-
+        console.log(roomRecord.toJSON());
         const resident = await Resident.findOne({ where: { id: req.params.id } });
         if (!resident) {
             return res.json({ success: false, message: "Cư dân không tồn tại" });
@@ -114,28 +113,34 @@ const updateResident = async (req, res) => {
 
 
 
+
 const deleteResident = async (req, res) => {
-
     try {
+        const { updateresidenttoken } = req.headers;
 
-        const {updateresidenttoken} = req.headers
 
-        if(!updateresidenttoken) {
-            return res.json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
+        if (!updateresidenttoken) {
+            return res.json({ success: false, message: "Bạn không có quyền cập nhật dân cư" });
         }
 
-        const { idCardNumber } = req.body
+        const { id } = req.params; // Extract the id parameter from the request parameters
 
-        await Resident.destroy({ where: { idCardNumber } });
-
-        return res.json({ success: true, message: "Xóa cư dân thành công" })
+        // Find the resident by ID
+        const resident = await Resident.findOne({ where: { id } });
+        if (!resident) {
+            return res.json({ success: false, message: "Cư dân không tồn tại" });
+        }
+        console.log(resident.toJSON());
+        
+        // Delete the resident record
+        await resident.destroy();
+        console.log('finish');
+        return res.json({ success: true, message: "Xóa cư dân thành công" });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
-
-}
-
+};
 
 const allResident = async (req, res) => {
     try {
@@ -158,15 +163,72 @@ const allResident = async (req, res) => {
     }
 }
 
+const changeHeadResident = async (req, res) => {
+    try {
+        const { updateresidenttoken } = req.headers;
+
+        if (!updateresidenttoken) {
+            return res.json({ success: false, message: "Bạn không có quyền cập nhật dân cư" });
+        }
+
+        const { residentId } = req.body; // Extract the residentId from the request body
+
+        // Find the resident by residentId
+        const resident = await Resident.findOne({ where: { id: residentId } });
+        if (!resident) {
+            return res.json({ success: false, message: "Cư dân không tồn tại" });
+        }
+
+        // Find the room associated with the resident
+        const room = await Room.findOne({ where: { id: resident.roomId } });
+        if (!room) {
+            return res.json({ success: false, message: "Phòng không tồn tại" });
+        }
+
+        // Update the headResidentId of the room
+        room.headResidentId = residentId;
+        await room.save();
+
+        res.json({ success: true, message: "Cập nhật chủ hộ thành công" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
 const roomList = async (req, res) => {
     try {
-        const rooms = await Room.findAll({ attributes: ['roomNumber'] });
-        return res.json({ success: true, rooms });
+        // Find all rooms
+        const rooms = await Room.findAll({
+            attributes: ['id', 'roomNumber', 'headResidentId'],
+            include: [
+                {
+                    model: Resident,
+                    attributes: ['id', 'name'],
+                }
+            ]
+        });
+
+        // Format the response
+        const formattedRooms = rooms.map(room => {
+            const residentCount = room.Residents ? room.Residents.length : 0;
+            const headResident = room.Residents.find(resident => resident.id === room.headResidentId);
+            const headResidentName = headResident ? headResident.name : null;
+
+            return {
+                id: room.id,
+                name: room.roomNumber,
+                residentCount: residentCount,
+                headResidentName: headResidentName
+            };
+        });
+
+        return res.json({ success: true, data: formattedRooms });
     } catch (error) {
         console.log(error);
         return res.json({ success: false, message: error.message });
     }
-}
+};
 
+export { allResident, createResident, deleteResident, updateResident, roomList, changeHeadResident };
 
-export { createResident, updateResident, deleteResident, allResident , roomList }
