@@ -6,14 +6,18 @@ import {
   parseCsv, 
   getAllFees,
   getNonOptionalFeeInfo, 
+  updateNonOptionalFee,
+  deleteFee
 } from '../controllers/feeController.js'
 
 const feeRouter = express.Router()
 
+feeRouter.get('/', upload.none(), getAllFees)
 feeRouter.post('/', upload.none(), createFee)
-feeRouter.get('/non-optional/types', upload.none(), getNonOptionalTypes)
+feeRouter.delete('/:id', upload.none(), deleteFee)
 feeRouter.post('/csv', upload.single('file'), parseCsv)
 feeRouter.get('/non-optional', upload.none(), getNonOptionalFeeInfo)
-feeRouter.get('/', upload.none(), getAllFees)
+feeRouter.put('/non-optional/:id', upload.none(), updateNonOptionalFee)
+feeRouter.get('/non-optional/types', upload.none(), getNonOptionalTypes)
 
 export default feeRouter
