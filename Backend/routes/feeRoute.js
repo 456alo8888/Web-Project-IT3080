@@ -8,7 +8,7 @@ import {
   getNonOptionalFeeInfo, 
   updateNonOptionalFee,
   deleteFee,
-  addRoomPaymentOfFee
+  addRoomPaymentOfFee,
 } from '../controllers/feeController.js'
 
 const feeRouter = express.Router()

@@ -419,3 +419,68 @@ export async function addRoomPaymentOfFee(req, res) {
     res.status(500).json({ message: error});
   }
 }
+
+export async function getRoomPaymentsInfo(req, res) {
+  try {
+    const { id: roomId } = req.params;
+    if (roomId == null) {
+      return res.status(400).json({ message: 'Thiếu dữ liệu' });
+    }
+    const bills = await Bill.findAll({ 
+      where: { roomId },
+      include: [
+        { 
+          model: Receipt, 
+          include: [ 
+            { model: Resident, attributes: ['name'] },
+            { model: Admin, attributes: ['name'] },
+          ]
+        },
+        { model: Fee }
+      ]
+    });
+    const paidNonOptional = bills
+      .filter(b => b.Receipt != null)
+      .map(b => ({
+        feeId: b.feeId,
+        name: b.Fee.name,
+        resident: b.Receipt.Resident?.name ?? 'Đã xóa',
+        admin: b.Receipt.Admin?.name ?? 'Đã xóa',
+        value: b.value,
+        isOptional: false,
+        createdAt: b.createdAt,
+      }));
+    const unpaid = bills
+      .filter(b => b.Receipt == null)
+      .map(b => ({
+        feeId: b.feeId,
+        name: b.Fee.name,
+        value: b.value,
+      }));
+    const donations = await DonationReceipt.findAll({ 
+      where: { roomId },
+      include: [
+        { model: Fee, required: true },
+        { model: Resident, attributes: ['name'] },
+        { model: Admin, attributes: ['name'] },
+      ]
+    });
+    const paidOptional = donations.map(d => ({
+      feeId: d.feeId,
+      name: d.Fee.name,
+      resident: d.Resident?.name ?? 'Đã xóa',
+      admin: d.Admin?.name ?? 'Đã xóa',
+      value: d.value,
+      isOptional: true,
+      createdAt: d.Fee.createdAt,
+    }));
+    const data = {
+      paid: [...paidOptional, ...paidNonOptional],
+      unpaid,
+    }
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error('Error getting room payment:', error);
+    res.status(500).json({ message: error});
+  }
+}

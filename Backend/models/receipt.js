@@ -13,6 +13,8 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       Receipt.belongsTo(models.Bill);
+      Receipt.belongsTo(models.Resident);
+      Receipt.belongsTo(models.Admin);
     }
   }
 

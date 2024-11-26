@@ -5,7 +5,7 @@ import connectCloudinary from './config/cloudinary.js'
 import adminRouter from './routes/adminRoute.js'
 import residentRouter from './routes/residentRoute.js'
 import feeRouter from './routes/feeRoute.js'
-// import historyRouter from './routes/historyRoute.js'
+import roomRouter from './routes/roomRoute.js'
 
 //App Config
 const app = express()
@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/admin', adminRouter)
 app.use('/api/resident', residentRouter)
 app.use('/api/fees', feeRouter)
-// app.use('/api/history', historyRouter)
+app.use('/api/rooms', roomRouter)
 
 
 app.get('/', (req, res)=>{
