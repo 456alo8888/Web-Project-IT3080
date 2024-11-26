@@ -7,7 +7,8 @@ import {
   getAllFees,
   getNonOptionalFeeInfo, 
   updateNonOptionalFee,
-  deleteFee
+  deleteFee,
+  addRoomPaymentOfFee
 } from '../controllers/feeController.js'
 
 const feeRouter = express.Router()
@@ -15,6 +16,7 @@ const feeRouter = express.Router()
 feeRouter.get('/', upload.none(), getAllFees)
 feeRouter.post('/', upload.none(), createFee)
 feeRouter.delete('/:id', upload.none(), deleteFee)
+feeRouter.post('/:id/pay', upload.none(), addRoomPaymentOfFee)
 feeRouter.post('/csv', upload.single('file'), parseCsv)
 feeRouter.get('/non-optional', upload.none(), getNonOptionalFeeInfo)
 feeRouter.put('/non-optional/:id', upload.none(), updateNonOptionalFee)

@@ -3,7 +3,7 @@ import csvParser from 'csv-parser';
 import fs from 'fs';
 import { Op } from 'sequelize';
 
-const { Fee, FeeOptional, FeeNonOptional, Admin, FeeType, Bill, Room } = db;
+const { Fee, FeeOptional, FeeNonOptional, Admin, FeeType, Bill, Room, Resident, Receipt } = db;
 
 async function createOptionalFee(req, res, adminId, deadline) {
   const { name, lowerBound } = req.body;
@@ -89,7 +89,7 @@ export async function createFee(req, res) {
   try {
     const { createfeetoken } = req.headers;
     if (!createfeetoken) {
-      return res.status(401).json({message: 'Bạn không có quyền tạo phí'});
+      return res.status(403).json({message: 'Bạn không có quyền tạo phí'});
     }
 
     const { deadline, isOptional, adminId } = req.body;
@@ -266,7 +266,7 @@ export async function getNonOptionalFeeInfo(req, res) {
 export async function updateNonOptionalFee(req, res) {
   try {
     if (!req.headers.updatefeetoken) {
-      return res.status(401).json({ message: 'Bạn không có quyền cập nhật khoản thu'});
+      return res.status(403).json({ message: 'Bạn không có quyền cập nhật khoản thu'});
     }
     const { roomId, value } = req.body;
     const { id: feeId } = req.params;
@@ -290,7 +290,7 @@ export async function updateNonOptionalFee(req, res) {
 export async function deleteFee(req, res) {
   try {
     if (!req.headers.updatefeetoken) {
-      return res.status(401).json({ message: 'Bạn không có quyền xóa khoản thu'});
+      return res.status(403).json({ message: 'Bạn không có quyền xóa khoản thu'});
     }
     const { id: feeId } = req.params;
     if (!feeId) {
@@ -300,6 +300,83 @@ export async function deleteFee(req, res) {
     return res.status(200).json({ message: 'Xóa khoản thu thành công'});
   } catch (error) {
     console.error('Error deleting fee:', error);
+    res.status(500).json({ message: error});
+  }
+}
+
+export async function addRoomPaymentOfFee(req, res) {
+  try {
+    if (!req.headers.receivefeetoken) {
+      return res.status(403).json({ message: 'Bạn không có quyền nhận khoản thu'});
+    }
+    const { id: feeId } = req.params;
+    const { residentId, value, roomId, adminId } = req.body;
+    if (feeId == null || residentId == null || value == null || roomId == null || adminId == null) {
+      return res.status(400).json({ message: 'Thiếu dữ liệu' });
+    }
+    const admin = await Admin.findOne({ where: { id: adminId }});
+    if (!admin) {
+      return res.status(400).json({ message: 'Admin không tồn tại'});
+    }
+    const fee = await Fee.findOne({ 
+      where: { id: feeId },
+      attributes: ['name', 'createdAt', 'id', 'paidCount'],
+      include: [
+        { 
+          model: FeeOptional,
+          attributes: ['lowerBound'],
+        },
+        { 
+          model: Bill,
+          where: { roomId },
+          attributes: ['value', 'id'],
+          include: [{
+            model: Room,
+            attributes: ['roomName'],
+            include: [{
+              model: Resident,
+              attributes: ['name', 'id']
+            }],
+          }],
+        },
+      ],
+    });
+    if (!fee) {
+      return res.status(400).json({ message: 'Không tồn tại khoản phí'});
+    }
+    if (!fee.isOptional) {
+      if (!fee.Bills?.[0]) {
+        return res.status(400).json({ message: 'Phòng không cần nộp phí này' });
+      }
+      const bill = fee.Bills[0];
+      const resident = bill.Room?.Residents?.find(r => r.id == residentId);
+      if (!resident) {
+        return res.status(400).json({ message: 'Cư dân không thuộc phòng này' });
+      }
+      if (value < bill.value) {
+        return res.status(400).json({ message: 'Không đủ số tiền' });
+      }
+      if (await Receipt.findOne( 
+        { where: { billId: bill.id } }
+      )) {
+        return res.status(400).json({ message: 'Phòng đã nộp khoản phí này'});
+      }
+      const receipt = await Receipt.create({ adminId: admin.id, residentId, value, billId: bill.id });
+      fee.paidCount++;
+      await fee.save();
+      const data = {
+        name: fee.name,
+        resident: resident.name,
+        admin: admin.name,
+        room: bill.Room.roomName,
+        value: value,
+        createdAt: receipt.createdAt
+      };
+      return res.status(200).json(data);
+    }
+
+  } catch (error) {
+    console.error('Error adding payment:', error);
     res.status(500).json({ message: error});
   }
 }

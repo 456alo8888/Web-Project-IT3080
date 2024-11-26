@@ -14,6 +14,7 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       Bill.belongsTo(models.Fee);
       Bill.belongsTo(models.Room);
+      Bill.hasOne(models.Receipt);
     }
   }
 
