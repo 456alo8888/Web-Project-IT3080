@@ -4,11 +4,8 @@ import upload from '../middlewares/multer.js'
 
 const residentRouter = express.Router()
 
-residentRouter.post('/create-resident', upload.single('avatar'), createResident)
-residentRouter.put('/update-resident/:id', upload.none(), updateResident)
-residentRouter.delete('/delete-resident/:id', upload.none(), deleteResident)
-residentRouter.get('/all-resident', upload.none(), allResident)
-residentRouter.get('/room-list', upload.none(), roomList)
-residentRouter.put('/change-head-resident',upload.none(), changeHeadResident);
-residentRouter.get('/resident-from-room/:roomId' , upload.none(), roomResident);
+residentRouter.post('/', upload.single('avatar'), createResident)
+residentRouter.put('/:id', upload.none(), updateResident)
+residentRouter.delete('/:id', upload.none(), deleteResident)
+residentRouter.get('/', upload.none(), allResident)
 export default residentRouter

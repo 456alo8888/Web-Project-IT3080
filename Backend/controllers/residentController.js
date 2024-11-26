@@ -2,22 +2,6 @@ import { v2 as cloudinary } from "cloudinary"
 import db from "../models/index.js"
 const { Resident, Room } = db
 
-// Configure Cloudinary
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET_KEY
-});
-
-const uploadImage = async (imagePath) => {
-    try {
-        const result = await cloudinary.uploader.upload(imagePath);
-        return result.secure_url;
-    } catch (error) {
-        throw new Error('Image upload failed');
-    }
-};
-
 const createResident = async (req, res) => {
 
     try {
@@ -25,26 +9,34 @@ const createResident = async (req, res) => {
         const {updateresidenttoken} = req.headers
 
         if(!updateresidenttoken) {
-            return res.json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
+            return res.status(403).json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
         }
 
-        const { room,name, age, gender, phoneNumber, idCardNumber } = req.body
+        const { roomId, name, age, gender, phoneNumber, idCardNumber, isHeadResident } = req.body
         const imageFile = req.file
-        console.log(req.body);
-        console.log(req.file);
+        //console.log(req.body);
+        //console.log(req.file);
 
         if (!imageFile) {
-            return res.json({ success: false, message: "Thiếu ảnh" })
+            return res.status(400).json({ success: false, message: "Thiếu ảnh" })
         }
-        if (!room || !name || !age || !gender || !phoneNumber || !idCardNumber) {
-            return res.json({ success: false, message: "Thiếu dữ liệu" })
+        if (roomId == null 
+            || name == null 
+            || age == null 
+            || gender == null 
+            || phoneNumber == null 
+            || idCardNumber == null
+            || isHeadResident == null) {
+            return res.status(400).json({ success: false, message: "Thiếu dữ liệu" })
         }
 
-        const roomRecord = await Room.findOne({ where: { roomNumber: room } })
+        const roomRecord = await Room.findOne({ where: { roomId } })
         if (!roomRecord) {
-            return res.json({ success: false, message: "Phòng không tồn tại"})
+            return res.status(400).json({ success: false, message: "Phòng không tồn tại"})
         }
-        const roomId = roomRecord.id
+        if (isHeadResident == true && roomRecord.headResidentId != null) {
+            return res.status(400).json({ message: 'Đã có trưởng phòng'})
+        }
 
         if (idCardNumber.length !== 12) {
             return res.json({ success: false, message: "CCCD phải có đúng 12 số" })
@@ -59,16 +51,21 @@ const createResident = async (req, res) => {
             roomId, name, age, gender, phoneNumber, idCardNumber, image
         }
 
-        if (!Resident.create(residentData)) {
+        const resident = await Resident.create(residentData)
+        if (!resident) {
             res.status(500).json({ success: false, message: "Lỗi hệ thống", })
         }
+        if (isHeadResident) {
+            roomRecord.headResidentId = resident.id
+            await roomRecord.save()
+        }
 
-        res.json({ success: true, message: "Thêm cư dân thành công" })
+        res.status(200).json({ success: true, message: "Thêm cư dân thành công" })
 
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
+        res.status(500).json({ success: false, message: error.message })
     }
 
 };
@@ -84,6 +81,7 @@ const updateResident = async (req, res) => {
         }
 
         const { room, name, age, gender, phoneNumber, idCardNumber } = req.body;
+        const { id } = req.params;
 
         // Tìm phòng theo roomNumber
         const roomRecord = await Room.findOne({ where: { roomNumber: room } });
@@ -92,7 +90,7 @@ const updateResident = async (req, res) => {
         }
 
         // Tìm cư dân theo id trong path params
-        const resident = await Resident.findOne({ where: { id: req.params.id } });
+        const resident = await Resident.findOne({ where: { id } });
         if (!resident) {
             return res.json({ success: false, message: "Cư dân không tồn tại" });
         }
@@ -115,7 +113,7 @@ const updateResident = async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             return res.json({ success: false, message: "Validation error", errors: error.errors });
         }
-        console.log(error);
+        //console.log(error);
         res.json({ success: false, message: error.message });
     }
 };
@@ -138,14 +136,14 @@ const deleteResident = async (req, res) => {
         if (!resident) {
             return res.json({ success: false, message: "Cư dân không tồn tại" });
         }
-        console.log(resident.toJSON());
+        //console.log(resident.toJSON());
         
         // Delete the resident record
         await resident.destroy();
-        console.log('finish');
+        //console.log('finish');
         return res.json({ success: true, message: "Xóa cư dân thành công" });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         res.json({ success: false, message: error.message });
     }
 };
@@ -166,7 +164,7 @@ const allResident = async (req, res) => {
         }))
         return res.json({ success: true, residents });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         return res.json({ success: false, message: error.message });
     }
 }
@@ -202,7 +200,7 @@ const changeHeadResident = async (req, res) => {
 
         res.json({ success: true, message: "Cập nhật chủ hộ thành công" });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         res.json({ success: false, message: error.message });
     }
 };
@@ -236,7 +234,7 @@ const roomList = async (req, res) => {
 
         return res.json({ success: true, data: formattedRooms });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         return res.json({ success: false, message: error.message });
     }
 };
@@ -276,7 +274,7 @@ const roomResident = async (req, res) => {
 
         return res.json({ success: true, headResidentId: room.headResidentId, residents: formattedResidents });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         return res.json({ success: false, message: error.message });
     }
 };
