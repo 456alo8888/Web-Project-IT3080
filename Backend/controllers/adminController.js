@@ -26,7 +26,9 @@ const signup = async (req, res) => {
 
         // console.log(req.body);
 
-        if (!username || !password || !updateFeeAuth | !createFeeAuth || !updateResidentAuth || !receiveAuthority || !name) {
+        if (username == null || password == null || updateFeeAuth == null 
+            || createFeeAuth == null || updateResidentAuth == null 
+            || receiveAuthority == null || name == null) {
             return res.json({ success: false, message: "Thiếu dữ liệu" })
         }
 
@@ -48,7 +50,7 @@ const signup = async (req, res) => {
             receiveAuthority: receiveAuthority === 'true' ? true : false
         }
 
-        Admin.create(adminData)
+        await Admin.create(adminData)
 
         return res.json({ success: true, message: "Thêm ADMIN thành công" })
 
@@ -94,7 +96,8 @@ const login = async (req, res) => {
             createfeetoken, 
             updateresidenttoken, 
             roottoken,
-            receivetoken
+            receivetoken,
+            id: admin.id
         })
 
     } catch (error) {

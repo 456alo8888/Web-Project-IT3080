@@ -38,7 +38,7 @@ const createResident = async (req, res) => {
             roomId, firstName, middleName, lastName, age, gender, phoneNumber, idCardNumber, image
         }
 
-        if (!Resident.create(residentData)) {
+        if (!(await Resident.create(residentData))) {
             res.status(500).json({ success: false, message: "Lỗi hệ thống", })
         }
 
