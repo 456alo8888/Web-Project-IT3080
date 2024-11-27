@@ -7,6 +7,8 @@ export const AppContext = createContext();
 const AppContextProvider = (props) => {
 
     const [username, setUsername] = useState(localStorage.getItem('username') ? localStorage.getItem('username') : '')
+    const [adminId, setAdminId] = useState(localStorage.getItem('adminId') ? localStorage.getItem('adminId') : '')
+
     const [admins, setAdmins] = useState([])
 
     const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '');
@@ -57,6 +59,7 @@ const AppContextProvider = (props) => {
         roottoken, setRoottoken,
         backendUrl,
         admins, getAllAdmins,
+        adminId, setAdminId
 
     }
 

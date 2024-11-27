@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const Login = () => {
 
-    const { username, setUsername, token, setToken, setUpdatefeetoken, setCreatefeetoken, setUpdateresidenttoken, setRoottoken, backendUrl } = useContext(AppContext)
+    const { username,setAdminId, setUsername, token, setToken, setReceivetoken, setUpdatefeetoken, setCreatefeetoken, setUpdateresidenttoken, setRoottoken, backendUrl } = useContext(AppContext)
     const [passwordVisible, setPasswordVisible] = useState(false)
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
@@ -37,6 +37,10 @@ const Login = () => {
                 setUpdateresidenttoken(data.updateresidenttoken);
                 localStorage.setItem("roottoken", data.roottoken);
                 setRoottoken(data.roottoken);
+                localStorage.setItem("receivetoken", data.receivetoken);
+                setReceivetoken(data.receivetoken);
+                localStorage.setItem("adminId", data.id);
+                setAdminId(data.id);
             } else {
                 toast.error(data.message)
             }
