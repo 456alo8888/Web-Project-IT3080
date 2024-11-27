@@ -12,7 +12,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [payAmount, setPayAmount] = useState(paymentInfo?.needPay);
-  const [residentId, setResidentId] = useState();
+  const [residentId, setResidentId] = useState(31);
 
   const [roomResident, setRoomResident] = useState([
     {
@@ -32,19 +32,23 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
       id: 32,
     },
   ]);
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, receivetoken, adminId } = useContext(AppContext);
   const { getAllFees } = useContext(FeeContext);
 
   const submitAddPayment = async () => {
     setIsLoading(true);
+    console.log(receivetoken);
+    
     try {
       const { data, status } = await axios.post(
-        backendUrl + `/api/fee/${room.id}/pay`,
+        backendUrl + `/api/fees/${room.id}/pay`,
         {
           residentId: residentId,
           value: payAmount,
           roomId: room.id,
-        }
+          adminId: Number(adminId),
+        },
+        {headers: {receivefeetoken: receivetoken}}
       );
 
       if (status === 200) {
