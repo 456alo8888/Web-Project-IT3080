@@ -59,7 +59,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
         toast.error(status);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +79,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -142,7 +142,8 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
                   : "focus:border-b-red-500 text-red-300"
               }  `}
               value={payAmount}
-              placeholder="100"
+              onChange={(e) => setPayAmount(e.target.value)}
+              placeholder="ex: 100"
             />
           </div>
           <div className="flex gap-4">

@@ -46,7 +46,6 @@ const ResidentInRoomId = () => {
   const {
     showResidentForm,
     setShowResidentForm,
-    getAllResidents,
     residents,
     rooms,
     getAllRooms,
@@ -73,13 +72,13 @@ const ResidentInRoomId = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
   useEffect(() => {
     getRoomResident();
-  }, []);
+  }, [rooms]);
 
   return (
     <div className="mb-4 w-full h-screen relative px-8 py-2 overflow-visible">

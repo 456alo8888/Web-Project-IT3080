@@ -33,7 +33,7 @@ const AdminInfo = ({ admin }) => {
                 }
 
             } catch (error) {
-                toast.error(error.message)
+                toast.error(error.response.data.message)
             }
         }
 
@@ -65,7 +65,7 @@ const AdminInfo = ({ admin }) => {
             }
 
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.response.data.message)
         }
 
     }

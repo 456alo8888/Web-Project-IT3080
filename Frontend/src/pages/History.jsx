@@ -12,74 +12,49 @@ const History = () => {
   const navigate = useNavigate()
   const [search, setSearch] = useState("");
   const [show, setShow] = useState(false);
-  const [allPaymentInfo, setAllPaymentInfo] = useState([
-    {
-      roomId: 123,
-      payment: {
-        paid: [
-          {
-            feeId: 123,
-            name: "Ủng hộ miền trung",
-            resident: "Trần văn lâm",
-            admin: "Nguyễn Thị Lành",
-            value: 123,
-            isOptional: true,
-            createdAt: "2024-11-23T15:30:00Z",
-          },
-        ],
-        unpaid: [
-          {
-            feeId: 67,
-            name: "Tiền nhà tháng 10/2009",
-            value: 123,
-          },
-        ],
-      },
-    }
-  ]);
   const [filterRoom, setFilterRoom] = useState([]);
 
   const { backendUrl } = useContext(AppContext);
 
-  const { fees } = useContext(FeeContext);
+  const { fees, allPaymentInfo, loadAllPaymentInfo } = useContext(FeeContext);
   const { rooms } = useContext(ResidentContext);
 
   //load paymentinfo
-  const loadPaymentInfo = async (roomId) => {
-    try {
-      const { data, status } = await axios.get(
-        `${backendUrl}/api/rooms/${roomId}/pay`
-      );
+  // const loadPaymentInfo = async (roomId) => {
+  //   try {
+  //     const { data, status } = await axios.get(
+  //       `${backendUrl}/api/rooms/${roomId}/pay`
+  //     );
 
-      if (status === 200) {
-        return { roomId, payment: data }; // Return the new payment info
-      } else {
-        toast.error(`Error: ${status}`);
-        return null; // Return null in case of error
-      }
-    } catch (error) {
-      toast.error(error.message);
-      return null; // Return null in case of exception
-    }
-  };
+  //     if (status === 200) {
+  //       return { roomId, payment: data }; // Return the new payment info
+  //     } else {
+  //       toast.error(`Error: ${status}`);
+  //       return null; // Return null in case of error
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //     return null; // Return null in case of exception
+  //   }
+  // };
 
-  const loadAllPaymentInfo = async () => {
-    try {
-      // Create an array of promises for all rooms
-      const promises = rooms.map((room) => loadPaymentInfo(room.id));
+  // const loadAllPaymentInfo = async () => {
+  //   try {
+  //     // Create an array of promises for all rooms
+  //     const promises = rooms.map((room) => loadPaymentInfo(room.id));
 
-      // Wait for all promises to resolve
-      const results = await Promise.all(promises);
+  //     // Wait for all promises to resolve
+  //     const results = await Promise.all(promises);
 
-      // Filter out null responses
-      const validResults = results.filter((result) => result !== null);
+  //     // Filter out null responses
+  //     const validResults = results.filter((result) => result !== null);
 
-      // Update state with new payment info
-      setAllPaymentInfo((prev) => [...prev, ...validResults]);
-    } catch (error) {
-      toast.error(`Failed to load payment info: ${error.message}`);
-    }
-  };
+  //     // Update state with new payment info
+  //     setAllPaymentInfo((prev) => [...prev, ...validResults]);
+  //   } catch (error) {
+  //     toast.error(`Failed to load payment info: ${error.response.data.message}`);
+  //   }
+  // };
 
   // funtion to search
 
@@ -97,7 +72,7 @@ const History = () => {
   };
 
   useEffect(() => {
-    loadAllPaymentInfo();
+    // loadAllPaymentInfo();
     console.log(rooms);
     
   }, [rooms]);
@@ -165,7 +140,7 @@ const History = () => {
         } relative grid grid-cols-3 max-h-[80%] overflow-y-auto gap-6 p-8 py-6 h-[85%] bg-white rounded-xl transition-all`}
       >
         {filterRoom.map((room, index) => (
-          <Link to={`/history/${room.id}`} key={index} className="flex flex-col gap-2 text-base text-gray-500 min-h-[150px] p-4 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green">
+          <Link to={`/history/${room.id}`} key={index} className="flex flex-col gap-2 text-base text-gray-500 min-h-[130px] p-4 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green">
             <div className="flex gap-2">
               <p className="font-semibold">Tên phòng:</p>
               <span>{room.name}</span>

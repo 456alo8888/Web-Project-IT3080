@@ -77,8 +77,8 @@ const ResidentForm = () => {
 
       const formData = new FormData();
 
-      formData.append("image", residentImg);
-      formData.append("room", room);
+      formData.append("avatar", residentImg);
+      formData.append("roomId", room);
       // formData.append("firstName", firstName);
       // formData.append("lastName", lastName);
       // formData.append("middleName", middleName);
@@ -89,14 +89,16 @@ const ResidentForm = () => {
       formData.append("phoneNumber", phone);
       formData.append("isHeadResident", isHeadResident);
 
-      const { data } = await axios.post(
-        backendUrl + "/api/resident/create-resident",
+      const response = await axios.post(
+        backendUrl + "/api/residents",
         formData,
         { headers: { updateresidenttoken } }
       );
+      console.log(response);
+      
 
-      if (data.success) {
-        toast.success(data.message);
+      if (response.status === 200) {
+        toast.success(response.data.message);
         setResidentImg("");
         setRoom("");
         setName("");
@@ -105,12 +107,11 @@ const ResidentForm = () => {
         setCccd("");
         setPhone("");
 
-        getAllResidents();
-      } else {
-        toast.error(data.message);
+      } else if (response.status === 400) {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 

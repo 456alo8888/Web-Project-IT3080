@@ -57,7 +57,7 @@ const signup = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.response.data.message })
     }
 
 }
@@ -102,7 +102,7 @@ const login = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.response.data.message })
     }
 
 }
@@ -143,7 +143,7 @@ const changePassword = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.response.data.message })
     }
 
 }
@@ -174,7 +174,7 @@ const deleteAdmin = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.response.data.message })
     }
 
 }
@@ -217,7 +217,7 @@ const changeAuthority = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.response.data.message })
     }
 
 }
@@ -241,7 +241,7 @@ const allAdmin = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        return res.json({ success: false, message: error.message })
+        return res.json({ success: false, message: error.response.data.message })
     }
 
 }

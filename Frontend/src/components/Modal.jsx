@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Modal = ({ isOpen, onClose, idFeeModal }) => {
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, updatefeetoken } = useContext(AppContext);
 
   const [feeValue, setFeeValue] = useState([]);
   const [csvFile, setCsvFile] = useState('')
@@ -80,11 +80,13 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
 
       if (status === 200) {
         data?.length > 0 && setFeeInfo(data[0]?.values);
+        console.log(data);
+        
       } else {
         toast.error(status);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -94,8 +96,10 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
         backendUrl + "/api/fees/non-optional/" + roomId,
         {
           roomId: roomId,
+          feeId: idFeeModal.id,
           value: value,
-        }
+        },
+        {headers: {updatefeetoken: updatefeetoken}}
       );
 
       if (status === 200) {
@@ -105,7 +109,7 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
         toast.error(status);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -123,7 +127,7 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
       getNonOptionalFeeInfo();
 
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.response.data.message)
     }
   }
 
@@ -183,7 +187,7 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
                     onChange={(e) => handleInputChange(index, parseInt(e.target.value))} // Update value on change
                   />
                   <button
-                    onClick={(e) => updateFee(info.roomId, e.target.value)}
+                    onClick={(e) => updateFee(info.roomId, info.value)}
                     className="p-1 px-2 rounded-full hover:opacity-80 hover:-translate-x-2 transition-all bg-primary text-sm text-white"
                   >
                     thay đổi

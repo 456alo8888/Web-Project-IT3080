@@ -28,7 +28,7 @@ const ResidentContextProvider = (props) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -106,7 +106,7 @@ const ResidentContextProvider = (props) => {
           },
         ]);
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -119,7 +119,6 @@ const ResidentContextProvider = (props) => {
   const value = {
     showResidentForm,
     setShowResidentForm,
-    getAllResidents,
     residents,
     rooms,
     getAllRooms,

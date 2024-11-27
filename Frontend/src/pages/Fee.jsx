@@ -22,7 +22,7 @@ const Fee = () => {
   const [filters, setFilters] = useState([]);
 
   //data from context
-  const { backendUrl, createfeetoken, token } = useContext(AppContext);
+  const { backendUrl, createfeetoken, token, adminId } = useContext(AppContext);
   const { residents, rooms } = useContext(ResidentContext);
   const { fees, getAllFees } = useContext(FeeContext);
 
@@ -39,6 +39,7 @@ const Fee = () => {
     { id: 2, name: "tiền điện" },
     { id: 3, name: "tiền nuoc" },
   ]);
+  nonOptionalType.forEach(e => console.log(e));
 
   //state for diaglog NONOPTIONAL FEE INFO
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,7 +53,7 @@ const Fee = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [name, setName] = useState("");
   const [feeType, setFeeType] = useState("BAT_BUOC");
-  const [feepayInfo, setFeepayInfo] = useState([]);
+  // const [feepayInfo, setFeepayInfo] = useState([]);
   const [deadline, setDeadline] = useState(new Date());
   const [costBAT_BUOC, setCostBAT_BUOC] = useState("");
 
@@ -60,20 +61,21 @@ const Fee = () => {
 
   const loadFeeTypes = async () => {
     try {
-      const { data } = await axios.get(
+      const { data, status } = await axios.get(
         backendUrl + "/api/fees/non-optional/types"
       );
 
-      if (data.success) {
-        setNonOptionalType(data);
+      if (status === 200) {
+        setNonOptionalType(data.data);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
+  
   const deleteFee = async (_id) => {
     const confirmDelete = window.confirm(
       "Bạn có chắc chắn muốn xóa khoản thu này?"
@@ -91,7 +93,7 @@ const Fee = () => {
           toast.error(data.message);
         }
       } catch (error) {
-        toast.error(error.message);
+        toast.error(error.response.data.message);
       }
     }
   };
@@ -152,28 +154,7 @@ const Fee = () => {
 
   //for createFee
 
-  useEffect(() => {
-    resetPayinfo();
-  }, [residents]);
 
-  const resetPayinfo = () => {
-    const newFeePayInfo = rooms.map((e) => ({
-      name: e.name,
-      value: 0,
-    }));
-
-    setFeepayInfo(newFeePayInfo);
-  };
-
-  const handleCostChange = (index, newValue) => {
-    setFeepayInfo((prev) =>
-      prev.map((resident, i) =>
-        i === index ? { ...resident, cost: newValue } : resident
-      )
-    );
-
-    console.log(feepayInfo);
-  };
 
   const handleCSVFile = async (e) => {
     const csv = e.target.file[0];
@@ -191,7 +172,7 @@ const Fee = () => {
         }))
       );
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -199,11 +180,8 @@ const Fee = () => {
     e.preventDefault();
     setLoading(true);
 
-    let info = structuredClone(feepayInfo);
+    let info = rooms.map(r => ({roomId: r.id, value: 0}));
 
-    if (feeType === "TU_NGUYEN") {
-      info = feepayInfo.map((e) => ({ ...e, value: 0 }));
-    }
 
     const today = new Date();
     const deadlineDate = new Date(deadline);
@@ -211,6 +189,7 @@ const Fee = () => {
 
     if (deadlineDate < today) {
       toast.error("Hạn nộp phải lớn hơn hôm nay");
+      setLoading(false)
       return;
     }
 
@@ -225,22 +204,22 @@ const Fee = () => {
       formData.append("year", year);
       formData.append("feeList", JSON.stringify(info));
       formData.append("deadline", deadline);
+      formData.append("adminId", adminId)
 
-      const { data } = await axios.post(backendUrl + "/api/fees", formData, {
+      const { data, status } = await axios.post(backendUrl + "/api/fees", formData, {
         headers: { createfeetoken },
       });
 
-      if (data.success) {
+      if (status === 200) {
         toast.success(data.message);
         setName("");
         setDeadline("");
-        resetPayinfo();
         getAllFees();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -283,7 +262,7 @@ const Fee = () => {
     const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
     return Math.abs(Math.round(daysDifference)); // Return absolute value and round off
-  }
+  };
 
   return (
     <div className="w-full h-screen relative p-2 px-8">
@@ -388,7 +367,7 @@ const Fee = () => {
                 onChange={(e) => setTypeId(e.target.value)}
                 className="text-gray-500 bg-gray-50 border-b-2 outline-none p-1 px-2  focus:border-secondary transition-all"
               >
-                {nonOptionalType.map((type, index) => (
+                {nonOptionalType?.map((type, index) => (
                   <option key={index} value={type.id}>
                     {type.name}
                   </option>
@@ -435,27 +414,7 @@ const Fee = () => {
               Phí :<br />{" "}
               <span className="text-sm text-secondary">(ngàn đồng)</span>{" "}
             </p>
-            {feeType === "HOA_DON" ? (
-              <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
-                {feepayInfo.map((resident, index) => (
-                  <div className="min-h-[34px]" key={index}>
-                    <span className="text-normal text-gray-500">
-                      {resident.room} :
-                    </span>
-                    <input
-                      type="number"
-                      value={resident.cost}
-                      onChange={(e) => {
-                        handleCostChange(index, e.target.value);
-                      }}
-                      className="max-w-[200px] text-red-400 mx-2 p-1 px-2 border-b-2 outline-none focus:border-b-secondary transition-all"
-                      placeholder="ex: 200"
-                      required
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : feeType === "BAT_BUOC" ? (
+            {feeType === "BAT_BUOC" ? (
               <>
                 <div className="file-uploader">
                   <label

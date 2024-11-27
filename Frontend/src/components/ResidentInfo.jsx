@@ -22,7 +22,10 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
   const { id } = useParams();
 
   const { backendUrl, updateresidenttoken } = useContext(AppContext);
-  const { getAllResidents } = useContext(ResidentContext);
+  const { getAllRooms, rooms } = useContext(ResidentContext);
+  const roomName = rooms.find(e => e.id === Number(id))?.name
+  console.log(roomName);
+  
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -39,7 +42,8 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
     try {
       const { data, status } = await axios.put(
         backendUrl + `/api/rooms/${id}/head-resident`,
-        { headResidentId: resident.id }
+        { headResidentId: resident.id },
+        {headers: {updateresidenttoken: updateresidenttoken}}
       );
 
       if (status === 200) {
@@ -49,7 +53,7 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -83,7 +87,7 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
 
     try {
       const formData = new FormData();
-      formData.append("roomNumber", updateResident.roomNumber);
+      formData.append("room", roomName);
       formData.append("name", updateResident.name);
       formData.append("gender", updateResident.gender);
       formData.append("age", Number(updateResident.age));
@@ -91,21 +95,21 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
       formData.append("phoneNumber", updateResident.phoneNumber);
 
       const { data, status } = await axios.put(
-        backendUrl + `/api/resident/${resident.id}`,
+        backendUrl + `/api/residents/${resident.id}`,
         formData,
         { headers: { updateresidenttoken } }
       );
 
       if (status === 200) {
         toast.success(data.message);
-        getAllResidents();
         resetForm();
         setIsEdit(false);
+        getAllRooms()
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -116,19 +120,21 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
     if (confirmDelete) {
       try {
         const { data, status } = await axios.delete(
-          backendUrl + "/api/resident/" + resident.id,
-          { idCardNumber: resident.idCardNumber },
-          { headers: { updateresidenttoken } }
+          backendUrl + "/api/residents/" + resident.id,
+          {
+            data: { idCardNumber: resident.idCardNumber }, // Body should be passed as 'data'
+            headers: { updateresidenttoken: updateresidenttoken } // Headers should be inside 'headers'
+          }
         );
 
         if (status) {
           toast.success(data.message);
-          getAllResidents();
+          getAllRooms()
         } else {
           toast.error(data.message);
         }
       } catch (error) {
-        toast.error(error.message);
+        toast.error(error.response.data.message);
       }
     }
   };
@@ -136,7 +142,7 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
   return (
     <form
       onSubmit={handleUpdateSubmit}
-      className="flex h-[32vh] p-2 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green"
+      className="flex h-[210px] p-2 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green"
     >
       <div className="flex flex-col justify-between items-start text-gray-500 text-xl">
         <img

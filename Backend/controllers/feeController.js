@@ -38,6 +38,8 @@ async function createOptionalFee(req, res, adminId, deadline) {
 async function createNonOptionalFee(req, res, adminId, deadline) {
   const { feeList: feeListRaw, typeId, month, year } = req.body;
   if (feeListRaw == null || typeId == null || month == null || year == null) {
+    console.log(req.body);
+    
     return res.status(400).json({message: 'Thiếu thông tin' });
   }
 
@@ -80,12 +82,14 @@ async function createNonOptionalFee(req, res, adminId, deadline) {
     date: new Date(year, month - 1, 1),
     type: typeId
   });
+  console.log(req.body);
 
   await Bill.bulkCreate(bills);
   return res.status(200).json({
     message: 'Thêm phí thành công',
     data: { id: fee.id }
   })
+  
 }
 
 /**
@@ -278,6 +282,8 @@ export async function updateNonOptionalFee(req, res) {
     const { roomId, value } = req.body;
     const { id: feeId } = req.params;
     if (!roomId || !value || !feeId) {
+      console.log(req.body);
+      
       return res.status(400).json({ message: 'Thiếu dữ liệu' });
     }
     if (value < 0) {
