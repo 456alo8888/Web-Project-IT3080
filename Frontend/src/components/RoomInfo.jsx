@@ -11,7 +11,7 @@ const RoomInfo = ({ room }) => {
         </div>
         <div>
           <span className="font-medium text-primary">Tên phòng : </span>
-          <span>{room.name}</span>
+          <span className="text-lg font-medium">{room.name}</span>
         </div>
       </div>
       <div className="flex gap-2 h-6">

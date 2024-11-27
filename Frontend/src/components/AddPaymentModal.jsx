@@ -9,6 +9,7 @@ import { assets } from "../assets/assets";
 import { FeeContext } from "../context/FeeContext";
 
 const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [payAmount, setPayAmount] = useState(paymentInfo?.needPay);
   const [residentId, setResidentId] = useState();
@@ -32,9 +33,9 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
     },
   ]);
   const { backendUrl } = useContext(AppContext);
-  const {getAllFees} = useContext(FeeContext)
+  const { getAllFees } = useContext(FeeContext);
 
-  const addPayment = async () => {
+  const submitAddPayment = async () => {
     setIsLoading(true);
     try {
       const { data, status } = await axios.post(
@@ -48,6 +49,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
 
       if (status === 200) {
         toast.success("Thanh cong");
+        setIsSuccess(true);
         getAllFees();
       } else {
         toast.error(status);
@@ -61,7 +63,9 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
 
   const getRoomResident = async () => {
     try {
-      const { data, status } = await axios.get(backendUrl + `/api/rooms/${room.id}`);
+      const { data, status } = await axios.get(
+        backendUrl + `/api/rooms/${room.id}`
+      );
 
       if (status === 200) {
         setRoomResident(data.data.sort((a, b) => Number(a.id) - Number(b.id)));
@@ -87,16 +91,25 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          className="absolute group p-4 top-4 right-4 text-gray-500 hover:text-gray-700"
         >
           <FontAwesomeIcon
             icon={faPlus}
-            className="text-2xl rotate-[225deg] transition-all ease-in-out"
+            className="text-4xl  group-hover:rotate-[45deg] group-hover:scale-110 rotate-[225deg] transition-all ease-in-out"
           />
         </button>
 
         {/* Modal Content */}
         <section className="flex flex-col gap-6 text-gray-500 text-lg ">
+          {!isSuccess ? (
+            <div className="self-center p-4 text-3xl font-semibold text-primary">
+              Thanh toán
+            </div>
+          ) : (
+            <div className="self-center p-4 text-2xl font-bold text-primary">
+              <img className="w-[150px]" src={assets.success_ani}></img>
+            </div>
+          )}
           <p className="font-semibold">
             Tên phòng : <span>{room?.name}</span>
           </p>
@@ -146,7 +159,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
             </select>
           </div>
           <button
-            onClick={addPayment}
+            onClick={submitAddPayment}
             className="min-w-[50%]  flex justify-center max-w-[60%] self-end p-4 px-8 mt-1 rounded-xl text-white font-medium text-lg mr-6 bg-secondary hover:shadow-[5px_5px_15px_rgba(0,0,0,0.3)] hover:opacity-60 hover:-translate-x-4 transition-all"
           >
             {isLoading ? (
