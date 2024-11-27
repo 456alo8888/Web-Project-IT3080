@@ -91,7 +91,7 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
   const updateFee = async (roomId, value) => {
     try {
       const { data, status } = await axios.put(
-        backendUrl + "/api/fee/non-optional/" + roomId,
+        backendUrl + "/api/fees/non-optional/" + roomId,
         {
           roomId: roomId,
           value: value,
