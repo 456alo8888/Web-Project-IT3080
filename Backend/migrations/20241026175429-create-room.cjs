@@ -2,35 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('receipts', {
+    await queryInterface.createTable('rooms', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      admin_id: {
-        type: Sequelize.INTEGER,
-        // references: {
-        //   model: 'Admins',
-        //   key: 'id'
-        // }
+      room_number: {
+        type: Sequelize.STRING
       },
-      resident_id: {
+      head_resident_id: {
         type: Sequelize.INTEGER,
         // references: {
         //   model: 'Residents',
-        //   key: 'id'
-        // }
-      },
-      money_amount: {
-        type: Sequelize.FLOAT,
-        allowNull: false
-      },
-      bill_id: {
-        type: Sequelize.INTEGER,
-        // references: {
-        //   model: 'Bills',
         //   key: 'id'
         // }
       },
@@ -45,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('receipts');
+    await queryInterface.dropTable('rooms');
   }
 };

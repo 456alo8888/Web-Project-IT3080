@@ -2,33 +2,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('residents', {
+    await queryInterface.createTable('bills', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      age: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      gender: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      phone_number: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-      id_card_number: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
       },
       room_id: {
         type: Sequelize.INTEGER,
@@ -37,9 +16,22 @@ module.exports = {
         //   key: 'id'
         // }
       },
-      image: {
-        type: Sequelize.STRING(2083),
+      bill_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        // preferences: {
+        //   model: 'Fees',
+        //   key: 'name'
+        // }
+      },
+      deadline: {
+        type: Sequelize.DATE,
         allowNull: false
+      },
+      cost: {
+        type: Sequelize.FLOAT,
+        allowNull: false
+
       },
       created_at: {
         allowNull: false,
@@ -52,6 +44,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('residents');
+    await queryInterface.dropTable('bills');
   }
 };

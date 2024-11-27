@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('residents', {
+    await queryInterface.createTable('fees', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,35 +10,28 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false
+        primaryKey: true
       },
-      age: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      gender: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      phone_number: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-      id_card_number: {
+      fee_type: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        enum:['BAT BUOC', 'TU NGUYEN' , 'HOA DON']
       },
-      room_id: {
+      created_by_id: {
         type: Sequelize.INTEGER,
         // references: {
-        //   model: 'Rooms',
+        //   model: 'Admins',
         //   key: 'id'
         // }
       },
-      image: {
-        type: Sequelize.STRING(2083),
+      total: {
+        type: Sequelize.FLOAT,
+        allowNull: false
+      },
+      house_count: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       created_at: {
@@ -52,6 +45,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('residents');
+    await queryInterface.dropTable('fees');
   }
 };
