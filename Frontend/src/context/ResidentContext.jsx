@@ -34,10 +34,10 @@ const ResidentContextProvider = (props) => {
 
   const getAllRooms = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/rooms");
+      const { data, status } = await axios.get(backendUrl + "/api/rooms");
 
-      if (data.success) {
-        setRooms(data.rooms.sort((a, b) => Number(a.room) - Number(b.room)));
+      if (status === 200) {
+        setRooms(data.data.sort((a, b) => Number(a.id) - Number(b.id)));
         console.log("ROOMS: ", data.rooms);
       } else {
         toast.error(data.message);

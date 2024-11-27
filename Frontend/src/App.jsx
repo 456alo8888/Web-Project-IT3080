@@ -11,6 +11,7 @@ import { AppContext } from './context/AppContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import ResidentInRoomId from './components/ResidentInRoomId'
+import HistoryOfRoomId from './pages/HistoryOfRoomId'
 
 const App = () => {
   const { token, setToken } = useContext(AppContext);
@@ -41,6 +42,7 @@ const App = () => {
               <Route path='/' element={<Home />} />
               <Route path='/fee' element={<Fee />} />
               <Route path='/history' element={<History />} />
+              <Route path='/history/:id' element={<HistoryOfRoomId />} />
               <Route path='/resident' element={<Resident />} />
               <Route path='/resident/:id' element={<ResidentInRoomId />} />
               <Route path='/admin' element={<Admin />} />
