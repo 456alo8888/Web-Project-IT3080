@@ -1,29 +1,59 @@
 const { faker } = require('@faker-js/faker');
 
 module.exports = {
- up: async (queryInterface, Sequelize) => {
-   const residents = [];
-   
-   for (let i = 0; i < 100; i++) {
-     residents.push({
-       first_name: faker.person.firstName(),
-       middle_name: faker.person.firstName(),
-       last_name: faker.person.lastName(),
-       age: faker.number.int({ min: 18, max: 80 }),
-       gender: faker.helpers.arrayElement(['male', 'female']),
-       phone_number: faker.phone.number(),
-       id_card_number: faker.string.alphanumeric(12),
-       room_id: faker.number.int({ min: 1, max: 120 }),
-       image: faker.image.avatar(),
-       created_at: new Date(),
-       updated_at: new Date(),
-     });
-   }
 
-   await queryInterface.bulkInsert('residents', residents, {});
- },
+  /**
+   * @param {import('sequelize').QueryInterface} queryInterface
+   */
+  up: async (queryInterface, Sequelize) => {
+    const residents = [];
 
- down: async (queryInterface, Sequelize) => {
-   await queryInterface.bulkDelete('residents', null, {});
- },
+    // Now, create residents and assign them to rooms
+    const roomIds = await queryInterface.sequelize.query('SELECT id FROM rooms');
+    const roomIdsList = roomIds[0]; // Extract room ids from the query result
+
+    for (let i = 0; i < 500; i++) {
+      const roomId = faker.helpers.arrayElement(roomIdsList).id;
+      residents.push({
+        name: faker.person.fullName(),
+        age: faker.number.int({ min: 18, max: 80 }),
+        gender: faker.helpers.arrayElement(['male', 'female', 'other']),
+        phone_number: faker.phone.number(),
+        id_card_number: faker.string.alphanumeric(12),
+        room_id: roomId, // Assign room to the resident
+        image: faker.image.avatar(),
+        created_at: new Date(),
+        updated_at: new Date(),
+      });
+    }
+
+    // Insert residents into the 'residents' table
+    await queryInterface.bulkInsert('residents', residents, {});
+    let residents_with_id = (await queryInterface.sequelize.query('SELECT * FROM residents'))[0];
+    // Assign a head resident to each room
+    const roomResidentPairs = [];
+    for (const room of roomIdsList) {
+      const allMembers = residents_with_id.filter(resi => resi.room_id === room.id);
+      if (allMembers.length === 0)
+          continue;
+      const headResident = faker.helpers.arrayElement(allMembers);
+      roomResidentPairs.push({
+        room_id: room.id,
+        head_resident_id: headResident.id, // Set head resident
+      });
+    }
+    // Update the rooms with head resident references
+    for (const pair of roomResidentPairs) {
+      await queryInterface.bulkUpdate(
+        'rooms', 
+        { head_resident_id: pair.head_resident_id }, 
+        { id: pair.room_id });
+    }
+  },
+
+  down: async (queryInterface, Sequelize) => {
+    // Delete all residents and rooms in reverse order (to prevent foreign key issues)
+    await queryInterface.bulkDelete('residents', null, {});
+    await queryInterface.bulkDelete('rooms', null, {});
+  },
 };

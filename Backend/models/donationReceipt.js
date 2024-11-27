@@ -5,35 +5,33 @@ import { Model } from 'sequelize';
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
-  class Fee extends Model {
+  class DonationReceipt extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Fee.hasOne(models.FeeOptional, { foreignKey: 'id' });
-      Fee.hasOne(models.FeeNonOptional, { foreignKey: 'id' });
-
-      Fee.hasMany(models.Bill);
+      DonationReceipt.belongsTo(models.Fee);
+      DonationReceipt.belongsTo(models.Resident);
+      DonationReceipt.belongsTo(models.Admin);
     }
   }
 
-  Fee.init(
+  DonationReceipt.init(
     {
-      name: DataTypes.STRING,
-      isOptional: DataTypes.BOOLEAN,
-      createdById: DataTypes.INTEGER,
-      deadline: DataTypes.DATE,
-      houseCount: DataTypes.INTEGER,
-      paidCount: DataTypes.INTEGER
+      adminId: DataTypes.INTEGER,
+      residentId: DataTypes.INTEGER,
+      roomId: DataTypes.INTEGER,
+      value: DataTypes.FLOAT,
+      feeId: DataTypes.INTEGER,
     },
     {
       sequelize,
-      modelName: 'Fee',
+      modelName: 'DonationReceipt',
       underscored: true,
     }
   );
 
-  return Fee;
+  return DonationReceipt;
 };

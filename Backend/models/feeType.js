@@ -5,7 +5,7 @@ import { Model } from 'sequelize';
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
-  class Donation_receipt extends Model {
+  class FeeType extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -16,19 +16,17 @@ export default (sequelize, DataTypes) => {
     }
   }
 
-  Donation_receipt.init(
+  FeeType.init(
     {
-      residentId: DataTypes.INTEGER,
-      feeName: DataTypes.STRING,
-      adminId: DataTypes.INTEGER,
-      moneyAmount: DataTypes.FLOAT,
+      name: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: 'Donation_receipt',
+      modelName: 'FeeType',
+      tableName: 'fee_types',
       underscored: true,
     }
   );
 
-  return Donation_receipt;
+  return FeeType;
 };

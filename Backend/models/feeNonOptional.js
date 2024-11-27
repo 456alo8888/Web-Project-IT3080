@@ -5,35 +5,29 @@ import { Model } from 'sequelize';
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
-  class Fee extends Model {
+  class FeeNonOptional extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Fee.hasOne(models.FeeOptional, { foreignKey: 'id' });
-      Fee.hasOne(models.FeeNonOptional, { foreignKey: 'id' });
-
-      Fee.hasMany(models.Bill);
+      FeeNonOptional.belongsTo(models.Fee, { foreignKey: 'id' });
     }
   }
 
-  Fee.init(
+  FeeNonOptional.init(
     {
-      name: DataTypes.STRING,
-      isOptional: DataTypes.BOOLEAN,
-      createdById: DataTypes.INTEGER,
-      deadline: DataTypes.DATE,
-      houseCount: DataTypes.INTEGER,
-      paidCount: DataTypes.INTEGER
+      date: DataTypes.DATE,
+      type: DataTypes.INTEGER,
     },
     {
       sequelize,
-      modelName: 'Fee',
+      modelName: 'FeeNonOptional',
       underscored: true,
+      tableName: 'fees_non_optional'
     }
   );
 
-  return Fee;
+  return FeeNonOptional;
 };

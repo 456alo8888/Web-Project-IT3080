@@ -1,6 +1,11 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
+  /**
+   * @param {import('sequelize').QueryInterface} queryInterface
+   * @param {typeof import('sequelize')} Sequelize
+   * @returns {Promise<void>}
+   */
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('bills', {
       id: {
@@ -11,27 +16,25 @@ module.exports = {
       },
       room_id: {
         type: Sequelize.INTEGER,
-        // references: {
-        //   model: 'Rooms',
-        //   key: 'id'
-        // }
-      },
-      bill_name: {
-        type: Sequelize.STRING,
+        references: {
+          model: 'rooms',
+          key: 'id'
+        },
         allowNull: false,
-        // preferences: {
-        //   model: 'Fees',
-        //   key: 'name'
-        // }
+        onDelete: 'CASCADE'
       },
-      deadline: {
-        type: Sequelize.DATE,
-        allowNull: false
+      fee_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'fees',
+          key: 'id'
+        },
+        allowNull: false,
+        onDelete: 'CASCADE'
       },
-      cost: {
-        type: Sequelize.FLOAT,
+      value: {
+        type: Sequelize.INTEGER,
         allowNull: false
-
       },
       created_at: {
         allowNull: false,

@@ -16,7 +16,7 @@ Tạo migration cho các model và tạo table trong database:
 npx sequelize-cli model:generate --name Admin --attributes username:string,password:string,update_fee_authority:boolean,update_resident_authority:boolean,create_fee_authority:boolean,receive_authority:boolean,is_root:boolean,first_name:string,last_name:string
 
 # Resident model
-npx sequelize-cli model:generate --name Resident --attributes first_name:string,middle_name:string,last_name:string,age:integer,gender:string,phone_number:string,id_card_number:string,room_id:integer
+npx sequelize-cli model:generate --name Resident --attributes name:string,age:integer,gender:string,phone_number:string,id_card_number:string,room_id:integer
 
 # Receipt model
 npx sequelize-cli model:generate --name Receipt --attributes admin_id:integer,resident_id:integer,money_amount:float,bill_id:integer
