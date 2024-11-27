@@ -37,10 +37,13 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
 
   const handleChangeHead = async () => {
     try {
-      const { data } = await axios.put(backendUrl + `/api/rooms/${id}/head-resident`, {headResidentId: resident.id});
+      const { data, status } = await axios.put(
+        backendUrl + `/api/rooms/${id}/head-resident`,
+        { headResidentId: resident.id }
+      );
 
-      if (data.success) {
-          setHead(resident.id);
+      if (status === 200) {
+        setHead(resident.id);
       } else {
         toast.error(data.message);
       }
@@ -48,7 +51,7 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
       console.log(error);
       toast.error(error.message);
     }
-  };  
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,13 +90,13 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
       formData.append("idCardNumber", updateResident.idCardNumber);
       formData.append("phoneNumber", updateResident.phoneNumber);
 
-      const { data } = await axios.post(
-        backendUrl + "/api/resident/update-resident",
+      const { data, status } = await axios.put(
+        backendUrl + `/api/resident/${resident.id}`,
         formData,
         { headers: { updateresidenttoken } }
       );
 
-      if (data.success) {
+      if (status === 200) {
         toast.success(data.message);
         getAllResidents();
         resetForm();
@@ -112,13 +115,13 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
     );
     if (confirmDelete) {
       try {
-        const { data } = await axios.post(
-          backendUrl + "/api/resident/delete-resident",
+        const { data, status } = await axios.delete(
+          backendUrl + "/api/resident/" + resident.id,
           { idCardNumber: resident.idCardNumber },
           { headers: { updateresidenttoken } }
         );
 
-        if (data.success) {
+        if (status) {
           toast.success(data.message);
           getAllResidents();
         } else {
@@ -188,9 +191,9 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
               />
             </div>
           ) : (
-            <p>
+            <p className="max-h-16 max-w-[300px] overflow-y-auto">
               <span className="font-semibold text-lg mr-2">Tên:</span>{" "}
-              {resident.name}{" "}
+              <span className="">{resident.name} </span>
             </p>
           )}
         </div>

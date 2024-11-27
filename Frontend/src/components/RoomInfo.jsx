@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 
 const RoomInfo = ({ room }) => {
   return (
-    <Link to={`/resident/${room.id}`} className="flex flex-col gap-2 text-base text-gray-500 min-h-[140px] p-4 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green">
+    <Link to={`/resident/${room.id}`} className="flex flex-col gap-2 text-base text-gray-500 min-h-[150px] p-4 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green">
       <div className="flex gap-8">
         <div>
           <span className="font-medium text-gray-800">ID phòng : </span>
           <span>{room.id}</span>
         </div>
         <div>
-          <span className="font-medium text-gray-800">Tên phòng : </span>
+          <span className="font-medium text-primary">Tên phòng : </span>
           <span>{room.name}</span>
         </div>
       </div>

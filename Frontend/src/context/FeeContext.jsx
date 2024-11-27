@@ -9,9 +9,87 @@ const FeeContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
 
-    const [fees, setFees] = useState([])
+    const [fees, setFees] = useState([
+        {
+            isOptional: true,
+            lowerBound: 123,
+            deadline: "2024-11-23T15:30:00Z",
+            name: "Ủng hộ lũ lụt miền Trung",
+            id: 123,
+            createdAt: "2024-11-23T15:30:00Z",
+            count: null,
+            finished: 98
+        }, 
+        {
+            isOptional: false,
+            deadline: "2024-11-23T15:30:00Z",
+            name: "Tiền nhà 11/2024",
+            id: 166234,
+            createdAt: "2024-11-23T15:30:00Z",
+            count: 100,
+            finished: 98
+        },
+        {
+            isOptional: true,
+            lowerBound: 123,
+            deadline: "2024-11-23T15:30:00Z",
+            name: "Ủng hộ lũ lụt miền Trung",
+            id: 12143123,
+            createdAt: "2024-11-23T15:30:00Z",
+            count: null,
+            finished: 98
+        }, 
+        {
+            isOptional: false,
+            deadline: "2024-11-23T15:30:00Z",
+            name: "Tiền nhà 11/2024",
+            id: 12345655,
+            createdAt: "2024-11-23T15:30:00Z",
+            count: 100,
+            finished: 98
+        },
+        {
+            isOptional: true,
+            lowerBound: 5123,
+            deadline: "2024-11-23T15:30:00Z",
+            name: "Ủng hộ lũ lụt miền Trung",
+            id: 52123,
+            createdAt: "2024-11-23T15:30:00Z",
+            count: null,
+            finished: 98
+        }, 
+        {
+            isOptional: false,
+            deadline: "2024-11-23T15:30:00Z",
+            name: "Tiền nhà 11/2024",
+            id: 751234,
+            createdAt: "2024-11-23T15:30:00Z",
+            count: 100,
+            finished: 98
+        },
+        {
+            isOptional: true,
+            lowerBound: 35123,
+            deadline: "2024-11-23T15:30:00Z",
+            name: "Ủng hộ lũ lụt miền Trung",
+            id: 88123423,
+            createdAt: "2024-11-23T15:30:00Z",
+            count: null,
+            finished: 98
+        }, 
+        {
+            isOptional: false,
+            deadline: "2024-11-23T15:30:00Z",
+            name: "Tiền nhà 11/2024",
+            id: 517234,
+            createdAt: "2024-11-23T15:30:00Z",
+            count: 100,
+            finished: 98
+        },
+    ]);
+
     const [listFees, setListFees] = useState([])
-    const [histories, setHistories] = useState([])
+    
 
 
 
@@ -28,12 +106,12 @@ const FeeContextProvider = (props) => {
 
         try {
 
-            const { data } = await axios.get(backendUrl + '/api/fees')
+            const { data, status } = await axios.get(backendUrl + '/api/fees')
 
-            if (data.success) {
+            if (status === 200) {
                 setFees(data.fees.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
             } else {
-                toast.error(error.message)
+                toast.error(status)
             }
             console.log(data);
 
@@ -45,26 +123,6 @@ const FeeContextProvider = (props) => {
 
     }
 
-    const getAllHistories = async () => {
-
-        try {
-
-            const { data } = await axios.get(backendUrl + '/api/history/all-history')
-
-            if (data.success) {
-                setHistories(data.histories.sort((a, b) => new Date(b.updateAt) - new Date(a.updateAt)))
-            } else {
-                toast.error(error.message)
-            }
-
-        } catch (error) {
-            console.log(error);
-            toast.error(error.message)
-        }
-
-    }
-
-
 
 
 
@@ -72,7 +130,6 @@ const FeeContextProvider = (props) => {
     useEffect(() => {
 
         getAllFees()
-        getAllHistories()
 
     }, [])
 
@@ -91,7 +148,6 @@ const FeeContextProvider = (props) => {
     const value = {
         fees, setFees, getAllFees,
         listFees, setListFees, initListFees,
-        histories, getAllHistories,
 
     }
 

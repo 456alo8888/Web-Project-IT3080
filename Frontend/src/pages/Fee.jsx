@@ -1,6 +1,7 @@
 import {
   faFilter,
   faMagnifyingGlass,
+  faPen,
   faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -11,6 +12,7 @@ import { ResidentContext } from "../context/ResidentContext";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { FeeContext } from "../context/FeeContext";
+import Modal from "../components/Modal";
 
 const Fee = () => {
   const [search, setSearch] = useState("");
@@ -23,8 +25,8 @@ const Fee = () => {
   const { residents, rooms } = useContext(ResidentContext);
   const { fees, getAllFees } = useContext(FeeContext);
 
- //for loading submit
-const [loading, setLoading] = useState(false)
+  //for loading submit
+  const [loading, setLoading] = useState(false);
 
   //state for create fee
   const [csvFile, setCsvFile] = useState();
@@ -36,6 +38,14 @@ const [loading, setLoading] = useState(false)
     { id: 2, name: "tiền điện" },
     { id: 3, name: "tiền nuoc" },
   ]);
+
+  //state for diaglog NONOPTIONAL FEE INFO
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [idFeeModal, setIdFeeModal] = useState("");
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
@@ -69,14 +79,12 @@ const [loading, setLoading] = useState(false)
     );
     if (confirmDelete) {
       try {
-        const { data } = await axios.post(
-          backendUrl + "/api/fee/delete-fee",
-          { feeId: _id },
-          { headers: { createfeetoken } }
+        const { data, status } = await axios.delete(
+          backendUrl + "/api/fee/delete/" + _id
         );
 
-        if (data.success) {
-          toast.success(data.message);
+        if (status === 200) {
+          toast.success("Xóa thành công");
           getAllFees();
         } else {
           toast.error(data.message);
@@ -93,7 +101,6 @@ const [loading, setLoading] = useState(false)
     } else {
       setFilters([...filters, value]);
     }
-    console.log(value);
     console.log(filters);
   };
 
@@ -112,11 +119,7 @@ const [loading, setLoading] = useState(false)
       }
 
       if (filters.includes("DA_HOAN_THANH")) {
-        searchFee = searchFee.filter(
-          (fee) =>
-            fee.feepayInfo.filter((v) => v.payed >= v.cost && v.cost > 0)
-              .length === fee.feepayInfo.length
-        );
+        searchFee = searchFee.filter((fee) => fee.finished === fee.count);
       }
 
       if (filters.includes("THANG_NAY")) {
@@ -124,7 +127,7 @@ const [loading, setLoading] = useState(false)
           const deadlineDay = new Date(fee.deadline);
           return (
             deadlineDay.getFullYear() === today.getFullYear() &&
-            deadlineDay.getMonth === today.getMonth()
+            deadlineDay.getMonth() === today.getMonth()
           );
         });
       }
@@ -172,26 +175,29 @@ const [loading, setLoading] = useState(false)
   };
 
   const handleCSVFile = async (e) => {
-    setCsvFile(e.target.files[0])
+    setCsvFile(e.target.files[0]);
     try {
-      const {data} = await axios.post(backendUrl + "/api/fees/csv");
-      setFeepayInfo(data.data.map(payinfo => ({name: payinfo.name, value: payinfo.value})));
-
+      const { data } = await axios.post(backendUrl + "/api/fees/csv");
+      setFeepayInfo(
+        data.data.map((payinfo) => ({
+          name: payinfo.name,
+          value: payinfo.value,
+        }))
+      );
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
 
     let info = structuredClone(feepayInfo);
 
     if (feeType === "TU_NGUYEN") {
       info = feepayInfo.map((e) => ({ ...e, value: 0 }));
-    } 
-    
+    }
 
     const today = new Date();
     const deadlineDate = new Date(deadline);
@@ -205,7 +211,7 @@ const [loading, setLoading] = useState(false)
     try {
       const formData = new FormData();
 
-      formData.append("isOptional", feeType === 'BAT_BUOC' ? false : true);
+      formData.append("isOptional", feeType === "BAT_BUOC" ? false : true);
       formData.append("name", name);
       formData.append("lowerBound", lowerBound);
       formData.append("typeId", typeId);
@@ -214,11 +220,9 @@ const [loading, setLoading] = useState(false)
       formData.append("feeList", JSON.stringify(info));
       formData.append("deadline", deadline);
 
-      const { data } = await axios.post(
-        backendUrl + "/api/fees",
-        formData,
-        { headers: { createfeetoken } }
-      );
+      const { data } = await axios.post(backendUrl + "/api/fees", formData, {
+        headers: { createfeetoken },
+      });
 
       if (data.success) {
         toast.success(data.message);
@@ -232,9 +236,8 @@ const [loading, setLoading] = useState(false)
     } catch (error) {
       toast.error(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-
   };
 
   //utility funtion
@@ -276,10 +279,13 @@ const [loading, setLoading] = useState(false)
     return Math.abs(Math.round(daysDifference)); // Return absolute value and round off
   }
 
-
-
   return (
     <div className="w-full h-screen relative p-2 px-8">
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        idFeeModal={idFeeModal}
+      />
       <div className="flex justify-between py-4 items-center">
         <p className="text-2xl font-bold text-gray-600">Danh sách khoản thu</p>
         <div
@@ -479,8 +485,13 @@ const [loading, setLoading] = useState(false)
             type="submit"
             className="min-w-[30%]  flex justify-center max-w-[40%] self-end p-4 px-8 mt-1 rounded-xl text-white font-medium text-lg mr-6 bg-secondary hover:shadow-[5px_5px_15px_rgba(0,0,0,0.3)] hover:opacity-60 hover:-translate-x-4 transition-all"
           >
-              {loading ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
-               : <span className='font-medium text-white tracking-wide'>Tạo khoản thu</span>}
+            {loading ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+            ) : (
+              <span className="font-medium text-white tracking-wide">
+                Tạo khoản thu
+              </span>
+            )}
           </button>
         </div>
       </form>
@@ -488,7 +499,7 @@ const [loading, setLoading] = useState(false)
       {/* main section */}
       <section
         className={`p-8 py-6 h-[85%] z-0  bg-white border rounded-xl transition-all duration-700 ${
-          showCreateFee ? "blur-sm bg-gray-300 opacity-60" : ""
+          showCreateFee || isModalOpen ? "blur-sm bg-gray-300 opacity-60" : ""
         } `}
       >
         {/* filter */}
@@ -553,20 +564,21 @@ const [loading, setLoading] = useState(false)
             >
               <div className="max-w-[130px] break-words text-sm text-gray-400">
                 {" "}
-                {fee._id}{" "}
+                {fee.id}{" "}
               </div>
               <div className="text-gray-600 "> {fee.name} </div>
               <div className="">
                 {" "}
-                {fee.feeType === "BAT_BUOC" ? (
-                  <div className="text-red-300 font-semibold text-center">
+                {!fee.isOptional ? (
+                  <div
+                    className=" text-red-300 p-2 bg-red-50 rounded-full font-semibold text-center cursor-pointer hover:opacity-80 "
+                    onClick={() => {
+                      setIsModalOpen(true);
+                      setIdFeeModal(fee);
+                    }}
+                  >
                     {" "}
-                    {fee.feepayInfo[0].cost}{" "}
-                  </div>
-                ) : fee.feeType === "HOA_DON" ? (
-                  <div className="max-w-[130px] text-center p-2 px-2 bg-sky-50 text-sky-400 text-sm font-semibold rounded-full">
-                    {" "}
-                    Hóa đơn{" "}
+                    Bắt buộc <FontAwesomeIcon icon={faPen} />
                   </div>
                 ) : (
                   <div className="max-w-[130px] text-center p-2 px-2 bg-violet-50 text-violet-400 text-sm font-semibold rounded-full">
@@ -578,16 +590,12 @@ const [loading, setLoading] = useState(false)
               <div className="text-center font-medium">
                 <span className="font-medium text-primary">
                   {" "}
-                  {
-                    fee.feepayInfo.filter(
-                      (e) => e.payed >= e.cost && e.payed > 0
-                    ).length
-                  }{" "}
+                  {fee?.finished}{" "}
                 </span>
                 /{" "}
                 <span className="font-medium text-gray-500">
                   {" "}
-                  {fee.feepayInfo.length}{" "}
+                  {fee?.count || "gì đây"}{" "}
                 </span>
               </div>
               <div className="text-center text-gray-400 ">

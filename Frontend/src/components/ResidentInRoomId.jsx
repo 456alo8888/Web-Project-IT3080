@@ -25,7 +25,7 @@ const ResidentInRoomId = () => {
   const [headId, setHeadId] = useState(31);
   const [roomResident, setRoomResident] = useState([
     {
-    name: "memeo",
+    name: "memeoajsflkjalkfjas lkfjlakjfafffaf fafafafa fafrqrqr qrqr",
     age: 20,
     gender: "male",
     phoneNumber: "01231414151",
@@ -52,17 +52,24 @@ const ResidentInRoomId = () => {
     getAllRooms,
   } = useContext(ResidentContext);
 
+  console.log(rooms);
+  console.log(id);
+  
+  
+  const roomName = rooms.find((e) => e.id === Number(id))?.name;
+  
+
   const getRoomResident = async () => {
     try {
-      const { data } = await axios.get(backendUrl + `/api/rooms/${id}`);
+      const { data, status } = await axios.get(backendUrl + `/api/rooms/${id}`);
 
-      if (data.success) {
+      if (status === 200) {
         setRoomResident(
-          data.residents.sort((a, b) => Number(a.room) - Number(b.room))
+          data.data.sort((a, b) => Number(a.id) - Number(b.id))
         );
         setHeadId(data.headResidentId);
       } else {
-        toast.error(data.message);
+        toast.error(status);
       }
     } catch (error) {
       console.log(error);
@@ -84,7 +91,7 @@ const ResidentInRoomId = () => {
               className="hover:-translate-x-2 px-2 transition-all"
             />
           </button>
-          <span className="ml-4"> Phòng {id} </span>
+          <span className="ml-4"> Phòng {roomName} </span>
         </p>
 
         <div

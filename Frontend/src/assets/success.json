@@ -1,0 +1,936 @@
+{
+	"info": {
+		"_postman_id": "2bf49e68-cdb9-4d74-b8c2-b83e1d739a70",
+		"name": "Resident Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31695194"
+	},
+	"item": [
+		{
+			"name": "Create resident",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "updateresidenttoken",
+						"value": "",
+						"description": "Token dùng để update cư dân của admin",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "roomId",
+							"value": "12",
+							"description": "Id của phòng",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Nguyễn Thị Bình",
+							"description": "Tên cư dân",
+							"type": "text"
+						},
+						{
+							"key": "age",
+							"value": "12",
+							"description": "Tuổi",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "female",
+							"description": "Giới tính",
+							"type": "text"
+						},
+						{
+							"key": "phoneNumber",
+							"value": "123123123",
+							"type": "text"
+						},
+						{
+							"key": "idCardNumber",
+							"value": "123123123123",
+							"type": "text"
+						},
+						{
+							"key": "isHeadResident",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "avatar",
+							"description": "Avatar cư dân",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": "{{url}}/api/residents"
+			},
+			"response": [
+				{
+					"name": "Create resident",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "updateresidenttoken",
+								"value": "",
+								"description": "Token dùng để update cư dân của admin",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "roomId",
+									"value": "12",
+									"description": "Id của phòng",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Nguyễn Thị Bình",
+									"description": "Tên cư dân",
+									"type": "text"
+								},
+								{
+									"key": "age",
+									"value": "12",
+									"description": "Tuổi",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "female",
+									"description": "Giới tính",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "123123123",
+									"type": "text"
+								},
+								{
+									"key": "idCardNumber",
+									"value": "123123123123",
+									"type": "text"
+								},
+								{
+									"key": "isHeadResident",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "avatar",
+									"description": "Avatar cư dân",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": "{{url}}/api/residents"
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"message\": \"Thêm cư dân thành công\",\r\n    data: {\r\n        \"id\": 123\r\n    }\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Update resident",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"room\": \"123-A\",\r\n    \"name\": \"Nguyen Anh Bao\",\r\n    \"age\": 14,\r\n    \"gender\": \"female\",\r\n    \"phoneNumber\": \"0999111233\",\r\n    \"idCardNumber\": \"111111111111\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/residents/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"residents",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "123",
+							"description": "ID của người dân"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update resident",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"room\": \"123-A\",\r\n    \"name\": \"Nguyen Anh Bao\",\r\n    \"age\": 14,\r\n    \"gender\": \"female\",\r\n    \"phoneNumber\": \"0999111233\",\r\n    \"idCardNumber\": \"111111111111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/residents/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"residents",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "233"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"message\": \"Cập nhật cư dân thành công\"\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete resident",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/residents/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"residents",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "34",
+							"description": "id của cư dân"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Room List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}/api/rooms"
+			},
+			"response": [
+				{
+					"name": "Get Room List",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/rooms"
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"data\": [\r\n        {\r\n            \"id\": 123,\r\n            \"name\": \"124-A\",\r\n            \"residentCount\": 3,\r\n            \"headResidentName\": \"Nguyen thi dep gai\"\r\n        },\r\n        {\r\n            \"id\": 89,\r\n            \"name\": \"455-AC\",\r\n            \"residentCount\": 0,\r\n            \"headResidentName\": null\r\n        }\r\n    ]\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Get room resident info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/rooms/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"rooms",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "3434",
+							"description": "id của phòng"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get room resident info",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/rooms/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"headResidentId\": 34,\r\n    \"data\": [\r\n        {\r\n            \"name\": \"Nguyen Anh Bao\",\r\n            \"age\": 14,\r\n            \"gender\": \"female\",\r\n            \"phoneNumber\": \"0999111233\",\r\n            \"idCardNumber\": \"111111111111\",\r\n            \"id\": 12\r\n        },\r\n        {\r\n            \"name\": \"Nguyen Anh Bao's father\",\r\n            \"age\": 14,\r\n            \"gender\": \"male\",\r\n            \"phoneNumber\": \"0999111233\",\r\n            \"idCardNumber\": \"111111111111\",\r\n            \"id\": 34\r\n        }\r\n    ]\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Change room head resident",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"headResidentId\": 123\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/rooms/:id/head-resident",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"rooms",
+						":id",
+						"head-resident"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "",
+							"description": "id của phòng"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Change room head resident",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"headResidentId\": 123\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/rooms/:id/head-resident",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								":id",
+								"head-resident"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "id của phòng"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"message\": \"Thay đổi chủ phòng thành công\"\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Create fee",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "createfeetoken",
+						"value": "",
+						"description": "Token tạo phí của admin",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "isOptional",
+							"value": "true",
+							"description": "Phí bắt buộc hay không bắt buộc",
+							"type": "text"
+						},
+						{
+							"key": "deadline",
+							"value": "2024-11-23T15:30:00Z",
+							"description": "Hạn nộp phí",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Ủng hộ lũ lụt miền Trung",
+							"description": "Tên phí không bắt buộc",
+							"type": "text"
+						},
+						{
+							"key": "lowerBound",
+							"value": "123000",
+							"description": "Số tiền thấp nhất có thể nhận, nếu là phí không bắt buộc, mặc định là 0",
+							"type": "text"
+						},
+						{
+							"key": "feeList",
+							"value": "[{\"id\": 123, \"value\": 12}, {\"id\": 123, \"12-ABC\", \"value\": 2323 }]",
+							"description": "Một mảng chứa các phần tử gồm ID và SỐ TIỀN của các phòng",
+							"type": "text"
+						},
+						{
+							"key": "typeId",
+							"value": "12",
+							"description": "ID của loại phí, nếu là phí bắt buộc",
+							"type": "text"
+						},
+						{
+							"key": "month",
+							"value": "11",
+							"description": "Tháng đóng phí, nếu là phí bắt buộc",
+							"type": "text"
+						},
+						{
+							"key": "year",
+							"value": "2023",
+							"description": "Năm đóng phí, nếu là phí bắt buộc",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{url}}/api/fees"
+			},
+			"response": [
+				{
+					"name": "Create fee",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "createfeetoken",
+								"value": "",
+								"description": "Token tạo phí của admin",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "isOptional",
+									"value": "true",
+									"description": "Phí bắt buộc hay không bắt buộc",
+									"type": "text"
+								},
+								{
+									"key": "deadline",
+									"value": "2024-11-23T15:30:00Z",
+									"description": "Hạn nộp phí",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Ủng hộ lũ lụt miền Trung",
+									"description": "Tên phí không bắt buộc",
+									"type": "text"
+								},
+								{
+									"key": "lowerBound",
+									"value": "123000",
+									"description": "Số tiền thấp nhất có thể nhận, nếu là phí không bắt buộc, mặc định là 0",
+									"type": "text"
+								},
+								{
+									"key": "feeList",
+									"value": "[{\"name\": \"123-A\", \"value\": 123}, {\"name\": \"12-ABC\", \"value\": 2323 }]",
+									"description": "Một mảng chứa các phần tử gồm TÊN và SỐ TIỀN của các phòng",
+									"type": "text"
+								},
+								{
+									"key": "typeId",
+									"value": "12",
+									"description": "ID của loại phí, nếu là phí bắt buộc",
+									"type": "text"
+								},
+								{
+									"key": "month",
+									"value": "11",
+									"description": "Tháng đóng phí, nếu là phí bắt buộc",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2023",
+									"description": "Năm đóng phí, nếu là phí bắt buộc",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{url}}/api/fees"
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"message\": \"Thêm phí thành công\",\r\n    \"data\": {\r\n        \"id\": 12\r\n    }\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Get non optional fee types",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}/api/fees/non-optional/types"
+			},
+			"response": [
+				{
+					"name": "Get non optional fee types",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/fees/non-optional/types"
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"data\": [\r\n        {\r\n            \"id\": 123,\r\n            \"name\": \"Tiền điện\"\r\n        },\r\n        {\r\n            \"id\": 45,\r\n            \"name\": \"Tiền xe cộ\"\r\n        }\r\n    ]\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Parse non optional csv file",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "feeFile",
+							"description": "File csv gồm 2 cột, TÊN và SỐ TIỀN",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": "{{url}}/api/fees/csv"
+			},
+			"response": [
+				{
+					"name": "Parse non optional csv file",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "feeFile",
+									"description": "File csv gồm 2 cột, TÊN và SỐ TIỀN",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": "{{url}}/api/fees/csv"
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"message\": \"File OK\",\r\n    \"data\": [\r\n        {\r\n            \"id\": 123,\r\n            \"name\": \"123-A\", \r\n            \"value\": 123\r\n        }, \r\n        {\r\n            \"id\": 12,\r\n            \"name\": \"12-ABC\", \r\n            \"value\": 2323 \r\n        }\r\n    ]\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Get all fee",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}/api/fees"
+			},
+			"response": [
+				{
+					"name": "Get all fee",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/fees"
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"message\": \"OK\",\r\n    \"data\": [\r\n        {\r\n            \"isOptional\": true,\r\n            \"lowerBound\": 123,\r\n            \"deadline\": \"2024-11-23T15:30:00Z\",\r\n            \"name\": \"Ủng hộ lũ lụt miền Trung\",\r\n            \"id\": 123,\r\n            \"createdAt\": \"2024-11-23T15:30:00Z\",\r\n            \"count\": null,\r\n            \"finished\": 98\r\n        }, \r\n        {\r\n            \"isOptional\": false,\r\n            \"deadline\": \"2024-11-23T15:30:00Z\",\r\n            \"name\": \"Tiền nhà 11/2024\",\r\n            \"id\": 1234,\r\n            \"createdAt\": \"2024-11-23T15:30:00Z\",\r\n            \"count\": 100,\r\n            \"finished\": 98\r\n        }\r\n    ]\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Get non optional fee info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/fees/non-optional?id=1&id=2&id=67",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"fees",
+						"non-optional"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Mảng chứa ID của các phí cần lấy thông tin"
+						},
+						{
+							"key": "id",
+							"value": "2",
+							"description": "Mảng chứa ID của các phí cần lấy thông tin"
+						},
+						{
+							"key": "id",
+							"value": "67",
+							"description": "Mảng chứa ID của các phí cần lấy thông tin"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get non optional fee info",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/fees/non-optional?id=1&id=2&id=67",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"fees",
+								"non-optional"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Mảng chứa ID của các phí cần lấy thông tin"
+								},
+								{
+									"key": "id",
+									"value": "2",
+									"description": "Mảng chứa ID của các phí cần lấy thông tin"
+								},
+								{
+									"key": "id",
+									"value": "67",
+									"description": "Mảng chứa ID của các phí cần lấy thông tin"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "[\r\n    {\r\n        \"deadline\": \"2024-11-23T15:30:00Z\",\r\n        \"name\": \"Tiền nhà 11/2024\",\r\n        \"id\": 1,\r\n        \"createdAt\": \"2024-11-23T15:30:00Z\",\r\n        \"count\": 100,\r\n        \"finished\": 98,\r\n        \"values\": [\r\n            {\r\n                \"roomId\": 12,\r\n                \"room\": \"123-A\",\r\n                \"value\": 123\r\n            },\r\n            {\r\n                \"roomId\": 123,\r\n                \"room\": \"123C\",\r\n                \"value\": 90\r\n            }\r\n        ]\r\n    },\r\n    {\r\n        \"deadline\": \"2024-11-23T15:30:00Z\",\r\n        \"name\": \"Tiền nhà 11/2024\",\r\n        \"id\": 2,\r\n        \"createdAt\": \"2024-11-23T15:30:00Z\",\r\n        \"count\": 100,\r\n        \"finished\": 98,\r\n        \"values\": [\r\n            {\r\n                \"room\": \"1230A\",\r\n                \"roomId\": 123,\r\n                \"value\": 123\r\n            },\r\n            {\r\n                \"room\": \"123C\",\r\n                \"roomId\": 123,\r\n                \"value\": 90\r\n            }\r\n        ]\r\n    },\r\n    {\r\n        \"deadline\": \"2024-11-23T15:30:00Z\",\r\n        \"name\": \"Tiền nhà 11/2024\",\r\n        \"id\": 67,\r\n        \"createdAt\": \"2024-11-23T15:30:00Z\",\r\n        \"count\": 100,\r\n        \"finished\": 98,\r\n        \"values\": [\r\n            {\r\n                \"room\": \"1230A\",\r\n                \"value\": 123\r\n            },\r\n            {\r\n                \"room\": \"123C\",\r\n                \"value\": 90\r\n            }\r\n        ]\r\n    }\r\n]"
+				}
+			]
+		},
+		{
+			"name": "Update non optional fee",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"roomId\": 1230,\r\n    \"value\": 123123\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/fees/non-optional/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"fees",
+						"non-optional",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update Fee",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roomId\": 1230,\r\n    \"value\": 123123\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/fees/non-optional/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"fees",
+								"non-optional",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    message: \"Cập nhật phí cho phòng thành công\"\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete fee",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/fees/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"fees",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "",
+							"description": "Id của phí"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add room's payment of fee",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"residentId\": 123, // Id của người đi nộp\r\n    \"value\": 123, // Số tiền nộp\r\n    \"roomId\": 11\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/fees/:id/pay",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"fees",
+						":id",
+						"pay"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Add room's payment of fee",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"residentId\": 123, // Id của người đi nộp\r\n    \"value\": 123, // Số tiền nộp\r\n    \"roomId\": 11\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/fees/:id/pay",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"fees",
+								":id",
+								"pay"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"name\": \"Ủng hộ miền trung\",\r\n    \"resident\": \"Trần văn lâm\",\r\n    \"admin\": \"Nguyễn Thị Lành\",\r\n    \"room\": \"123-A\",\r\n    \"value\": 123,\r\n    \"createdAt\": \"2024-11-23T15:30:00Z\"\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Get room payment info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/rooms/:id/pay",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"rooms",
+						":id",
+						"pay"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get room payment info",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/rooms/:id/pay",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								":id",
+								"pay"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"paid\": [\r\n        {\r\n            \"feeId\": 123,\r\n            \"name\": \"Ủng hộ miền trung\",\r\n            \"resident\": \"Trần văn lâm\",\r\n            \"admin\": \"Nguyễn Thị Lành\",\r\n            \"value\": 123,\r\n            \"isOptional\": true,\r\n            \"createdAt\": \"2024-11-23T15:30:00Z\"\r\n        }\r\n    ],\r\n    \"unpaid\": [\r\n        {\r\n            \"feeId\": 67,\r\n            \"name\": \"Tiền nhà tháng 10/2009\",\r\n            \"value\": 123\r\n        }\r\n    ]\r\n}"
+				}
+			]
+		}
+	]
+}
