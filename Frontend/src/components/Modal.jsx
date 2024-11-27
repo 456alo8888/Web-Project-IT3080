@@ -72,14 +72,14 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
   const getNonOptionalFeeInfo = async () => {
     try {
       const { data, status } = await axios.get(
-        backendUrl + "/api/fee/non-optional",
+        backendUrl + "/api/fees/non-optional",
         {
           params: { id: idFeeModal.id },
         }
       );
 
       if (status === 200) {
-        setFeeInfo(data[0]?.values);
+        data?.length > 0 && setFeeInfo(data[0]?.values);
       } else {
         toast.error(status);
       }
@@ -91,7 +91,7 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
   const updateFee = async (roomId, value) => {
     try {
       const { data, status } = await axios.put(
-        backendUrl + "/api/fee/non-optional/" + roomId,
+        backendUrl + "/api/fees/non-optional/" + roomId,
         {
           roomId: roomId,
           value: value,
@@ -111,8 +111,12 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
 
   const handleCSVFile = async (e) => {
     setCsvFile(e.target.files[0])
+    console.log(e.target.files[0]);
+    
     try {
-      const {data} = await axios.post(backendUrl + "/api/fees/csv");
+        const form = new FormData();
+        form.append("feeFile", e.target.files[0])
+      const {data} = await axios.post(backendUrl + "/api/fees/csv", form);
       data.data?.forEach(payinfo => {
         updateFee(payinfo?.id, payinfo.value);
       });
@@ -166,7 +170,7 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
           <div className="flex gap-4">
             <p className="text-lg font-medium text-gray-500">Phí : </p>
             <div className="flex grid grid-cols-2 gap-2 items-center max-h-[300px] overflow-y-auto">
-              {feeInfo.map((info, index) => (
+              {feeInfo?.map((info, index) => (
                 <div
                   className="flex p-2 items-center gap-4 min-h-[36px]"
                   key={index}

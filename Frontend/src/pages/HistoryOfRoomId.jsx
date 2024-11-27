@@ -104,7 +104,7 @@ const HistoryOfRoomId = () => {
       </div>
       <section className="flex gap-2 p-8 py-6 h-[85%] z-0  bg-white border rounded-xl transition-all duration-700">
         <div className="flex-1">
-          <div className="grid grid-cols-[0.6fr_1.2fr_0.8fr_0.6fr_0.6fr_0.8fr] bg-gray-50 p-4 px-4 text-gray-500 rounded-t-md">
+          <div className="grid grid-cols-[0.6fr_1.2fr_0.8fr_0.6fr_0.6fr_0.8fr] bg-gray-200 p-4 px-4 text-gray-500 rounded-t-md">
             <div className="font-medium">ID</div>
             <div className="font-medium">Tên</div>
             <div className="font-medium">Admin </div>
@@ -125,22 +125,22 @@ const HistoryOfRoomId = () => {
                 <div>{payment.admin} </div>
                 <div className="pl-6 text-primary font-medium">{payment.value}</div>
                 <div>{formatDate(payment.createdAt)}</div>
-                <div>{payment.isOptional ? <span className="text-violet-500">Tự nguyện</span> : <span className="text-red-500">Bắt buộc</span>}</div>
+                <div>{payment.isOptional ? <span className="text-violet-500 text-sm pl-4">Tự nguyện</span> : <span className="text-red-500 text-sm pl-4">Bắt buộc</span>}</div>
               </div>
             ))}
           </div>
         </div>
         <div>
-          <div className="grid grid-cols-3 bg-gray-50 p-4 px-4 text-gray-500 rounded-t-md">
+          <div className="grid grid-cols-[1fr_3fr_1fr] bg-gray-200 p-4 px-4 text-gray-500 rounded-t-md">
             <div className="font-medium">ID</div>
             <div className="font-medium">Tên</div>
             <div className="font-medium">Cần đóng </div>
           </div>
-          <div className="flex max-w-[350px] flex-col max-h-[60vh] overflow-y-auto">
+          <div className="flex flex-col max-h-[60vh] overflow-y-auto">
             {paymentInfo?.unpaid?.map((payment, index) => (
               <div
                 key={index}
-                className={`group grid grid-cols-3 min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${
+                className={`group grid grid-cols-[1fr_3fr_1fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${
                   index % 2 === 0 ? "bg-white" : "bg-gray-50"
                 }`}
               >
