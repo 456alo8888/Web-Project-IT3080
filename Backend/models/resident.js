@@ -13,14 +13,14 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       Resident.belongsTo(models.Room, { foreignKey: 'roomId' });
+      Resident.hasMany(models.Receipt);
+      Resident.hasMany(models.DonationReceipt);
     }
   }
 
   Resident.init(
     {
-      firstName: DataTypes.STRING,
-      middleName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
+      name: DataTypes.STRING,
       age: DataTypes.INTEGER,
       gender: DataTypes.STRING,
       phoneNumber: DataTypes.STRING,

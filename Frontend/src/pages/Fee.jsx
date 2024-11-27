@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { FeeContext } from "../context/FeeContext";
 import Modal from "../components/Modal";
+import { Form } from "react-router-dom";
 
 const Fee = () => {
   const [search, setSearch] = useState("");
@@ -175,9 +176,14 @@ const Fee = () => {
   };
 
   const handleCSVFile = async (e) => {
+    const csv = e.target.file[0];
     setCsvFile(e.target.files[0]);
+    console.log(csv);
     try {
-      const { data } = await axios.post(backendUrl + "/api/fees/csv");
+      const form = new FormData();
+      
+      form.append("feeFile", csv)
+      const { data } = await axios.post(backendUrl + "/api/fees/csv", form);
       setFeepayInfo(
         data.data.map((payinfo) => ({
           name: payinfo.name,

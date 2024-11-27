@@ -14,9 +14,9 @@ import { AppContext } from "../context/AppContext";
 import { ResidentContext } from "../context/ResidentContext";
 import { useParams } from "react-router-dom";
 
-function buildName(first, mid, last) {
-  return (first ? first + " " : "") + (mid ? mid + " " : "") + last;
-}
+// function buildName(first, mid, last) {
+//   return (first ? first + " " : "") + (mid ? mid + " " : "") + last;
+// }
 
 const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
   const { id } = useParams();
@@ -28,7 +28,7 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
 
   const [updateResident, setUpdateResident] = useState({
     roomNumber: resident.roomNumber,
-    name: buildName(resident.firstName, resident.middleName, resident.lastName),
+    name: resident.name,
     age: resident.age,
     gender: resident.gender,
     idCardNumber: resident.idCardNumber,

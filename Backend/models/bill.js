@@ -12,16 +12,17 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Bill.belongsTo(models.Fee);
+      Bill.belongsTo(models.Room);
+      Bill.hasOne(models.Receipt);
     }
   }
 
   Bill.init(
     {
       roomId: DataTypes.INTEGER,
-      billName: DataTypes.STRING,
-      deadline: DataTypes.DATE,
-      cost: DataTypes.FLOAT,
+      feeId: DataTypes.INTEGER,
+      value: DataTypes.INTEGER,
     },
     {
       sequelize,

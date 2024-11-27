@@ -12,7 +12,9 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Receipt.belongsTo(models.Bill);
+      Receipt.belongsTo(models.Resident);
+      Receipt.belongsTo(models.Admin);
     }
   }
 
@@ -20,7 +22,7 @@ export default (sequelize, DataTypes) => {
     {
       adminId: DataTypes.INTEGER,
       residentId: DataTypes.INTEGER,
-      moneyAmount: DataTypes.FLOAT,
+      value: DataTypes.FLOAT,
       billId: DataTypes.INTEGER,
     },
     {

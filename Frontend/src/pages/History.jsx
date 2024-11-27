@@ -88,7 +88,7 @@ const History = () => {
       setFilterRoom(
         rooms.filter(
           (room) =>
-            room.id.toString().includes(search) 
+            room.name.includes(search) 
         )
       );
     } else {

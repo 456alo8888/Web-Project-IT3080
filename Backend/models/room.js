@@ -12,13 +12,15 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Room.hasMany(models.Resident, { foreignKey: 'roomId' });
+      Room.hasMany(models.Resident);
+      Room.hasOne(models.Bill);
+      Room.belongsTo(models.Resident, { as: 'headResident' });
     }
   }
 
   Room.init(
     {
-      roomNumber: DataTypes.INTEGER,
+      roomName: DataTypes.STRING,
       headResidentId: DataTypes.INTEGER,
     },
     {

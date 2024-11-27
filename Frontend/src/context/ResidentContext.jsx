@@ -112,7 +112,7 @@ const ResidentContextProvider = (props) => {
 
  
   useEffect(() => {
-    getAllResidents();
+    // getAllResidents();
     getAllRooms();
   }, []);
 

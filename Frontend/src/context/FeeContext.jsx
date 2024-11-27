@@ -109,7 +109,8 @@ const FeeContextProvider = (props) => {
             const { data, status } = await axios.get(backendUrl + '/api/fees')
 
             if (status === 200) {
-                setFees(data.fees.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
+
+                data.data.length > 0 && setFees(data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
             } else {
                 toast.error(status)
             }
