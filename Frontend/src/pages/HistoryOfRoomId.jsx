@@ -18,35 +18,7 @@ const HistoryOfRoomId = () => {
   const navigate = useNavigate();
 
   const [searchFee, setSearchFee] = useState("");
-  const [paymentInfo, setPaymentInfo] = useState({
-    paid: [
-      {
-        feeId: 123,
-        name: "Ủng hộ miền trung",
-        resident: "Trần văn lâm",
-        admin: "Nguyễn Thị Lành",
-        value: 123,
-        isOptional: true,
-        createdAt: "2024-11-23T15:30:00Z",
-      },
-      {
-        feeId: 123,
-        name: "Ủng hộ miền trung",
-        resident: "Trần văn lâm",
-        admin: "Nguyễn Thị Lành",
-        value: 123,
-        isOptional: true,
-        createdAt: "2024-11-23T15:30:00Z",
-      },
-    ],
-    unpaid: [
-      {
-        feeId: 67,
-        name: "Tiền nhà tháng 10/2009",
-        value: 123,
-      },
-    ],
-  });
+  const [paymentInfo, setPaymentInfo] = useState({ paid: [], unpaid: [] });
   const { backendUrl, updateresidenttoken, token } = useContext(AppContext);
   const { rooms } = useContext(ResidentContext);
 
