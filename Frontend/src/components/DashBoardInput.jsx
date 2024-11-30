@@ -7,7 +7,7 @@ import { FeeContext } from "../context/FeeContext";
 
 const DashBoardInput = ({ fee, room, openModal }) => {
   const { displayedFees } = useContext(FeeContext);
-  const [paymentInfo, setPaymentInfo] = useState({});
+  const [paymentInfo, setPaymentInfo] = useState(null);
 
   const getPaymentInfo = () => {
     const entry = displayedFees.find(f => f.id === fee.id)?.values?.find(v => v.roomId === room.id);
@@ -50,6 +50,12 @@ const DashBoardInput = ({ fee, room, openModal }) => {
     getPaymentInfo();
   }, [fee, room]);
 
+
+  if (paymentInfo == null) {
+    return (
+      <div className="text-sm font-medium text-gray-400">đang tải...</div>
+    );
+  }
   if (!paymentInfo.join) {
     return (
       <div className="text-sm font-medium text-gray-400">không tham gia</div>
