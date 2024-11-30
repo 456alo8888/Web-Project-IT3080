@@ -3,7 +3,7 @@ import { AppContext } from "../context/AppContext";
 import { ResidentContext } from "../context/ResidentContext";
 import { FeeContext } from "../context/FeeContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSortDown } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faPlus, faSortDown } from "@fortawesome/free-solid-svg-icons";
 import DashBoardInput from "../components/DashBoardInput";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -22,6 +22,8 @@ const Home = () => {
   //state for dashboard
   const [showModalFees, setShowModalFees] = useState(-1);
   const [showChart, setShowChart] = useState(false);
+  const [search, setSearch] = useState('')
+  const [filterRooms, setFilterRooms] = useState([])
 
   //state for open modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,10 +55,24 @@ const Home = () => {
     }
   };
 
+const applySearch = () => {
+  if (search) {
+    setFilterRooms(rooms.filter(r => r.name?.toLowerCase().includes(search)));
+  } else {
+    setFilterRooms(rooms)
+    console.log(rooms);
+    
+  }
+}
+
   const handleChangeFee = (index, newfee) => {
     setListFees(listFees.map((f, i) => (i === index ? newfee : f)));
     setShowModalFees(-1);
   };
+
+  useEffect(() => {
+    applySearch();
+  }, [fees, rooms, search])
 
   return (
     <div className="relative w-full h-screen p-2 px-8">
@@ -81,6 +97,21 @@ const Home = () => {
 
       <section className="flex justify-between py-4 items-center">
         <p className="text-2xl font-bold text-gray-600">Bảng quản lí thu chi</p>
+        <div
+          className={` focus-within:shadow-custom-green  relative w-1/3 rounded-full z-10 transition-all `}
+        >
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="peer w-full p-2 px-4 border-2 outline-none  text-gray-500 rounded-full focus:border-secondary transition-all"
+            placeholder="ex: tiền điện, tiền nước"
+          />
+          <FontAwesomeIcon
+            icon={faMagnifyingGlass}
+            className="absolute top-3 right-3 text-xl text-gray-500 peer-focus:-translate-x-2 peer-focus:scale-110 transition-all"
+          />
+        </div>
         <div
           onClick={(e) => setShowChart(!showChart)}
           className={`${
@@ -161,7 +192,7 @@ const Home = () => {
         </div>
 
         <div className="relative z-0 flex flex-col max-h-[90%] overflow-y-auto">
-          {rooms.map((room, index) => (
+          {filterRooms.map((room, index) => (
             <div
               key={index}
               className={`grid grid-cols-[1fr_2fr_2fr_2fr_2fr_2fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${

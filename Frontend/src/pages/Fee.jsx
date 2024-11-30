@@ -22,7 +22,7 @@ const Fee = () => {
   const [filters, setFilters] = useState([]);
 
   //data from context
-  const { backendUrl, createfeetoken, token, adminId } = useContext(AppContext);
+  const { backendUrl, createfeetoken, token, adminId, updatefeetoken } = useContext(AppContext);
   const { residents, rooms } = useContext(ResidentContext);
   const { fees, getAllFees } = useContext(FeeContext);
 
@@ -83,7 +83,8 @@ const Fee = () => {
     if (confirmDelete) {
       try {
         const { data, status } = await axios.delete(
-          backendUrl + "/api/fee/delete/" + _id
+          backendUrl + "/api/fees/" + _id,
+          {headers: {updatefeetoken: updatefeetoken}}
         );
 
         if (status === 200) {
@@ -219,7 +220,7 @@ const Fee = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response.data.message?.name || error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -531,7 +532,7 @@ const Fee = () => {
                 {" "}
                 {fee.id}{" "}
               </div>
-              <div className="text-gray-600 "> {fee.name} </div>
+              <div className="text-gray-500 font-medium "> {fee.name} </div>
               <div className="">
                 {" "}
                 {!fee.isOptional ? (
@@ -577,7 +578,7 @@ const Fee = () => {
                 )}
                 <FontAwesomeIcon
                   icon={faTrash}
-                  onClick={() => deleteFee(fee._id)}
+                  onClick={() => deleteFee(fee?.id)}
                   className="ml-6 invisible group-hover:visible"
                 />
               </div>
