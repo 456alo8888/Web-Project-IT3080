@@ -19,7 +19,7 @@ feeRouter.delete('/:id', upload.none(), deleteFee)
 feeRouter.post('/:id/pay', upload.none(), addRoomPaymentOfFee)
 feeRouter.post('/csv', upload.single('file'), parseCsv)
 feeRouter.get('/non-optional', upload.none(), getNonOptionalFeeInfo)
-feeRouter.put('/non-optional/:id', upload.none(), updateNonOptionalFee)
+feeRouter.patch('/non-optional/:id', upload.none(), updateNonOptionalFee)
 feeRouter.get('/non-optional/types', upload.none(), getNonOptionalTypes)
 
 export default feeRouter

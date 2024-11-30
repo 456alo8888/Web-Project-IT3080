@@ -286,18 +286,46 @@ export async function updateNonOptionalFee(req, res) {
     if (!req.headers.updatefeetoken) {
       return res.status(403).json({ message: 'Bạn không có quyền cập nhật khoản thu'});
     }
-    const { roomId, value } = req.body;
+    
+    const { data: dataRaw } = req.body;
+    if (dataRaw == null) {
+      return res.status(400).json({ message: 'Không có dữ liệu' });
+    }
+    let data;
+    try {
+      data = JSON.parse(dataRaw);
+    } catch (error) {
+      return res.status(400).json({ message: 'Sai định dạng' + ' ' + error });
+    }
+    if (!Array.isArray(data)) {
+      return res.status(400).json({ message: 'Sai định dạng' });
+    }
+
     const { id: feeId } = req.params;
-    if (!roomId || !value || !feeId) {
+    if (feeId == null) {
       
       return res.status(400).json({ message: 'Thiếu dữ liệu' });
     }
-    if (value < 0) {
-      return res.status(400).json({ message: 'Giá trị mới phải >= 0' });
+
+    const fee = await Fee.findOne({
+      where: { id: feeId },
+      include: {
+        model: FeeNonOptional
+      }
+    });
+
+    if (fee == null || fee.FeeNonOptional == null) {
+      return res.status(400).json({ message: 'Khoản thu không tồn tại' });
     }
-    await Bill.update(
-      { value },
-      { where: { roomId, feeId } }
+
+    let dataValid = true;
+    if (dataValid === false) {
+      return res.status(400).json({ message: 'Danh sách phí sai định dạng' });
+    }
+
+    data.forEach(async d => await Bill.update(
+      { value: d.value }, 
+      { where: { feeId, roomId: d.roomId } })
     );
     return res.status(200).json({ message: 'Cập nhật khoản thu cho phòng thành công'});
   } catch (error) {
