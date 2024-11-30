@@ -52,7 +52,7 @@ const Fee = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [name, setName] = useState("");
   const [feeType, setFeeType] = useState("BAT_BUOC");
-  // const [feepayInfo, setFeepayInfo] = useState([]);
+  const [feepayInfo, setFeepayInfo] = useState([]);
   const [deadline, setDeadline] = useState(new Date());
   const [costBAT_BUOC, setCostBAT_BUOC] = useState("");
 
@@ -174,7 +174,7 @@ const Fee = () => {
     e.preventDefault();
     setLoading(true);
 
-    let info = rooms.map(r => ({roomId: r.id, value: 0}));
+    let info = rooms.map(r => ({id: r.id, value: 0}));
 
 
     const today = new Date();
@@ -211,10 +211,18 @@ const Fee = () => {
       toast.success(data.message);
       setName("");
       setDeadline("");
-      resetPayinfo();
+      setLowerBound(0);
+      setTypeId(1);
+      setYear(new Date().getFullYear());
+      setMonth(new Date().getMonth() + 1);
+      // resetPayinfo();
       getAllFees();
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.status >= 500) {
+        toast.error('Lỗi hệ thống');
+      } else {
+        toast.error(error.response.data.message);
+      }
     } finally {
       setLoading(false);
     }

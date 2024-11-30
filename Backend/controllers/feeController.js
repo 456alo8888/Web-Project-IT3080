@@ -70,13 +70,20 @@ async function createNonOptionalFee(req, res, adminId, deadline) {
   });
 
 
+  let listValid = true;
   const bills = feeList.map(f => {
+    if (f.id == null || f.value == null) {
+      listValid = false;
+    }
     return {
       roomId: f.id,
       feeId: fee.id,
       value: f.value,
     }
   });
+  if (!listValid) {
+    return res.status(400).json({ message: 'Danh sách phí sai định dạng' });
+  }
 
   await FeeNonOptional.create({
     id: fee.id,
