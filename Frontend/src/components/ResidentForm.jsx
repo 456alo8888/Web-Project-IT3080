@@ -46,8 +46,8 @@ const ResidentForm = () => {
           (room) =>
             room.id?.toString().includes(lowercaseSearch) ||
             room.name?.toLowerCase().includes(lowercaseSearch) ||
-            room.headResidentName?.toLowerCase().includes(lowercaseSearch)||
-            ( lowercaseSearch.includes('num =') && lowercaseSearch.endsWith(room.residentCount) )
+            room.headResidentName?.toLowerCase().includes(lowercaseSearch) ||
+            (lowercaseSearch.includes('num =') && lowercaseSearch.endsWith(room.residentCount))
         )
       );
     } else {
@@ -92,7 +92,7 @@ const ResidentForm = () => {
         { headers: { updateresidenttoken } }
       );
       console.log(response);
-      
+
 
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -132,12 +132,12 @@ const ResidentForm = () => {
             className="absolute top-3 right-3 text-xl text-gray-500 peer-focus:-translate-x-2 peer-focus:scale-110 transition-all"
           />
         </div>
-        <div
+        {
+          !!updateresidenttoken && <div
           onClick={(e) => setShowResidentForm(!showResidentForm)}
-          className={`${
-            showResidentForm ? "backdrop-blur-md shadow-custom-green" : ""
-          } inline-flex items-center gap-4 mr-2 bg-secondary p-2 px-8 rounded-full text-white text-xl shadow hover:opacity-80 hover:-translate-x-2 transition-all ease-in-out cursor-pointer select-none`}
-        >
+          className={`${showResidentForm ? "backdrop-blur-md shadow-custom-green" : ""
+            } inline-flex items-center gap-4 mr-2 bg-secondary p-2 px-8 rounded-full text-white text-xl shadow hover:opacity-80 hover:-translate-x-2 transition-all ease-in-out cursor-pointer select-none`}
+          >
           <p className="text-center font-semibold">Thêm cư dân</p>
           <FontAwesomeIcon
             icon={faPlus}
@@ -147,14 +147,14 @@ const ResidentForm = () => {
                 : "transition-all duration-500 ease-in-out"
             }
           />
-        </div>
+          </div>
+        }
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className={`${
-          showResidentForm ? "backdrop-blur-lg" : "hidden"
-        } absolute right-[200px] top-32  z-10 flex gap-16 px-8 py-8 bg-white max-w-6xl items-start shadow-lg transition-all`}
+        className={`${showResidentForm ? "backdrop-blur-lg" : "hidden"
+          } absolute right-[200px] top-32  z-10 flex gap-16 px-8 py-8 bg-white max-w-6xl items-start shadow-lg transition-all`}
       >
         <div className="flex flex-col justify-center items-center gap-4 mb-8 text-gray-500 text-lg">
           <label htmlFor="resident-image" className="">
@@ -283,13 +283,16 @@ const ResidentForm = () => {
       </form>
 
       <section
-        className={`grid grid-cols-3 gap-8 gap-x-6 p-8 h-[85%] z-0 overflow-y-auto bg-white border rounded-xl transition-all duration-700 ${
-          showResidentForm ? "blur-sm bg-gray-300 opacity-60" : ""
-        } `}
+        className={`grid ${!!updateresidenttoken ? 'grid-cols-3' : 'grid-cols-1'} gap-8 gap-x-6 p-8 h-[85%] z-0 overflow-y-auto bg-white border rounded-xl transition-all duration-700 ${showResidentForm ? "blur-sm bg-gray-300 opacity-60" : ""} ${!updateresidenttoken ? 'bg-gray-200 flex items-center justify-center text-gray-500' : 'bg-white'}`}
       >
-        {filterRooms.map((room, index) => (
-          <RoomInfo key={index} room={room} />
-        ))}
+        {!!updateresidenttoken ?
+          filterRooms.map((room, index) => (
+            <RoomInfo key={index} room={room} />
+          )) :
+          <div className="h-full w-full text-center flex items-center justify-center">
+            Bạn không có quyền truy cập trang này
+          </div>
+        }
       </section>
     </div>
   );

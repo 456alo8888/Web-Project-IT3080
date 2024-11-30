@@ -74,21 +74,6 @@ const History = () => {
             className="absolute top-3 right-3 text-xl text-gray-500 peer-focus:-translate-x-2 peer-focus:scale-110 transition-all"
           />
         </div>
-        <div
-          className={`${
-            show ? "backdrop-blur-md shadow-custom-green" : ""
-          } inline-flex items-center gap-4 mr-2 bg-secondary p-2 px-8 rounded-full text-white text-xl shadow hover:opacity-80 hover:-translate-x-2 transition-all ease-in-out cursor-pointer select-none`}
-        >
-          <p className="text-center font-semibold">Thêm cư dân</p>
-          <FontAwesomeIcon
-            icon={faPlus}
-            className={
-              show
-                ? "rotate-[225deg] -translate-x-2 scale-125 transition-all duration-500 ease-in-out"
-                : "transition-all duration-500 ease-in-out"
-            }
-          />
-        </div>
       </section>
 
       <section
