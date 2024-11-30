@@ -44,37 +44,12 @@ const FeeContextProvider = (props) => {
     }
   }
 
-  // const loadAllPaymentInfo = async () => {
-  //   try {
-  //     // Create an array of promises for all rooms
-  //     const promises = rooms.map((room) => loadPaymentInfo(room.id));
-
-  //     // Wait for all promises to resolve
-  //     const results = await Promise.all(promises);
-
-  //     // Filter out null responses
-  //     const validResults = results.filter((result) => result !== null);
-
-  //     // Update state with new payment info
-  //     setAllPaymentInfo((prev) => [...prev, ...validResults]);
-  //   } catch (error) {
-  //     toast.error(`Failed to load payment info: ${error.response.data.message}`);
-  //   }
-  // };
-
-
-
-
-  //funtion to load
-  const initListFees = () => {
-
-    setDisplayedFees(allFees.slice(0, 5))
-    console.log('Fees: ', allFees);
-
-
+  const changeDisplayedFee = async (feeId, index) => {
+    const newFee = (await loadDisplayedFeesInfo([feeId]))[0];
+    const newFees = [...displayedFees];
+    newFees[index] = newFee;
+    setDisplayedFees(newFees)
   }
-
-
 
   const getFeesData = async () => {
 
@@ -101,8 +76,8 @@ const FeeContextProvider = (props) => {
   }, [/* rooms */])
 
   const value = {
-    allFees, setAllFees, getFeesData,
-    displayedFees, setDisplayedFees,
+    allFees, getFeesData,
+    displayedFees, changeDisplayedFee
   }
 
   return (

@@ -14,7 +14,7 @@ const Home = () => {
   const { backendUrl, updatefeetoken, token, username } =
     useContext(AppContext);
   const { residents, rooms } = useContext(ResidentContext);
-  const { allFees, getFeesData, displayedFees, setDisplayedFees } =
+  const { allFees, getFeesData, displayedFees, changeDisplayedFee } =
     useContext(FeeContext);
 
   //state for dashboard
@@ -56,8 +56,8 @@ const applySearch = () => {
   }
 }
 
-  const handleChangeFee = (index, newfee) => {
-    setDisplayedFees(displayedFees.map((f, i) => (i === index ? newfee : f)));
+  const handleChangeFee = (feeid, index) => {
+    changeDisplayedFee(feeid, index);
     setShowModalFees(-1);
   };
 
@@ -162,7 +162,7 @@ const applySearch = () => {
                 <div className="overflow-y-auto">
                   {allFees.map((f, index3) => (
                     <div
-                      onClick={(e) => handleChangeFee(index, f)}
+                      onClick={(e) => handleChangeFee(f.id, index)}
                       key={f.id}
                       className={` ${
                         f.id === fee.id

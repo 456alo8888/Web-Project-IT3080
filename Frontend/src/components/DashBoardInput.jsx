@@ -73,7 +73,7 @@ const DashBoardInput = ({ fee, room, openModal }) => {
             >
               {paymentInfo.paidAmount}{" "}
             </p>
-            <p className={` ${fee.isOptional ? "text-violet-300" : "text-red-300"} font-medium `}>
+            <p className={` ${fee.isOptional ? "text-violet-400" : "text-red-300"} font-medium `}>
               / {paymentInfo.needPay}
             </p>
           </div>
