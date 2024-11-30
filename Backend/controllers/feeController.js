@@ -241,7 +241,7 @@ export async function getAllFees(req, res) {
   }
 };
 
-export async function getNonOptionalFeeInfo(req, res) {
+export async function getFeesStatus(req, res) {
   try {
     const { id: idsRaw } = req.query;
     if (!idsRaw) {
@@ -251,28 +251,49 @@ export async function getNonOptionalFeeInfo(req, res) {
     
     const fees = await Fee.findAll({
       where: { id: { [Op.in]: ids } },
-      include: [{
-        model: Bill,
-        attributes: ['roomId', 'value'],
-        include: [{
-          model: Room,
-          attributes: ['roomName'],
-        }],
-      }],
+      include: [
+        {
+          model: Bill,
+          attributes: ['roomId', 'value'],
+          include: [
+            {
+              model: Room,
+              attributes: ['roomName'],
+            }
+          ],
+        },
+        {
+          model: DonationReceipt,
+          attributes: ['roomId', 'value'],
+          include: [
+            {
+              model: Room,
+              attributes: ['roomName'],
+            }
+          ],
+        }
+      ],
     });
 
-    const data = fees.map((f) => ({
+    const data = fees.map(f => ({
+      isOptional: f.isOptional,
       deadline: f.deadline,
       name: f.name,
       id: f.id,
       createdAt: f.createdAt,
       count: f.houseCount,
       finished: f.paidCount,
-      values: f.Bills.map((b) => ({
-        roomId: b.roomId,
-        room: b.Room.roomName,
-        value: b.value
-      })),
+      values: f.isOptional 
+        ? f.DonationReceipts.map(d => ({
+          roomId: d.roomId,
+          room: d.Room.roonName,
+          value: d.value
+        }))
+        : f.Bills.map((b) => ({
+          roomId: b.roomId,
+          room: b.Room.roomName,
+          value: b.value
+        }))        
     }));
     return res.status(200).json(data);
   } catch (error) {

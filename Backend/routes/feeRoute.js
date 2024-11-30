@@ -5,7 +5,7 @@ import {
   getNonOptionalTypes, 
   parseCsv, 
   getAllFees,
-  getNonOptionalFeeInfo, 
+  getFeesStatus, 
   updateNonOptionalFee,
   deleteFee,
   addRoomPaymentOfFee,
@@ -18,7 +18,7 @@ feeRouter.post('/', upload.none(), createFee)
 feeRouter.delete('/:id', upload.none(), deleteFee)
 feeRouter.post('/:id/pay', upload.none(), addRoomPaymentOfFee)
 feeRouter.post('/csv', upload.single('file'), parseCsv)
-feeRouter.get('/non-optional', upload.none(), getNonOptionalFeeInfo)
+feeRouter.get('/status', upload.none(), getFeesStatus)
 feeRouter.patch('/non-optional/:id', upload.none(), updateNonOptionalFee)
 feeRouter.get('/non-optional/types', upload.none(), getNonOptionalTypes)
 
