@@ -21,26 +21,8 @@ const ResidentInRoomId = () => {
   const navigate = useNavigate();
 
   const [changeHead, SetChangeHead] = useState(false);
-  //đang để mặc định để test
   const [headId, setHeadId] = useState(31);
-  const [roomResident, setRoomResident] = useState([
-    {
-    name: "memeoajsflkjalkfjas lkfjlakjfafffaf fafafafa fafrqrqr qrqr",
-    age: 20,
-    gender: "male",
-    phoneNumber: "01231414151",
-    idCardNumber: '111111111111',
-    id: 31
-  },
-    {
-    name: "ghggmemeo",
-    age: 20,
-    gender: "male",
-    phoneNumber: "01231414151",
-    idCardNumber: '111111111111',
-    id: 32
-  },
-]);
+  const [roomResident, setRoomResident] = useState([]);
 
   const { backendUrl, updateresidenttoken, token } = useContext(AppContext);
   const {

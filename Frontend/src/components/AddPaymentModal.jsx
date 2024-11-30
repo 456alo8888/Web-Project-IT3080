@@ -14,24 +14,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
   const [payAmount, setPayAmount] = useState(paymentInfo?.needPay);
   const [residentId, setResidentId] = useState(31);
 
-  const [roomResident, setRoomResident] = useState([
-    {
-      name: "memeo",
-      age: 20,
-      gender: "male",
-      phoneNumber: "01231414151",
-      idCardNumber: "111111111111",
-      id: 31,
-    },
-    {
-      name: "ghggmemeo",
-      age: 20,
-      gender: "male",
-      phoneNumber: "01231414151",
-      idCardNumber: "111111111111",
-      id: 32,
-    },
-  ]);
+  const [roomResident, setRoomResident] = useState([]);
   const { backendUrl, receivetoken, adminId } = useContext(AppContext);
   const { getAllFees } = useContext(FeeContext);
 

@@ -234,12 +234,13 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
               >
                 <option value="male">Nam</option>
                 <option value="female">Nữ</option>
+                <option value="other">Khác</option>
               </select>
             </div>
           ) : (
             <p>
               <span className="font-semibold text-lg mr-2">Giới tính:</span>{" "}
-              {resident.gender === "male" ? "Nam" : "Nữ"}{" "}
+              {resident.gender === "male" ? "Nam" : resident.gender === "female" ? "Nữ" : "Khác"}{" "}
             </p>
           )}
         </div>
@@ -250,7 +251,7 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
               <input
                 required
                 type="text"
-                name="cccd"
+                name="idCardNumber"
                 value={updateResident.idCardNumber}
                 onChange={handleChange}
                 className="px-1 ml-2 outline-none border focus:border-secondary max-w-[200px] rounded-sm"
@@ -271,7 +272,7 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
               <input
                 required
                 type="text"
-                name="phone"
+                name="phoneNumber"
                 value={updateResident.phoneNumber}
                 onChange={handleChange}
                 className="px-1 ml-2 outline-none border focus:border-secondary max-w-[180px] rounded-sm"

@@ -34,20 +34,20 @@ const ResidentForm = () => {
   const [search, setSearch] = useState("");
 
   const { backendUrl, updateresidenttoken, token } = useContext(AppContext);
-  const { showResidentForm, setShowResidentForm, getAllResidents, residents, rooms, getAllRooms } =
+  const { showResidentForm, setShowResidentForm, residents, rooms, getAllRooms } =
     useContext(ResidentContext);
 
-  console.log("ROOMS:", rooms);
 
   const applyFilter = () => {
     if (search) {
+      const lowercaseSearch = search.toLowerCase();
       setFilterRooms(
         rooms.filter(
           (room) =>
-            room.id?.toString().includes(search) ||
-            room.name?.toLowerCase().includes(search) ||
-            room.headResidentName?.toLowerCase().includes(search)||
-            ( search.includes('num =') && search.includes(room.residentCount) )
+            room.id?.toString().includes(lowercaseSearch) ||
+            room.name?.toLowerCase().includes(lowercaseSearch) ||
+            room.headResidentName?.toLowerCase().includes(lowercaseSearch)||
+            ( lowercaseSearch.includes('num =') && lowercaseSearch.endsWith(room.residentCount) )
         )
       );
     } else {
@@ -78,10 +78,7 @@ const ResidentForm = () => {
       const formData = new FormData();
 
       formData.append("avatar", residentImg);
-      formData.append("roomId", room);
-      // formData.append("firstName", firstName);
-      // formData.append("lastName", lastName);
-      // formData.append("middleName", middleName);
+      formData.append("roomName", room);
       formData.append("name", name);
       formData.append("gender", gender);
       formData.append("age", Number(age));
@@ -128,7 +125,7 @@ const ResidentForm = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="peer w-full p-2 px-4 border-2 outline-none  text-gray-500 rounded-full focus:border-secondary transition-all"
-            placeholder="Tìm kiếm: ex 101, meo meo"
+            placeholder="Tìm kiếm: ex 101, An, num = 3"
           />
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
@@ -185,7 +182,7 @@ const ResidentForm = () => {
         <div className="flex flex-col grow">
           <div className="flex gap-12 mb-4">
             <div className="w-[40%]">
-              <p className="mb-2 text-gray-500 font-medium">Số phòng</p>
+              <p className="mb-2 text-gray-500 font-medium">Tên phòng</p>
               <input
                 type="text"
                 onChange={(e) => setRoom(e.target.value)}
@@ -196,7 +193,7 @@ const ResidentForm = () => {
               />
             </div>
             <div className="w-full">
-              <p className="mb-2 text-gray-500 font-medium">Tên chủ hộ</p>
+              <p className="mb-2 text-gray-500 font-medium">Họ và tên</p>
               <input
                 type="text"
                 onChange={(e) => setName(e.target.value)}
@@ -220,6 +217,7 @@ const ResidentForm = () => {
               >
                 <option value="male">Nam</option>
                 <option value="female">Nữ</option>
+                <option value="other">Khác</option>
               </select>
             </div>
             <div className="w-full">
@@ -244,7 +242,7 @@ const ResidentForm = () => {
                 onChange={(e) => setAge(e.target.value)}
                 value={age}
                 className="p-2 px-4 pr-0 w-full  border  bg-gray-50 focus:border-secondary outline-none rounded-md text-gray-500 transition-all"
-                placeholder="ex: 20(trên 17)"
+                placeholder="ex: 20"
                 required
               />
             </div>

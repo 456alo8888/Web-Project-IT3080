@@ -17,7 +17,7 @@ const RoomInfo = ({ room }) => {
       <div className="flex gap-2 h-6">
         <span className="min-w-[100px] font-medium text-gray-800">Chủ phòng : </span>
         <span className="max-w-200 overflow-y-auto">
-          {room.headResidentName}
+          {room.headResidentName ?? 'Chưa có'}
         </span>
       </div>
       <div>

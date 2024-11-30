@@ -12,7 +12,7 @@ const createResident = async (req, res) => {
             return res.status(403).json({success:false, message: "Bạn không có quyền cập nhật dân cư"})
         }
 
-        const { roomId, name, age, gender, phoneNumber, idCardNumber, isHeadResident } = req.body
+        const { roomName, name, age, gender, phoneNumber, idCardNumber, isHeadResident } = req.body
         const imageFile = req.file
         //console.log(req.body);
         //console.log(req.file);
@@ -20,7 +20,7 @@ const createResident = async (req, res) => {
         if (!imageFile) {
             return res.status(400).json({ success: false, message: "Thiếu ảnh" })
         }
-        if (roomId == null 
+        if (roomName == null 
             || name == null 
             || age == null 
             || gender == null 
@@ -31,14 +31,14 @@ const createResident = async (req, res) => {
             return res.status(400).json({ success: false, message: "Thiếu dữ liệu" })
         }
 
-        const roomRecord = await Room.findOne({ where: { id: roomId } })
+        const roomRecord = await Room.findOne({ where: { roomName } })
         if (!roomRecord) {
             return res.status(400).json({ success: false, message: "Phòng không tồn tại"})
         }
         if (await Resident.findOne({ where: { idCardNumber } })) {
             return res.status(400).json({ message: 'CCCD đã tồn tại' })
         }
-        if (isHeadResident == 'true' && roomRecord.headResidentId != null) {
+        if (isHeadResident === 'true' && roomRecord.headResidentId != null) {
             return res.status(400).json({ message: 'Đã có trưởng phòng'})
         }
 
@@ -52,14 +52,14 @@ const createResident = async (req, res) => {
         const image = imageUpload.secure_url
 
         const residentData = {
-            roomId, name, age, gender, phoneNumber, idCardNumber, image
+            roomId: roomRecord.id, name, age, gender, phoneNumber, idCardNumber, image
         }
 
         const resident = await Resident.create(residentData)
         if (!resident) {
             res.status(500).json({ success: false, message: "Lỗi hệ thống", })
         }
-        if (isHeadResident) {
+        if (isHeadResident === 'true') {
             roomRecord.headResidentId = resident.id
             await roomRecord.save()
         }
@@ -98,6 +98,10 @@ const updateResident = async (req, res) => {
             || idCardNumber == null
         ) {
             return res.status(400).json({ success: false, message: "Thiếu dữ liệu" })
+        }
+
+        if (idCardNumber.length !== 12) {
+            return res.status(400).json({ success: false, message: "CCCD phải có đúng 12 số" })
         }
 
         // Tìm phòng theo roomName
@@ -271,7 +275,7 @@ const roomResident = async (req, res) => {
         // Find all residents of the specified room
         const residents = await Resident.findAll({
             where: { roomId },
-            attributes: ['id', 'name', 'age', 'gender', 'phoneNumber', 'idCardNumber'], // Select specific attributes
+            attributes: ['id', 'name', 'age', 'gender', 'phoneNumber', 'idCardNumber', 'image'], // Select specific attributes
             raw: true,
             nest: true,
         });
@@ -284,6 +288,7 @@ const roomResident = async (req, res) => {
             gender: resi.gender,
             phoneNumber: resi.phoneNumber,
             idCardNumber: resi.idCardNumber,
+            image: resi.image,
         }));
 
         return res.status(200).json({ success: true, headResidentId: room.headResidentId, data: formattedResidents });
