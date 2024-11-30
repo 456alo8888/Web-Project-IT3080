@@ -10,4 +10,33 @@
   scroll-behavior: smooth;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+}
+
+.active li {
+  background-color: rgba(126, 188, 110, 0.75) !important;
+  color: white;
+}
+
+.custom-checkbox {
+  @apply h-4 w-4 accent-primary border-gray-300;
+}
+
+/* Add this to your global CSS file */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;  /* Scrollbar track color */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;     /* Scrollbar thumb color */
+  border-radius: 10px;   /* Make the thumb rounded */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;      /* Scrollbar thumb color on hover */
 }
