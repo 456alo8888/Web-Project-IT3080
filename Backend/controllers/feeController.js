@@ -17,6 +17,9 @@ async function createOptionalFee(req, res, adminId, deadline) {
   if (name == null || lowerBound == null) {
     return res.status(400).json({message: 'Thiếu thông tin' });
   }
+  if (lowerBound < 0) {
+    return res.status(400).json({ message: 'Phí tối thiểu là số âm' });
+  }
   const fee = await Fee.create({
     name,
     isOptional: true,
@@ -38,8 +41,6 @@ async function createOptionalFee(req, res, adminId, deadline) {
 async function createNonOptionalFee(req, res, adminId, deadline) {
   const { feeList: feeListRaw, typeId, month, year } = req.body;
   if (feeListRaw == null || typeId == null || month == null || year == null) {
-    console.log(req.body);
-    
     return res.status(400).json({message: 'Thiếu thông tin' });
   }
 
@@ -82,7 +83,6 @@ async function createNonOptionalFee(req, res, adminId, deadline) {
     date: new Date(year, month - 1, 1),
     type: typeId
   });
-  console.log(req.body);
 
   await Bill.bulkCreate(bills);
   return res.status(200).json({
@@ -282,7 +282,6 @@ export async function updateNonOptionalFee(req, res) {
     const { roomId, value } = req.body;
     const { id: feeId } = req.params;
     if (!roomId || !value || !feeId) {
-      console.log(req.body);
       
       return res.status(400).json({ message: 'Thiếu dữ liệu' });
     }
@@ -309,7 +308,11 @@ export async function deleteFee(req, res) {
     if (!feeId) {
       return res.status(400).json({ message: 'Thiếu dữ liệu' });
     }
-    await Fee.destroy({ where: { id: feeId } });
+    const fee = await Fee.findOne({ where: { id: feeId } });
+    if (!fee) {
+      return res.status(400).json({ message: 'Phí không tồn tại' });
+    }
+    await fee.destroy();
     return res.status(200).json({ message: 'Xóa khoản thu thành công'});
   } catch (error) {
     console.error('Error deleting fee:', error);

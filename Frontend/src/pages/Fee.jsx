@@ -22,7 +22,7 @@ const Fee = () => {
   const [filters, setFilters] = useState([]);
 
   //data from context
-  const { backendUrl, createfeetoken, token, adminId, updatefeetoken } = useContext(AppContext);
+  const { backendUrl, createfeetoken, updatefeetoken, token, adminId } = useContext(AppContext);
   const { residents, rooms } = useContext(ResidentContext);
   const { fees, getAllFees } = useContext(FeeContext);
 
@@ -31,13 +31,12 @@ const Fee = () => {
 
   //state for create fee
   const [csvFile, setCsvFile] = useState();
-  const [isOptional, setIsOptional] = useState(true);
   const [lowerBound, setLowerBound] = useState(0);
   const [typeId, setTypeId] = useState(1);
   const [nonOptionalType, setNonOptionalType] = useState([
-    { id: 1, name: "tiền xe" },
-    { id: 2, name: "tiền điện" },
-    { id: 3, name: "tiền nuoc" },
+    // { id: 1, name: "tiền xe" },
+    // { id: 2, name: "tiền điện" },
+    // { id: 3, name: "tiền nuoc" },
   ]);
   nonOptionalType.forEach(e => console.log(e));
 
@@ -65,11 +64,7 @@ const Fee = () => {
         backendUrl + "/api/fees/non-optional/types"
       );
 
-      if (status === 200) {
-        setNonOptionalType(data.data);
-      } else {
-        toast.error(data.message);
-      }
+      setNonOptionalType(data.data);
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -83,16 +78,14 @@ const Fee = () => {
     if (confirmDelete) {
       try {
         const { data, status } = await axios.delete(
-          backendUrl + "/api/fees/" + _id,
-          {headers: {updatefeetoken: updatefeetoken}}
+          backendUrl + "/api/fees/" + _id, 
+          {
+            headers: { updatefeetoken }
+          }
         );
 
-        if (status === 200) {
-          toast.success("Xóa thành công");
-          getAllFees();
-        } else {
-          toast.error(data.message);
-        }
+        toast.success("Xóa thành công");
+        getAllFees();
       } catch (error) {
         toast.error(error.response.data.message);
       }
@@ -158,17 +151,17 @@ const Fee = () => {
 
 
   const handleCSVFile = async (e) => {
-    const csv = e.target.file[0];
+    
+    const csv = e.target.files[0];
     setCsvFile(e.target.files[0]);
-    console.log(csv);
-    try {
-      const form = new FormData();
+    const form = new FormData();
       
-      form.append("feeFile", csv)
+    form.append("file", csv);
+    try {
       const { data } = await axios.post(backendUrl + "/api/fees/csv", form);
       setFeepayInfo(
         data.data.map((payinfo) => ({
-          name: payinfo.name,
+          id: payinfo.id,
           value: payinfo.value,
         }))
       );
@@ -194,33 +187,34 @@ const Fee = () => {
       return;
     }
 
-    try {
-      const formData = new FormData();
+   
+    const formData = new FormData();
 
-      formData.append("isOptional", feeType === "BAT_BUOC" ? false : true);
+    const isOptional = feeType !== "BAT_BUOC";
+    formData.append("isOptional", isOptional);
+    formData.append("deadline", deadline);
+    formData.append("adminId", adminId);
+    if (isOptional) {
       formData.append("name", name);
       formData.append("lowerBound", lowerBound);
+    } else {
       formData.append("typeId", typeId);
       formData.append("month", month);
       formData.append("year", year);
       formData.append("feeList", JSON.stringify(info));
-      formData.append("deadline", deadline);
-      formData.append("adminId", adminId)
+    }
 
-      const { data, status } = await axios.post(backendUrl + "/api/fees", formData, {
+    try {
+      const { data } = await axios.post(backendUrl + "/api/fees", formData, {
         headers: { createfeetoken },
       });
-
-      if (status === 200) {
-        toast.success(data.message);
-        setName("");
-        setDeadline("");
-        getAllFees();
-      } else {
-        toast.error(data.message);
-      }
+      toast.success(data.message);
+      setName("");
+      setDeadline("");
+      resetPayinfo();
+      getAllFees();
     } catch (error) {
-      toast.error(error.response.data.message?.name || error.response.data.message);
+      toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -328,7 +322,7 @@ const Fee = () => {
                 className="text-gray-500 bg-gray-50 border-b-2 outline-none p-1 px-2  focus:border-secondary transition-all"
               >
                 <option value="BAT_BUOC">Bắt buộc</option>
-                <option value="KHONG_BAT_BUOC">Không bắt buọc </option>
+                <option value="KHONG_BAT_BUOC">Không bắt buộc </option>
               </select>
             </div>
             <div className="flex items-center gap-2">
@@ -412,7 +406,7 @@ const Fee = () => {
 
           <div className="flex mt-4 gap-12 items-start justify-start w-full max-h-[300px]">
             <p className="text-lg text-gray-500 font-medium">
-              Phí :<br />{" "}
+              {feeType === "BAT_BUOC" ? 'Phí :' : 'Tối thiểu:'}<br />{" "}
               <span className="text-sm text-secondary">(ngàn đồng)</span>{" "}
             </p>
             {feeType === "BAT_BUOC" ? (
@@ -440,10 +434,14 @@ const Fee = () => {
                 </div>
               </>
             ) : (
-              <p className="text-red-400 p-1 px-2 border-b-2">
-                {" "}
-                * không giới hạn
-              </p>
+              <input
+                type="number"
+                value={lowerBound}
+                onChange={(e) => setLowerBound(e.target.value)}
+                className="text-primary border-b-2 outline-none p-1 px-2  focus:border-secondary transition-all"
+                required
+                placeholder="ex: 10000"
+              />
             )}
           </div>
 
@@ -561,7 +559,7 @@ const Fee = () => {
                 /{" "}
                 <span className="font-medium text-gray-500">
                   {" "}
-                  {fee?.count || "gì đây"}{" "}
+                  {fee?.count || "-"}{" "}
                 </span>
               </div>
               <div className="text-center text-gray-400 ">

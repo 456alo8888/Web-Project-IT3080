@@ -11,84 +11,7 @@ const FeeContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
     const {createfeetoken} = useContext(AppContext)
-    const [fees, setFees] = useState([
-        {
-            isOptional: true,
-            lowerBound: 123,
-            deadline: "2024-11-23T15:30:00Z",
-            name: "Ủng hộ lũ lụt miền Trung",
-            id: 123,
-            createdAt: "2024-11-23T15:30:00Z",
-            count: null,
-            finished: 98
-        }, 
-        {
-            isOptional: false,
-            deadline: "2024-11-23T15:30:00Z",
-            name: "Tiền nhà 11/2024",
-            id: 166234,
-            createdAt: "2024-11-23T15:30:00Z",
-            count: 100,
-            finished: 98
-        },
-        {
-            isOptional: true,
-            lowerBound: 123,
-            deadline: "2024-11-23T15:30:00Z",
-            name: "Ủng hộ lũ lụt miền Trung",
-            id: 12143123,
-            createdAt: "2024-11-23T15:30:00Z",
-            count: null,
-            finished: 98
-        }, 
-        {
-            isOptional: false,
-            deadline: "2024-11-23T15:30:00Z",
-            name: "Tiền nhà 11/2024",
-            id: 12345655,
-            createdAt: "2024-11-23T15:30:00Z",
-            count: 100,
-            finished: 98
-        },
-        {
-            isOptional: true,
-            lowerBound: 5123,
-            deadline: "2024-11-23T15:30:00Z",
-            name: "Ủng hộ lũ lụt miền Trung",
-            id: 52123,
-            createdAt: "2024-11-23T15:30:00Z",
-            count: null,
-            finished: 98
-        }, 
-        {
-            isOptional: false,
-            deadline: "2024-11-23T15:30:00Z",
-            name: "Tiền nhà 11/2024",
-            id: 751234,
-            createdAt: "2024-11-23T15:30:00Z",
-            count: 100,
-            finished: 98
-        },
-        {
-            isOptional: true,
-            lowerBound: 35123,
-            deadline: "2024-11-23T15:30:00Z",
-            name: "Ủng hộ lũ lụt miền Trung",
-            id: 88123423,
-            createdAt: "2024-11-23T15:30:00Z",
-            count: null,
-            finished: 98
-        }, 
-        {
-            isOptional: false,
-            deadline: "2024-11-23T15:30:00Z",
-            name: "Tiền nhà 11/2024",
-            id: 517234,
-            createdAt: "2024-11-23T15:30:00Z",
-            count: 100,
-            finished: 98
-        },
-    ]);
+    const [fees, setFees] = useState([]);
 
     const {rooms} = useContext(ResidentContext)
     const [listFees, setListFees] = useState([])
@@ -175,20 +98,11 @@ const FeeContextProvider = (props) => {
 
         try {
 
-            const { data, status } = await axios.get(backendUrl + '/api/fees', {headers: {createfeetoken: createfeetoken}})
+          const { data, status } = await axios.get(backendUrl + '/api/fees', {headers: {createfeetoken}})
 
-            if (status === 200) {
-
-                data.data.length > 0 && setFees(data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
-                data.data.length > 0 && setListFees((data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)))
-            } else {
-                toast.error(status)
-            }
-            console.log(data);
-
-
+          data.data.length > 0 && setFees(data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
+          data.data.length > 0 && setListFees((data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)))
         } catch (error) {
-            console.log(error);
             toast.error(error.response.data.message)
         }
 

@@ -11,63 +11,7 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
 
   const [feeValue, setFeeValue] = useState([]);
   const [csvFile, setCsvFile] = useState('')
-  const [feeInfo, setFeeInfo] = useState([
-    {
-      roomId: 12,
-      room: "123-A",
-      value: 123,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-    {
-      roomId: 123,
-      room: "123C",
-      value: 90,
-    },
-  ]);
+  const [feeInfo, setFeeInfo] = useState([]);
 
   const getNonOptionalFeeInfo = async () => {
     try {
@@ -78,13 +22,8 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
         }
       );
 
-      if (status === 200) {
-        data?.length > 0 && setFeeInfo(data[0]?.values);
-        console.log(data);
-        
-      } else {
-        toast.error(status);
-      }
+      data?.length > 0 && setFeeInfo(data[0]?.values);
+
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -98,16 +37,14 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
           roomId: roomId,
           feeId: idFeeModal.id,
           value: value,
-        },
-        {headers: {updatefeetoken: updatefeetoken}}
+        }, 
+        {
+          headers: { updatefeetoken }
+        }
       );
 
-      if (status === 200) {
-        toast.success(data.message);
-        getNonOptionalFeeInfo();
-      } else {
-        toast.error(status);
-      }
+      toast.success(data.message);
+      getNonOptionalFeeInfo();
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -115,11 +52,10 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
 
   const handleCSVFile = async (e) => {
     setCsvFile(e.target.files[0])
-    console.log(e.target.files[0]);
     
     try {
         const form = new FormData();
-        form.append("feeFile", e.target.files[0])
+        form.append("file", e.target.files[0])
       const {data} = await axios.post(backendUrl + "/api/fees/csv", form);
       data.data?.forEach(payinfo => {
         updateFee(payinfo?.id, payinfo.value);
