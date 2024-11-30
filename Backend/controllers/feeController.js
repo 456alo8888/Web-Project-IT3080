@@ -524,7 +524,7 @@ export async function getRoomPaymentsInfo(req, res) {
         admin: b.Receipt.Admin?.name ?? 'Đã xóa',
         value: b.value,
         isOptional: false,
-        createdAt: b.createdAt,
+        createdAt: b.Receipt.createdAt,
       }));
     const unpaid = bills
       .filter(b => b.Receipt == null)
@@ -548,7 +548,7 @@ export async function getRoomPaymentsInfo(req, res) {
       admin: d.Admin?.name ?? 'Đã xóa',
       value: d.value,
       isOptional: true,
-      createdAt: d.Fee.createdAt,
+      createdAt: d.createdAt,
     }));
     const data = {
       paid: [...paidOptional, ...paidNonOptional],

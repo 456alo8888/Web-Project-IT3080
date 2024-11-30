@@ -16,54 +16,17 @@ const History = () => {
 
   const { backendUrl } = useContext(AppContext);
 
-  const { fees, allPaymentInfo, loadAllPaymentInfo } = useContext(FeeContext);
+  const {  } = useContext(FeeContext);
   const { rooms } = useContext(ResidentContext);
 
-  //load paymentinfo
-  // const loadPaymentInfo = async (roomId) => {
-  //   try {
-  //     const { data, status } = await axios.get(
-  //       `${backendUrl}/api/rooms/${roomId}/pay`
-  //     );
-
-  //     if (status === 200) {
-  //       return { roomId, payment: data }; // Return the new payment info
-  //     } else {
-  //       toast.error(`Error: ${status}`);
-  //       return null; // Return null in case of error
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.response.data.message);
-  //     return null; // Return null in case of exception
-  //   }
-  // };
-
-  // const loadAllPaymentInfo = async () => {
-  //   try {
-  //     // Create an array of promises for all rooms
-  //     const promises = rooms.map((room) => loadPaymentInfo(room.id));
-
-  //     // Wait for all promises to resolve
-  //     const results = await Promise.all(promises);
-
-  //     // Filter out null responses
-  //     const validResults = results.filter((result) => result !== null);
-
-  //     // Update state with new payment info
-  //     setAllPaymentInfo((prev) => [...prev, ...validResults]);
-  //   } catch (error) {
-  //     toast.error(`Failed to load payment info: ${error.response.data.message}`);
-  //   }
-  // };
 
   // funtion to search
-
   const applySearch = () => {
     if (search) {
       setFilterRoom(
         rooms.filter(
           (room) =>
-            room.name.includes(search) 
+            room.name.includes(search) || room.headResidentName?.includes(search)
         )
       );
     } else {
@@ -72,14 +35,8 @@ const History = () => {
   };
 
   useEffect(() => {
-    // loadAllPaymentInfo();
-    console.log(rooms);
-    
-  }, [rooms]);
-
-  useEffect(() => {
     applySearch();
-  }, [allPaymentInfo, search]);
+  }, [search]);
 
   //utility funtion
 
@@ -146,14 +103,9 @@ const History = () => {
               <span>{room.name}</span>
             </div>
             <div className="flex gap-2">
-              <p className="">Chưa đóng:</p>
-              <span className="text-red-300 font-semibold">{allPaymentInfo.find(e => e.roomId === room.id)?.payment?.unpaid.length}</span>
+              <p className="font-semibold">Chủ phòng:</p>
+              <span>{room.headResidentName}</span>
             </div>
-            <div className="flex gap-2">
-              <p>Đã đóng:</p>
-              <span className="text-primary font-semibold">{allPaymentInfo.find(e => e.roomId === room.id)?.payment?.paid.length}</span>
-            </div>
-
           </Link>
         ))}
       </section>

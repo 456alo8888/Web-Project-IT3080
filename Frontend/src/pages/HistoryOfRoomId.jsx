@@ -104,26 +104,26 @@ const HistoryOfRoomId = () => {
       </div>
       <section className="flex gap-2 p-8 py-6 h-[85%] z-0  bg-white border rounded-xl transition-all duration-700">
         <div className="flex-1">
-          <div className="grid grid-cols-[0.6fr_1.2fr_0.8fr_0.6fr_0.6fr_0.8fr] bg-gray-200 p-4 px-4 text-gray-500 rounded-t-md">
-            <div className="font-medium">ID</div>
-            <div className="font-medium">Tên</div>
-            <div className="font-medium">Admin </div>
-            <div className="font-medium text-center">Số tiền</div>
-            <div className="font-medium text-center">Thời gian</div>
+          <div className="grid grid-cols-[1.0fr_0.6fr_0.6fr_0.6fr_0.6fr_0.8fr] bg-gray-200 p-4 px-4 text-gray-500 rounded-t-md">
+            <div className="font-medium">Tên phí</div>
+            <div className="font-medium">Admin</div>
+            <div className="font-medium">Số tiền</div>
+            <div className="font-medium">Người đóng</div>
+            <div className="font-medium">Thời gian</div>
             <div className="font-medium ml-4">Loại phí</div>
           </div>
           <div className="flex flex-col max-h-[60vh] overflow-y-auto">
             {paymentInfo?.paid?.map((payment, index) => (
               <div
                 key={index}
-                className={`group grid grid-cols-[0.6fr_1.2fr_0.8fr_0.6fr_0.6fr_0.8fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${
+                className={`group grid grid-cols-[1.0fr_0.6fr_0.6fr_0.6fr_0.6fr_0.8fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${
                   index % 2 === 0 ? "bg-white" : "bg-gray-50"
                 }`}
               >
-                <div className="text-gray-600 text-sm">{payment.feeId}</div>
                 <div>{payment.name} </div>
                 <div>{payment.admin} </div>
                 <div className="pl-6 text-primary font-medium">{payment.value}</div>
+                <div>{payment.resident}</div>
                 <div>{formatDate(payment.createdAt)}</div>
                 <div>{payment.isOptional ? <span className="text-violet-500 text-sm pl-4">Tự nguyện</span> : <span className="text-red-500 text-sm pl-4">Bắt buộc</span>}</div>
               </div>
@@ -131,8 +131,7 @@ const HistoryOfRoomId = () => {
           </div>
         </div>
         <div>
-          <div className="grid grid-cols-[1fr_3fr_1fr] bg-gray-200 p-4 px-4 text-gray-500 rounded-t-md">
-            <div className="font-medium">ID</div>
+          <div className="grid grid-cols-[3fr_1fr] bg-gray-200 p-4 px-4 text-gray-500 rounded-t-md">
             <div className="font-medium">Tên</div>
             <div className="font-medium">Cần đóng </div>
           </div>
@@ -140,11 +139,10 @@ const HistoryOfRoomId = () => {
             {paymentInfo?.unpaid?.map((payment, index) => (
               <div
                 key={index}
-                className={`group grid grid-cols-[1fr_3fr_1fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${
+                className={`group grid grid-cols-[3fr_1fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${
                   index % 2 === 0 ? "bg-white" : "bg-gray-50"
                 }`}
               >
-                <div>{payment.feeId}</div>
                 <div>{payment.name} </div>
                 <div className="pl-6 font-medium text-red-500">{payment.value} </div>
               </div>

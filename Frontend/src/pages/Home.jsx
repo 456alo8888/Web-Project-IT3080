@@ -100,7 +100,7 @@ const applySearch = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="peer w-full p-2 px-4 border-2 outline-none  text-gray-500 rounded-full focus:border-secondary transition-all"
-            placeholder="ex: tiền điện, tiền nước"
+            placeholder="tên phòng"
           />
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
