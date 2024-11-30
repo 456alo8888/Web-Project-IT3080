@@ -16,32 +16,29 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
 
   const [roomResident, setRoomResident] = useState([]);
   const { backendUrl, receivetoken, adminId } = useContext(AppContext);
-  const { getAllFees } = useContext(FeeContext);
+  const { getFeesData } = useContext(FeeContext);
 
   const submitAddPayment = async () => {
     setIsLoading(true);
     console.log(receivetoken);
-    
+
     try {
       const { data, status } = await axios.post(
-        backendUrl + `/api/fees/${room.id}/pay`,
+        backendUrl + `/api/fees/${fee.id}/pay`,
         {
           residentId: residentId,
           value: payAmount,
           roomId: room.id,
           adminId: Number(adminId),
         },
-        {headers: {receivefeetoken: receivetoken}}
+        { headers: { receivefeetoken: receivetoken } }
       );
 
-      if (status === 200) {
-        toast.success("Thanh cong");
-        setIsSuccess(true);
-        getAllFees();
-      } else {
-        toast.error(status);
-      }
+      toast.success("Thành công");
+      setIsSuccess(true);
+      getFeesData();
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
@@ -69,7 +66,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
   useEffect(() => {
     getRoomResident();
 
-    return () => {};
+    return () => { };
   }, []);
 
   return (
@@ -119,11 +116,10 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
             <p className="font-semibold ">Số tiền đóng:</p>
             <input
               type="number"
-              className={`w-[100px] p-2 py-1 outline-none border-b-2 transition-all ${
-                fee.isOptional
+              className={`w-[100px] p-2 py-1 outline-none border-b-2 transition-all ${fee.isOptional
                   ? "focus:border-b-violet-500 text-violet-300"
                   : "focus:border-b-red-500 text-red-300"
-              }  `}
+                }  `}
               value={payAmount}
               onChange={(e) => setPayAmount(e.target.value)}
               placeholder="ex: 100"
@@ -146,7 +142,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
               ))}
             </select>
           </div>
-          <button
+          {!isSuccess && <button
             onClick={submitAddPayment}
             className="min-w-[50%]  flex justify-center max-w-[60%] self-end p-4 px-8 mt-1 rounded-xl text-white font-medium text-lg mr-6 bg-secondary hover:shadow-[5px_5px_15px_rgba(0,0,0,0.3)] hover:opacity-60 hover:-translate-x-4 transition-all"
           >
@@ -158,6 +154,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
               </span>
             )}
           </button>
+          }
         </section>
       </div>
     </div>

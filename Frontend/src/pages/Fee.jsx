@@ -24,7 +24,7 @@ const Fee = () => {
   //data from context
   const { backendUrl, createfeetoken, updatefeetoken, token, adminId } = useContext(AppContext);
   const { residents, rooms } = useContext(ResidentContext);
-  const { fees, getAllFees } = useContext(FeeContext);
+  const { allFees, getFeesData } = useContext(FeeContext);
 
   //for loading submit
   const [loading, setLoading] = useState(false);
@@ -79,7 +79,7 @@ const Fee = () => {
         );
 
         toast.success("Xóa thành công");
-        getAllFees();
+        getFeesData();
       } catch (error) {
         toast.error(error.response.data.message);
       }
@@ -97,7 +97,7 @@ const Fee = () => {
 
   const applyFilter = async () => {
     if (filters.length || search) {
-      let searchFee = fees.filter((fee) =>
+      let searchFee = allFees.filter((fee) =>
         fee.name.toLowerCase().includes(search.toLowerCase())
       );
 
@@ -126,17 +126,17 @@ const Fee = () => {
       setFilterFees(searchFee);
       console.log(searchFee);
     } else {
-      setFilterFees(fees);
-      console.log(fees);
+      setFilterFees(allFees);
+      console.log(allFees);
     }
   };
 
   useEffect(() => {
     applyFilter();
-  }, [fees, search, filters]);
+  }, [allFees, search, filters]);
 
   useEffect(() => {
-    getAllFees();
+    getFeesData();
     loadFeeTypes();
   }, [token]);
 
@@ -207,7 +207,7 @@ const Fee = () => {
       setYear(new Date().getFullYear());
       setMonth(new Date().getMonth() + 1);
       // resetPayinfo();
-      getAllFees();
+      getFeesData();
     } catch (error) {
       if (error.status >= 500) {
         toast.error('Lỗi hệ thống');

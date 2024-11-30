@@ -10,46 +10,57 @@ const FeeContextProvider = (props) => {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL
 
-  const { createfeetoken } = useContext(AppContext)
-  const [fees, setFees] = useState([]);
-
-  const { rooms } = useContext(ResidentContext)
-  const [listFees, setListFees] = useState([])
-  const [allPaymentInfo, setAllPaymentInfo] = useState([]);
-
-
+  const [allFees, setAllFees] = useState([]);
+  const [displayedFees, setDisplayedFees] = useState([])
 
   //load paymentinfo
-  const loadPaymentInfo = async (roomId) => {
+  // const loadRoomPaymentInfo = async (roomId) => {
+  //   try {
+  //     const { data, status } = await axios.get(
+  //       `${backendUrl}/api/rooms/${roomId}/pay`
+  //     );
+
+  //     return { roomId, payment: data };
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //     return null; // Return null in case of exception
+  //   }
+  // };
+
+  const loadDisplayedFeesInfo = async (feeIds) => {
+    if (feeIds == null || feeIds.length == 0) {
+      return [];
+    }
     try {
+      const searchParams = `?${feeIds.map(id => `id=${id}`).join('&')}`
       const { data, status } = await axios.get(
-        `${backendUrl}/api/rooms/${roomId}/pay`
+        `${backendUrl}/api/fees/status` + searchParams,
       );
 
-      return { roomId, payment: data };
+      return data;
     } catch (error) {
       toast.error(error.response.data.message);
-      return null; // Return null in case of exception
+      return [];
     }
-  };
+  }
 
-  const loadAllPaymentInfo = async () => {
-    try {
-      // Create an array of promises for all rooms
-      const promises = rooms.map((room) => loadPaymentInfo(room.id));
+  // const loadAllPaymentInfo = async () => {
+  //   try {
+  //     // Create an array of promises for all rooms
+  //     const promises = rooms.map((room) => loadPaymentInfo(room.id));
 
-      // Wait for all promises to resolve
-      const results = await Promise.all(promises);
+  //     // Wait for all promises to resolve
+  //     const results = await Promise.all(promises);
 
-      // Filter out null responses
-      const validResults = results.filter((result) => result !== null);
+  //     // Filter out null responses
+  //     const validResults = results.filter((result) => result !== null);
 
-      // Update state with new payment info
-      setAllPaymentInfo((prev) => [...prev, ...validResults]);
-    } catch (error) {
-      toast.error(`Failed to load payment info: ${error.response.data.message}`);
-    }
-  };
+  //     // Update state with new payment info
+  //     setAllPaymentInfo((prev) => [...prev, ...validResults]);
+  //   } catch (error) {
+  //     toast.error(`Failed to load payment info: ${error.response.data.message}`);
+  //   }
+  // };
 
 
 
@@ -57,23 +68,25 @@ const FeeContextProvider = (props) => {
   //funtion to load
   const initListFees = () => {
 
-    setListFees(fees.slice(0, 5))
-    console.log(fees);
+    setDisplayedFees(allFees.slice(0, 5))
+    console.log('Fees: ', allFees);
 
 
   }
 
 
 
-  const getAllFees = async () => {
+  const getFeesData = async () => {
 
     try {
 
-      const { data, status } = await axios.get(backendUrl + '/api/fees', { headers: { createfeetoken } })
-
-      data.data.length > 0 && setFees(data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
-      data.data.length > 0 && setListFees((data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)))
+      let { data: allFeesData } = await axios.get(backendUrl + '/api/fees');
+      allFeesData = allFeesData.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      allFeesData.length > 0 && setAllFees(allFeesData);
+      const displayedData = await loadDisplayedFeesInfo(allFeesData.slice(0, 5).map(f => f.id));
+      displayedData.length > 0 && setDisplayedFees(displayedData)
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message)
     }
 
@@ -83,17 +96,13 @@ const FeeContextProvider = (props) => {
 
   // load for state
   useEffect(() => {
-
-    getAllFees()
-    loadAllPaymentInfo()
+    getFeesData()
 
   }, [/* rooms */])
 
   const value = {
-    fees, setFees, getAllFees,
-    listFees, setListFees, initListFees,
-    allPaymentInfo, setAllPaymentInfo, loadAllPaymentInfo,
-
+    allFees, setAllFees, getFeesData,
+    displayedFees, setDisplayedFees,
   }
 
   return (

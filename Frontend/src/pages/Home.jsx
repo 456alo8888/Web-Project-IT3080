@@ -14,10 +14,8 @@ const Home = () => {
   const { backendUrl, updatefeetoken, token, username } =
     useContext(AppContext);
   const { residents, rooms } = useContext(ResidentContext);
-  const { fees, getAllFees, listFees, setListFees, initListFees } =
+  const { allFees, getFeesData, displayedFees, setDisplayedFees } =
     useContext(FeeContext);
-
-  console.log(rooms, listFees);
 
   //state for dashboard
   const [showModalFees, setShowModalFees] = useState(-1);
@@ -30,11 +28,6 @@ const Home = () => {
   const [modalFee, setModalFee] = useState("");
   const [modalRoom, setModalRoom] = useState("");
   const [modalPayInfo, setModalPayInfo] = useState("");
-
-  //effect
-  useEffect(() => {
-    initListFees();
-  }, []);
 
   //to open modal and add payment
   const openModal = (fee, room, paymentInfo) => {
@@ -60,19 +53,17 @@ const applySearch = () => {
     setFilterRooms(rooms.filter(r => r.name?.toLowerCase().includes(search)));
   } else {
     setFilterRooms(rooms)
-    console.log(rooms);
-    
   }
 }
 
   const handleChangeFee = (index, newfee) => {
-    setListFees(listFees.map((f, i) => (i === index ? newfee : f)));
+    setDisplayedFees(displayedFees.map((f, i) => (i === index ? newfee : f)));
     setShowModalFees(-1);
   };
 
   useEffect(() => {
     applySearch();
-  }, [fees, rooms, search])
+  }, [allFees, rooms, search])
 
   return (
     <div className="relative w-full h-screen p-2 px-8">
@@ -92,8 +83,12 @@ const applySearch = () => {
         className={`
           ${
             showChart ? "backdrop-blur-md shadow-md" : "hidden"
-          } absolute z-50 right-1/2 translate-x-1/2 top-1/2 -translate-y-1/2 bg-white w-[80%] h-[80%]`}
-      ></section>
+          } absolute z-50 right-1/2 translate-x-1/2 top-1/2 -translate-y-1/2 bg-white w-[80%] h-[80%] flex items-center justify-center`}
+      >
+        <p className="text-gray-700 text-lg font-semibold">
+          Tính năng đang được hoàn thiện, vui lòng quay lại sau
+        </p>
+      </section>
 
       <section className="flex justify-between py-4 items-center">
         <p className="text-2xl font-bold text-gray-600">Bảng quản lí thu chi</p>
@@ -141,7 +136,7 @@ const applySearch = () => {
               Phòng
             </div>
           </div>
-          {listFees.map((fee, index) => (
+          {displayedFees.map((fee, index) => (
             <div
               key={index}
               onClick={() => toggleModal(index)}
@@ -165,14 +160,14 @@ const applySearch = () => {
                 } absolute z-50 flex flex-col top-full mt-2 right-0 border-2 shadow-md max-h-[350px] w-full  bg-white p-2 transition-all`}
               >
                 <div className="overflow-y-auto">
-                  {fees.map((f, index3) => (
+                  {allFees.map((f, index3) => (
                     <div
                       onClick={(e) => handleChangeFee(index, f)}
                       key={f.id}
                       className={` ${
                         f.id === fee.id
                           ? "bg-[rgba(126,188,110,1)] text-white"
-                          : listFees.find((temp) => temp.id === f.id)
+                          : displayedFees.find((temp) => temp.id === f.id)
                           ? "bg-[rgba(126,188,110,0.2)] opacity-80 "
                           : index3 % 2 === 0
                           ? "bg-white"
@@ -202,7 +197,7 @@ const applySearch = () => {
               <div className="font-medium text-[18px] text-gray-500">
                 {room.name}
               </div>
-              {listFees.map((fee, index2) => (
+              {displayedFees.map((fee, index2) => (
                 <div key={index2} className="">
                   <DashBoardInput fee={fee} room={room} openModal={openModal} />
                 </div>

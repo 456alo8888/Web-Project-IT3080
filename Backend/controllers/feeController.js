@@ -259,6 +259,10 @@ export async function getFeesStatus(req, res) {
             {
               model: Room,
               attributes: ['roomName'],
+            },
+            {
+              model: Receipt,
+              attributes: ['id', 'value']
             }
           ],
         },
@@ -271,6 +275,10 @@ export async function getFeesStatus(req, res) {
               attributes: ['roomName'],
             }
           ],
+        },
+        {
+          model: FeeOptional,
+          attributes: ['lowerBound'],
         }
       ],
     });
@@ -283,16 +291,19 @@ export async function getFeesStatus(req, res) {
       createdAt: f.createdAt,
       count: f.houseCount,
       finished: f.paidCount,
+      ...f.isOptional 
+        ? { lowerBound: f.FeeOptional.lowerBound }
+        : {},
       values: f.isOptional 
         ? f.DonationReceipts.map(d => ({
           roomId: d.roomId,
-          room: d.Room.roonName,
-          value: d.value
+          paidAmount: d.value
         }))
         : f.Bills.map((b) => ({
           roomId: b.roomId,
-          room: b.Room.roomName,
-          value: b.value
+          needAmount: b.value,
+          paidAmount: b.Receipt?.value ?? 0,
+          isPaid: b.Receipt != null,
         }))        
     }));
     return res.status(200).json(data);

@@ -16,7 +16,7 @@ const Modal = ({ onClose, idFeeModal }) => {
   const getNonOptionalFeeInfo = async () => {
     try {
       const { data, status } = await axios.get(
-        backendUrl + "/api/fees/non-optional",
+        backendUrl + "/api/fees/status",
         {
           params: { id: idFeeModal.id },
         }
