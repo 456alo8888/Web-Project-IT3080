@@ -72,7 +72,7 @@ const createResident = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ success: false, message: error.response.data.message })
+        res.status(500).json({ success: false, message: error.message })
     }
 
 };
@@ -141,7 +141,7 @@ const updateResident = async (req, res) => {
         res.status(200).json({ success: true, message: "Cập nhật cư dân thành công" });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ success: false, message: error.response.data.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -171,7 +171,7 @@ const deleteResident = async (req, res) => {
         return res.status(200).json({ success: true, message: "Xóa cư dân thành công" });
     } catch (error) {
         //console.log(error);
-        res.status(500).json({ success: false, message: error.response.data.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -212,7 +212,7 @@ const changeHeadResident = async (req, res) => {
         res.status(200).json({ success: true, message: "Cập nhật chủ hộ thành công" });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ success: false, message: error.response.data.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -246,7 +246,7 @@ const roomList = async (req, res) => {
         return res.status(200).json({ success: true, data: formattedRooms });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ success: false, message: error.response.data.message });
+        return res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -289,7 +289,7 @@ const roomResident = async (req, res) => {
         return res.status(200).json({ success: true, headResidentId: room.headResidentId, data: formattedResidents });
     } catch (error) {
         //console.log(error);
-        return res.status(500).json({ success: false, message: error.response.data.message });
+        return res.status(500).json({ success: false, message: error.message });
     }
 };
 
