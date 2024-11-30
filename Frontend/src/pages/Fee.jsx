@@ -33,22 +33,16 @@ const Fee = () => {
   const [csvFile, setCsvFile] = useState();
   const [lowerBound, setLowerBound] = useState(0);
   const [typeId, setTypeId] = useState(1);
-  const [nonOptionalType, setNonOptionalType] = useState([
-    // { id: 1, name: "tiền xe" },
-    // { id: 2, name: "tiền điện" },
-    // { id: 3, name: "tiền nuoc" },
-  ]);
-  nonOptionalType.forEach(e => console.log(e));
+  const [nonOptionalType, setNonOptionalType] = useState([]);
 
-  //state for diaglog NONOPTIONAL FEE INFO
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [idFeeModal, setIdFeeModal] = useState("");
+  const [idFeeModal, setIdFeeModal] = useState({});
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  const [month, setMonth] = useState(new Date().getMonth());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [name, setName] = useState("");
   const [feeType, setFeeType] = useState("BAT_BUOC");
@@ -104,7 +98,7 @@ const Fee = () => {
   const applyFilter = async () => {
     if (filters.length || search) {
       let searchFee = fees.filter((fee) =>
-        fee.name.toLowerCase().includes(search)
+        fee.name.toLowerCase().includes(search.toLowerCase())
       );
 
       const today = new Date();
@@ -121,10 +115,10 @@ const Fee = () => {
 
       if (filters.includes("THANG_NAY")) {
         searchFee = searchFee.filter((fee) => {
-          const deadlineDay = new Date(fee.deadline);
+          const createDay = new Date(fee.createdAt);
           return (
-            deadlineDay.getFullYear() === today.getFullYear() &&
-            deadlineDay.getMonth() === today.getMonth()
+            createDay.getFullYear() === today.getFullYear() &&
+            createDay.getMonth() === today.getMonth()
           );
         });
       }
@@ -174,9 +168,6 @@ const Fee = () => {
     e.preventDefault();
     setLoading(true);
 
-    let info = rooms.map(r => ({id: r.id, value: 0}));
-
-
     const today = new Date();
     const deadlineDate = new Date(deadline);
     console.log(deadlineDate, today);
@@ -201,7 +192,7 @@ const Fee = () => {
       formData.append("typeId", typeId);
       formData.append("month", month);
       formData.append("year", year);
-      formData.append("feeList", JSON.stringify(info));
+      formData.append("feeList", JSON.stringify(feepayInfo));
     }
 
     try {
@@ -269,11 +260,13 @@ const Fee = () => {
 
   return (
     <div className="w-full h-screen relative p-2 px-8">
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        idFeeModal={idFeeModal}
-      />
+      {
+        isModalOpen && 
+        <Modal
+          onClose={closeModal}
+          idFeeModal={idFeeModal}
+        />
+      }
       <div className="flex justify-between py-4 items-center">
         <p className="text-2xl font-bold text-gray-600">Danh sách khoản thu</p>
         <div

@@ -6,7 +6,7 @@ import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const Modal = ({ isOpen, onClose, idFeeModal }) => {
+const Modal = ({ onClose, idFeeModal }) => {
   const { backendUrl, updatefeetoken } = useContext(AppContext);
 
   const [feeValue, setFeeValue] = useState([]);
@@ -31,13 +31,11 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
 
   const updateFee = async (roomId, value) => {
     try {
-      const { data, status } = await axios.put(
-        backendUrl + "/api/fees/non-optional/" + roomId,
+      const { data, status } = await axios.patch(
+        backendUrl + "/api/fees/non-optional/" + idFeeModal.id,
         {
-          roomId: roomId,
-          feeId: idFeeModal.id,
-          value: value,
-        }, 
+          data: JSON.stringify([ { roomId, value } ]), 
+        },
         {
           headers: { updatefeetoken }
         }
@@ -51,19 +49,37 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
   };
 
   const handleCSVFile = async (e) => {
-    setCsvFile(e.target.files[0])
-    
     try {
-        const form = new FormData();
-        form.append("file", e.target.files[0])
-      const {data} = await axios.post(backendUrl + "/api/fees/csv", form);
-      data.data?.forEach(payinfo => {
-        updateFee(payinfo?.id, payinfo.value);
-      });
-      getNonOptionalFeeInfo();
+      setCsvFile(e.target.files[0])
+      const form = new FormData();
+      form.append("file", e.target.files[0]);
+      let data;
+      try {
+        data = await axios.post(backendUrl + "/api/fees/csv", form);
+      } catch (error) {
+        toast.error(error.response.data.message);
+        return;
+      }
+      const newFee = data.data?.data?.map(payinfo => ({
+        roomId: payinfo.id,
+        value: payinfo.value
+      }));
+      try {
+        const res = await axios.patch(
+          backendUrl + "/api/fees/non-optional/" + idFeeModal.id, 
+          { data: JSON.stringify(newFee) }, 
+          { headers: { updatefeetoken } }
+        );
+        toast.success(res.data.message);
+        getNonOptionalFeeInfo();
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+
 
     } catch (error) {
-      toast.error(error.response.data.message)
+      console.log(error)
+      toast.error(error);
     }
   }
 
@@ -81,11 +97,8 @@ const Modal = ({ isOpen, onClose, idFeeModal }) => {
 
   useEffect(() => {
     getNonOptionalFeeInfo();
-
-    return () => {};
   }, []);
 
-  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 ">
       <div className="bg-white min-w-[420px] translate-x-[100px] p-6 pb-8 shadow-lg relative">
