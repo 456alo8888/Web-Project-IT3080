@@ -66,13 +66,13 @@ const ResidentInRoomId = () => {
     <div className="mb-4 w-full h-screen relative px-8 py-2 overflow-visible">
       <div className="flex justify-between py-4 items-center overflow-visible">
         <p className="text-2xl font-bold text-gray-600 overflow-visible">
-          <button onClick={() => navigate(-1)}>
+          <button onClick={() => navigate(-1)} className="group hover:opacity-80 transition-all">
             <FontAwesomeIcon
               icon={faArrowLeft}
-              className="hover:-translate-x-2 px-2 transition-all"
+              className="group-hover:-translate-x-2 px-2 transition-all"
             />
-          </button>
           <span className="ml-4"> Phòng {roomName} </span>
+          </button>
         </p>
 
         <div

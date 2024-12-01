@@ -26,7 +26,7 @@ const History = () => {
       setFilterRoom(
         rooms.filter(
           (room) =>
-            room.name.includes(search) || room.headResidentName?.includes(search)
+            room.name.toLowerCase().includes(search) || room.headResidentName?.toLowerCase().includes(search)
         )
       );
     } else {
@@ -57,7 +57,7 @@ const History = () => {
 
   return (
     <div className="mb-4 px-8 w-full h-screen relative">
-      <section className="flex justify-between py-6 items-center">
+      <section className="flex justify-start gap-44 py-6 items-center">
         <p className="text-2xl font-bold text-gray-600">Lịch sử cập nhật</p>
         <div
           className={` focus-within:shadow-custom-green  relative w-1/3 rounded-full z-10 transition-all `}
@@ -67,7 +67,7 @@ const History = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="peer w-full p-2 px-4 border-2 outline-none  text-gray-500 rounded-full focus:border-secondary transition-all"
-            placeholder="Tìm kiếm: ex 101, meo meo"
+            placeholder="Tìm kiếm: 1-ABC, 2-ABC"
           />
           <FontAwesomeIcon
             icon={faMagnifyingGlass}

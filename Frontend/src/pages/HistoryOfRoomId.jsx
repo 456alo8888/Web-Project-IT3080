@@ -65,18 +65,18 @@ const HistoryOfRoomId = () => {
     <div className="mb-4 w-full h-screen relative px-8 py-2 overflow-visible">
       <div className="flex justify-between py-4 items-center overflow-visible">
         <p className="text-2xl font-bold text-gray-600 overflow-visible">
-          <button onClick={() => navigate(-1)}>
+          <button onClick={() => navigate(-1)} className='group hover:opacity-70 transition-all'>
             <FontAwesomeIcon
               icon={faArrowLeft}
-              className="hover:-translate-x-2 px-2 transition-all"
+              className="group-hover:-translate-x-2 px-2 transition-all"
             />
-          </button>
           <span className="ml-4"> Phòng {roomName} </span>
+          </button>
         </p>
       </div>
       <section className="flex gap-2 p-8 py-6 h-[85%] z-0  bg-white border rounded-xl transition-all duration-700">
         <div className="flex-1">
-          <div className="grid grid-cols-[1.0fr_0.6fr_0.6fr_0.6fr_0.6fr_0.8fr] bg-gray-200 p-4 px-4 text-gray-500 rounded-t-md">
+          <div className="grid grid-cols-[1.0fr_0.6fr_0.5fr_0.7fr_0.6fr_0.8fr] bg-gray-200 p-4 px-4 text-gray-500 rounded-t-md">
             <div className="font-medium">Tên phí</div>
             <div className="font-medium">Admin</div>
             <div className="font-medium">Số tiền</div>
@@ -88,14 +88,14 @@ const HistoryOfRoomId = () => {
             {paymentInfo?.paid?.map((payment, index) => (
               <div
                 key={index}
-                className={`group grid grid-cols-[1.0fr_0.6fr_0.6fr_0.6fr_0.6fr_0.8fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${
+                className={`group grid grid-cols-[1.0fr_0.6fr_0.5fr_0.7fr_0.6fr_0.8fr] min-h-[64px] p-2 px-4 items-center border-b border-b-gray-100 text-gray-700 ${
                   index % 2 === 0 ? "bg-white" : "bg-gray-50"
                 }`}
               >
-                <div>{payment.name} </div>
+                <div className="text-gray-600 font-medium pr-2">{payment.name} </div>
                 <div>{payment.admin} </div>
                 <div className="pl-6 text-primary font-medium">{payment.value}</div>
-                <div>{payment.resident}</div>
+                <div className="pr-2   break-words">{payment.resident}</div>
                 <div>{formatDate(payment.createdAt)}</div>
                 <div>{payment.isOptional ? <span className="text-violet-500 text-sm pl-4">Tự nguyện</span> : <span className="text-red-500 text-sm pl-4">Bắt buộc</span>}</div>
               </div>

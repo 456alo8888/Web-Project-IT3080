@@ -22,7 +22,8 @@ const Fee = () => {
   const [filters, setFilters] = useState([]);
 
   //data from context
-  const { backendUrl, createfeetoken, updatefeetoken, token, adminId } = useContext(AppContext);
+  const { backendUrl, createfeetoken, updatefeetoken, token, adminId } =
+    useContext(AppContext);
   const { residents, rooms } = useContext(ResidentContext);
   const { allFees, getFeesData } = useContext(FeeContext);
 
@@ -64,7 +65,6 @@ const Fee = () => {
     }
   };
 
-  
   const deleteFee = async (_id) => {
     const confirmDelete = window.confirm(
       "Bạn có chắc chắn muốn xóa khoản thu này?"
@@ -72,9 +72,9 @@ const Fee = () => {
     if (confirmDelete) {
       try {
         const { data, status } = await axios.delete(
-          backendUrl + "/api/fees/" + _id, 
+          backendUrl + "/api/fees/" + _id,
           {
-            headers: { updatefeetoken }
+            headers: { updatefeetoken },
           }
         );
 
@@ -142,14 +142,11 @@ const Fee = () => {
 
   //for createFee
 
-
-
   const handleCSVFile = async (e) => {
-    
     const csv = e.target.files[0];
     setCsvFile(e.target.files[0]);
     const form = new FormData();
-      
+
     form.append("file", csv);
     try {
       const { data } = await axios.post(backendUrl + "/api/fees/csv", form);
@@ -174,11 +171,10 @@ const Fee = () => {
 
     if (deadlineDate < today) {
       toast.error("Hạn nộp phải lớn hơn hôm nay");
-      setLoading(false)
+      setLoading(false);
       return;
     }
 
-   
     const formData = new FormData();
 
     const isOptional = feeType !== "BAT_BUOC";
@@ -206,11 +202,12 @@ const Fee = () => {
       setTypeId(1);
       setYear(new Date().getFullYear());
       setMonth(new Date().getMonth() + 1);
+      setCsvFile("");
       // resetPayinfo();
       getFeesData();
     } catch (error) {
       if (error.status >= 500) {
-        toast.error('Lỗi hệ thống');
+        toast.error("Lỗi hệ thống");
       } else {
         toast.error(error.response.data.message);
       }
@@ -256,17 +253,11 @@ const Fee = () => {
     const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
     return Math.abs(Math.round(daysDifference)); // Return absolute value and round off
-  };
+  }
 
   return (
     <div className="w-full h-screen relative p-2 px-8">
-      {
-        isModalOpen && 
-        <Modal
-          onClose={closeModal}
-          idFeeModal={idFeeModal}
-        />
-      }
+      {isModalOpen && <Modal onClose={closeModal} idFeeModal={idFeeModal} />}
       <div className="flex justify-between py-4 items-center">
         <p className="text-2xl font-bold text-gray-600">Danh sách khoản thu</p>
         <div
@@ -407,8 +398,10 @@ const Fee = () => {
 
           <div className="flex mt-4 gap-12 items-start justify-start w-full max-h-[300px]">
             <p className="text-lg text-gray-500 font-medium">
-              {feeType === "BAT_BUOC" ? 'Phí :' : 'Tối thiểu:'}<br />{" "}
-              <span className="text-sm text-secondary">(ngàn đồng)</span>{" "}
+              {feeType === "BAT_BUOC" ? "Phí :" : "Tối thiểu:"}
+              <br /> <span className="text-sm text-secondary">
+                (ngàn đồng)
+              </span>{" "}
             </p>
             {feeType === "BAT_BUOC" ? (
               <>
@@ -424,7 +417,7 @@ const Fee = () => {
                     type="file"
                     accept=".csv" // Accept only CSV files
                     onChange={handleCSVFile} // Handle file selection
-                    className="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-gray-700 hover:file:bg-gray-100 transition-all"
+                    className="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:transition-all file:ease-in-out file:rounded-md file:border file:border-gray-300 file:text-gray-700 hover:file:bg-primary transition-all"
                   />
 
                   {csvFile && (
@@ -464,7 +457,9 @@ const Fee = () => {
       {/* main section */}
       <section
         className={`p-8 py-6 h-[85%] z-0  bg-white border rounded-xl transition-all duration-700 ${
-          showCreateFee || isModalOpen ? "blur-sm bg-gray-300 opacity-60" : ""
+          showCreateFee || isModalOpen
+            ? "blur-sm bg-gray-300 opacity-60 pointer-events-none"
+            : ""
         } `}
       >
         {/* filter */}

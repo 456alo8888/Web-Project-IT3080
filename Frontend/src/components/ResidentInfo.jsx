@@ -288,13 +288,13 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
         </div>
 
         {resident.id === headId ? (
-          <div className="absolute right-4 bottom-2 p-1 px-4 bg-primary text-white font-semibold border-primary border rounded-full">
+          <div className="absolute opacity-80 right-4 bottom-2 p-1 px-4 bg-primary text-white font-semibold border-primary border rounded-full">
             Chủ phòng
           </div>
         ) : resident.id !== headId && changeHead ? (
           <button
             onClick={handleChangeHead}
-            className="absolute right-4 bottom-2 p-1 px-4 bg-white text-primary font-semibold border-primary border rounded-full"
+            className="absolute opacity-80 right-4 bottom-2 p-1 px-4 bg-white text-primary font-semibold border-primary border rounded-full"
           >
             Chủ phòng
           </button>

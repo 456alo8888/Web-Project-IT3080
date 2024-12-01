@@ -59,7 +59,9 @@ const FeeContextProvider = (props) => {
       allFeesData = allFeesData.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       allFeesData.length > 0 && setAllFees(allFeesData);
       const displayedData = await loadDisplayedFeesInfo(allFeesData.slice(0, 5).map(f => f.id));
-      displayedData.length > 0 && setDisplayedFees(displayedData)
+      displayedData.length > 0 && setDisplayedFees(displayedData.reverse())
+      console.log(allFeesData);
+      
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message)
