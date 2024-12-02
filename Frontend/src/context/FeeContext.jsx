@@ -59,7 +59,12 @@ const FeeContextProvider = (props) => {
       allFeesData = allFeesData.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       allFeesData.length > 0 && setAllFees(allFeesData);
       const displayedData = await loadDisplayedFeesInfo(allFeesData.slice(0, 5).map(f => f.id));
-      displayedData.length > 0 && setDisplayedFees(displayedData.reverse())
+      if (displayedFees.length == 0) {
+        displayedData.length > 0 && setDisplayedFees(displayedData.reverse());
+      } else {
+        const latestData = await loadDisplayedFeesInfo(displayedFees.map(f => f.id));
+        setDisplayedFees(displayedFees.map(f => latestData.find(d => d.id === f.id)));
+      }
       console.log(allFeesData);
       
     } catch (error) {
