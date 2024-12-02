@@ -308,7 +308,8 @@ export async function getFeesStatus(req, res) {
           roomName: b.Room.roomName,
         }))        
     }));
-    return res.status(200).json(data);
+    const sortedData = data.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+    return res.status(200).json(sortedData);
   } catch (error) {
     console.error('Error get fee info:', error);
     res.status(500).json({ message: error});

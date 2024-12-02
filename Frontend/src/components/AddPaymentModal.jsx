@@ -70,8 +70,10 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 ">
-      <div className="bg-white min-w-[420px] translate-x-[100px] p-6 pb-8 shadow-lg relative">
+    <div className="fixed inset-0 flex items-center justify-center z-50 "
+    onClick={onClose}>
+      <div className="bg-white min-w-[420px] translate-x-[100px] p-6 pb-8 shadow-lg relative"
+      onClick={e => e.stopPropagation()}>
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -121,6 +123,7 @@ const AddPaymentModal = ({ fee, room, onClose, paymentInfo }) => {
                   : "focus:border-b-red-500 text-red-300"
                 }  `}
               value={payAmount}
+              autoFocus
               onChange={(e) => setPayAmount(e.target.value)}
               placeholder="ex: 100"
             />

@@ -16,6 +16,8 @@ const Home = () => {
   const { residents, rooms } = useContext(ResidentContext);
   const { allFees, getFeesData, displayedFees, changeDisplayedFee } =
     useContext(FeeContext);
+    console.log(displayedFees);
+    
 
   //state for dashboard
   const [showModalFees, setShowModalFees] = useState(-1);
