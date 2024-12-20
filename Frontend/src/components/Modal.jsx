@@ -88,7 +88,7 @@ const Modal = ({ onClose, idFeeModal }) => {
     const updatedFeeInfo = [...feeInfo];
   
     // Update the specific item's value
-    updatedFeeInfo[index].value = newValue;
+    updatedFeeInfo[index].needAmount = newValue;
   
     // Set the updated array as the new state
     setFeeInfo(updatedFeeInfo);
@@ -128,15 +128,15 @@ const Modal = ({ onClose, idFeeModal }) => {
                   className="flex p-2 items-center gap-4 min-h-[36px]"
                   key={index}
                 >
-                  <p className="w-[50px] text-gray-800 ">{info.room}</p>
+                  <p className="w-[50px] text-gray-800 ">{info.roomName}</p>
                   <input
                     className="p-1 px-2 max-w-[100px] text-primary outline-none border-b-2 focus:border-b-primary"
                     type="number"
-                    value={info.value}
+                    value={info.needAmount}
                     onChange={(e) => handleInputChange(index, parseInt(e.target.value))} // Update value on change
                   />
                   <button
-                    onClick={(e) => updateFee(info.roomId, info.value)}
+                    onClick={(e) => updateFee(info.roomId, info.needAmount)}
                     className="p-1 px-2 rounded-full hover:opacity-80 hover:-translate-x-2 transition-all bg-primary text-sm text-white"
                   >
                     thay đổi

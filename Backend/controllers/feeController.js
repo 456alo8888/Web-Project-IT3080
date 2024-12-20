@@ -297,13 +297,15 @@ export async function getFeesStatus(req, res) {
       values: f.isOptional 
         ? f.DonationReceipts.map(d => ({
           roomId: d.roomId,
-          paidAmount: d.value
+          paidAmount: d.value,
+          roomName: d.roomName,
         }))
         : f.Bills.map((b) => ({
           roomId: b.roomId,
           needAmount: b.value,
           paidAmount: b.Receipt?.value ?? 0,
           isPaid: b.Receipt != null,
+          roomName: b.Room.roomName,
         }))        
     }));
     const sortedData = data.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
