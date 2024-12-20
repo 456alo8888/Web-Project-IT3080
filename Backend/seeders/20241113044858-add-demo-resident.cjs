@@ -1,4 +1,4 @@
-const { faker } = require('@faker-js/faker');
+const { fakerVI: faker } = require('@faker-js/faker');
 
 module.exports = {
 
@@ -12,14 +12,17 @@ module.exports = {
     const roomIds = await queryInterface.sequelize.query('SELECT id FROM rooms');
     const roomIdsList = roomIds[0]; // Extract room ids from the query result
 
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 200; i++) {
       const roomId = faker.helpers.arrayElement(roomIdsList).id;
+      const gender = faker.helpers.arrayElement(['male', 'female', 'other']);
+      const sex = gender === 'other' ? undefined : gender;
+      const fullName = `${faker.person.lastName(sex)} ${faker.person.firstName(sex)}`
       residents.push({
-        name: faker.person.fullName(),
+        name: fullName,
         age: faker.number.int({ min: 18, max: 80 }),
-        gender: faker.helpers.arrayElement(['male', 'female', 'other']),
-        phone_number: faker.phone.number(),
-        id_card_number: faker.string.alphanumeric(12),
+        gender,
+        phone_number: faker.phone.number({ style: 'national' }),
+        id_card_number: faker.string.numeric(12),
         room_id: roomId, // Assign room to the resident
         image: faker.image.avatar(),
         created_at: new Date(),
