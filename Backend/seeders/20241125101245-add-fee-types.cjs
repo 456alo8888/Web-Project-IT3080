@@ -7,7 +7,7 @@ module.exports = {
    */
   async up (queryInterface, Sequelize) {
     const feeTypes = [];
-    for (const name of ['Tiền điện', 'Tiền thở', 'Phí dịch vụ', 'Tiền sinh hoạt chung', 'Phí VAT']) {
+    for (const name of ['Tiền điện', 'Tiền nước', 'Tiền internet', 'Tiền phụ thu', 'Tiền dịch vụ']) {
       feeTypes.push({
         name,
         created_at: new Date(),

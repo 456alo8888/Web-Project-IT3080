@@ -4,9 +4,9 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     const rooms = [];
-    for (let i = 1; i <= 150; i++) {
+    for (let i = 1; i <= 40; i++) {
       rooms.push({
-        room_name: `${i}-ABC`,
+        room_name: `${i}`,
         head_resident_id: null,
         created_at: new Date(),
         updated_at: new Date()
