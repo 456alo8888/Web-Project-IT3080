@@ -2,6 +2,10 @@ import { v2 as cloudinary } from "cloudinary"
 import db from "../models/index.js"
 const { Resident, Room } = db
 
+function isNumeric(str) {
+    return /^\d+$/.test(str); // Checks if the string contains only digits
+}
+
 const createResident = async (req, res) => {
 
     try {
@@ -42,7 +46,11 @@ const createResident = async (req, res) => {
             return res.status(400).json({ message: 'Đã có trưởng phòng'})
         }
 
-        if (idCardNumber.length !== 12) {
+        if (!isNumeric(phoneNumber) || phoneNumber.length <= 9 || phoneNumber.length > 15) {
+            return res.status(400).json({ success: false, message: "SĐT không hợp lệ" })
+        }
+
+        if (!isNumeric(idCardNumber) || idCardNumber.length !== 12) {
             return res.status(400).json({ success: false, message: "CCCD phải có đúng 12 số" })
         }
 
