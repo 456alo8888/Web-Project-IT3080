@@ -127,3 +127,45 @@ export async function deleteVehicle(req, res) {
         res.json({ success: false, message: error.message })
     }
 }
+
+export async function getVehiclesOfRoom(req, res) {
+  try {
+    const { id: roomId } = req.params;
+
+    if (roomId == null || isNaN(Number(roomId))) {
+      return res.status(400).json({ success: false, message: "Thiếu dữ liệu" });
+    }
+
+    const vehicles = await Vehicle.findAll({
+      where: { roomId },
+      include: [
+        {
+          model: VehicleType,
+          attributes: ['name'],
+          as: 'type',
+        }
+      ],
+    });
+
+    if (!vehicles.length) {
+      return res.status(404).json({ success: false, message: "Không tìm thấy phương tiện" });
+    }
+
+    const result = vehicles.map(vehicle => ({
+      id: vehicle.id,
+      typeId: vehicle.typeId,
+      type: vehicle.type.name,
+      licensePlate: vehicle.licensePlate,
+      imageUrl: vehicle.image,
+      insuranceEndDate: vehicle.insuranceEndDate.toISOString(),
+    }));
+
+    res.status(200).json({
+      count: result.length,
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+}

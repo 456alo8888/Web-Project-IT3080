@@ -14,6 +14,7 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       // Associate Vehicle with Room
       Vehicle.belongsTo(models.Room);
+      Vehicle.belongsTo(models.VehicleType, { as: 'type' });
     }
   }
 
