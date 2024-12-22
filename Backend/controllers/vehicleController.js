@@ -82,7 +82,7 @@ export async function createVehicle(req, res) {
       }
 
       res.status(200).json({ 
-          message: "Đã thêm xe vào phòng",
+          message: "Đã thêm phương tiện vào phòng",
           data: { id: vehicle.id }
       })
 
@@ -93,3 +93,37 @@ export async function createVehicle(req, res) {
   }
 
 };
+
+export async function deleteVehicle(req, res) {
+    try {
+
+        const { updateresidenttoken } = req.headers
+
+        if (!updateresidenttoken) {
+            return res.status(403).json({ success: false, message: "Bạn không có quyền xóa phương tiện" })
+        }
+
+
+        const { roomId, vehicleId } = req.params;
+
+        if (roomId == null 
+          || vehicleId == null 
+          || isNaN(Number(roomId)) 
+          || isNaN(Number(vehicleId))
+        ) {
+          return res.status(400).json({message: 'Thiếu dữ liệu'});
+        }
+
+        const deletedVehicle = await Vehicle.destroy({ where: { id: vehicleId, roomId } });
+
+        if (!deletedVehicle) {
+            return res.status(400).json({ success: false, message: "Phương tiện không tồn tại" })
+        }
+
+        return res.status(200).json({ success: true, message: "Xóa phương tiện thành công" })
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message })
+    }
+}
