@@ -5,32 +5,32 @@ import { Model } from 'sequelize';
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
-  class Room extends Model {
+  class Vehicle extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Room.hasMany(models.Resident);
-      Room.hasMany(models.Bill);
-      Room.hasMany(models.DonationReceipt);
-      Room.hasMany(models.Vehicle);
-      Room.belongsTo(models.Resident, { as: 'headResident' });
+      // Associate Vehicle with Room
+      Vehicle.belongsTo(models.Room);
     }
   }
 
-  Room.init(
+  Vehicle.init(
     {
-      roomName: DataTypes.STRING,
-      headResidentId: DataTypes.INTEGER,
+      roomId: DataTypes.INTEGER,
+      typeId: DataTypes.INTEGER,
+      licensePlate: DataTypes.STRING,
+      image: DataTypes.STRING,
+      insuranceEndDate: DataTypes.DATE,
     },
     {
       sequelize,
-      modelName: 'Room',
+      modelName: 'Vehicle',
       underscored: true,
     }
   );
 
-  return Room;
+  return Vehicle;
 };
