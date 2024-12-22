@@ -6,7 +6,10 @@ import {
   changeHeadResident, 
   roomResident 
 } from '../controllers/residentController.js'
-import { getVehicleTypes } from '../controllers/vehicleController.js'
+import { 
+  getVehicleTypes,
+  createVehicle
+} from '../controllers/vehicleController.js'
 
 const roomRouter = express.Router()
 
@@ -15,5 +18,6 @@ roomRouter.put('/:id/head-resident',upload.none(), changeHeadResident);
 roomRouter.get('/:id' , upload.none(), roomResident);
 roomRouter.get('/:id/pay', upload.none(), getRoomPaymentsInfo);
 roomRouter.get('/vehicles/types', upload.none(), getVehicleTypes);
+roomRouter.post('/:id/vehicles', upload.single('image'), createVehicle);
 
 export default roomRouter
