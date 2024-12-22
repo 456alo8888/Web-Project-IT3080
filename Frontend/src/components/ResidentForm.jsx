@@ -32,7 +32,7 @@ const ResidentForm = () => {
 
   const [filterRooms, setFilterRooms] = useState([]);
   const [search, setSearch] = useState("");
-  const [isLoading, SetIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { backendUrl, updateresidenttoken, token } = useContext(AppContext);
   const {
@@ -78,7 +78,7 @@ const ResidentForm = () => {
       if (!residentImg) {
         return toast.error("Chưa chọn ảnh cư dân");
       }
-      SetIsLoading(true);
+      setIsLoading(true);
       // const { firstName, middleName, lastName } = splitFullName(name);
 
       const formData = new FormData();
@@ -114,7 +114,7 @@ const ResidentForm = () => {
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
-      SetIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -299,7 +299,7 @@ const ResidentForm = () => {
 
       <section
         className={`grid ${
-          !!updateresidenttoken ? "grid-cols-3" : "grid-cols-1"
+          !!updateresidenttoken ? "grid-cols-[repeat(auto-fill,minmax(310px,1fr))] " : "grid-cols-1"
         } gap-8 gap-x-6 p-8 h-[85%] z-0 overflow-y-auto bg-white border rounded-xl transition-all duration-700 ${
           showResidentForm
             ? "blur-sm bg-gray-300 opacity-60 pointer-events-none"

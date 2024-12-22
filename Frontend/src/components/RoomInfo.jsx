@@ -1,9 +1,38 @@
-import React from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ResidentContext } from "../context/ResidentContext";
 
 const RoomInfo = ({ room }) => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [vehicles, setVehicles] = useState("");
+  const { roomTypes } = useContext(ResidentContext);
+
+  const getVehicles = async () => {
+    try {
+      const { data, status } = await axios.get(
+        backendUrl + `/api/rooms/${room.id}/vehicles`
+      );
+
+      setVehicles(data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    getVehicles();
+
+    return () => {};
+  }, []);
+
   return (
-    <Link to={`/resident/${room.id}`} className="flex flex-col gap-2 text-base text-gray-500 min-h-[150px] p-4 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green">
+    <Link
+      to={`/resident/${room.id}`}
+      className="flex flex-col gap-2 text-base text-gray-500 min-h-[160px] p-4 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green"
+    >
       <div className="flex gap-8">
         <div>
           <span className="font-medium text-gray-800">ID phòng : </span>
@@ -15,14 +44,32 @@ const RoomInfo = ({ room }) => {
         </div>
       </div>
       <div className="flex gap-2 h-6">
-        <span className="min-w-[100px] font-medium text-gray-800">Chủ phòng : </span>
+        <span className="min-w-[100px] font-medium text-gray-800">
+          Chủ phòng :{" "}
+        </span>
         <span className="max-w-200 overflow-y-auto">
-          {room.headResidentName ?? 'Chưa có'}
+          {room.headResidentName ?? "Chưa có"}
         </span>
       </div>
-      <div>
-        <span className="font-medium text-gray-800">Số thành viên : </span>
-        <span>{room.residentCount}</span>
+      <div className="flex gap-8">
+        <div>
+          <span className="font-medium text-gray-800">Số thành viên : </span>
+          <span>{room.residentCount}</span>
+        </div>
+        <div>
+          <span className="font-medium text-gray-800">Số xe : </span>
+          <span>{vehicles.count || 0}</span>
+        </div>
+      </div>
+      <div className="flex gap-8">
+        <div>
+          <span className="font-medium text-gray-800">Loại phòng : </span>
+          <span>{roomTypes.find((e) => e.id == room?.typeId)?.name}</span>
+        </div>
+        <div>
+          <span className="font-medium text-gray-800">Diện tích : </span>
+          <span>{roomTypes.find((e) => e.id == room?.typeId)?.area}</span>
+        </div>
       </div>
     </Link>
   );

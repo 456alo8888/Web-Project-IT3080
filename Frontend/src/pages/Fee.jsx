@@ -35,6 +35,8 @@ const Fee = () => {
   const [lowerBound, setLowerBound] = useState(0);
   const [typeId, setTypeId] = useState(1);
   const [nonOptionalType, setNonOptionalType] = useState([]);
+  const [priceCalType, setPriceCalType] = useState(1);
+  const [valuePerUnit, setValuePerUnit] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [idFeeModal, setIdFeeModal] = useState({});
@@ -188,6 +190,7 @@ const Fee = () => {
       formData.append("typeId", typeId);
       formData.append("month", month);
       formData.append("year", year);
+      formData.append("valuePerUnit", valuePerUnit);
       formData.append("feeList", JSON.stringify(feepayInfo));
     }
 
@@ -300,7 +303,7 @@ const Fee = () => {
           showCreateFee ? "backdrop-blur-lg" : "hidden"
         } absolute right-1/2 translate-x-1/2 top-32  z-10 flex gap-16 px-8 py-8 bg-white max-w-[750px] items-start shadow-lg transition-all`}
       >
-        <div className="flex flex-col items-start gap-6 min-w-[600px]">
+        <div className="flex flex-col items-start gap-6 min-w-[650px]">
           <div className="flex justify-between gap-4 w-full">
             <div className="flex items-center gap-2">
               <p className="text-gray-500 font-medium text-lg ">
@@ -396,14 +399,33 @@ const Fee = () => {
             </div>
           )}
 
-          <div className="flex mt-4 gap-12 items-start justify-start w-full max-h-[300px]">
+          <div className="flex mt-4 gap-6 items-start justify-start w-full max-h-[300px]">
             <p className="text-lg text-gray-500 font-medium">
               {feeType === "BAT_BUOC" ? "Phí :" : "Tối thiểu:"}
               <br /> <span className="text-sm text-secondary">
                 (ngàn đồng)
               </span>{" "}
             </p>
-            {feeType === "BAT_BUOC" ? (
+            {feeType == 'BAT_BUOC' &&
+              <div>
+                <p className="text-base text-gray-500 font-medium">
+                  Cách tính Phí
+                </p>
+                <select
+                  name=""
+                  id=""
+                  onChange={(e) => setPriceCalType(e.target.value)}
+                  value={priceCalType}
+                  className="p-2 px-4 bg-gray-50 border-b-2 focus:border-secondary outline-none text-gray-500 transition-all"
+                  required
+                >
+                  <option value="1">file CSV</option>
+                  <option value="2">Theo diện tích</option>
+                  <option value="3">Theo số xe</option>
+                </select>
+              </div>
+            }
+            {feeType === "BAT_BUOC" && priceCalType == 1 ? (
               <>
                 <div className="file-uploader">
                   <label
@@ -427,6 +449,18 @@ const Fee = () => {
                   )}
                 </div>
               </>
+            ) : feeType === "BAT_BUOC" && priceCalType != 1 ? (
+              <div className="flex flex-col gap-1">
+                <p className="text-gray-500 font-medium">Giá trên đơn vị:</p>
+                <input
+                  type="number"
+                  value={valuePerUnit}
+                  onChange={(e) => setValuePerUnit(e.target.value)}
+                  className="text-primary border-b-2 outline-none p-1 px-2  focus:border-secondary transition-all"
+                  required
+                  placeholder="ex: 10000"
+                />
+              </div>
             ) : (
               <input
                 type="number"

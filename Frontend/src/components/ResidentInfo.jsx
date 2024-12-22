@@ -142,15 +142,15 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
   return (
     <form
       onSubmit={handleUpdateSubmit}
-      className="flex h-[210px] p-2 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green"
+      className={`flex h-[170px] p-2 rounded-lg border-2 ${resident.id==headId ? ' border-secondary border-2 shadow-custom-green' : ''} bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green`}
     >
-      <div className="flex flex-col justify-between items-start text-gray-500 text-xl">
+      <div className="flex flex-col w-[120px] justify-between items-start text-gray-500 text-xl">
         <img
           src={resident.image}
           alt="avatar"
-          className="max-w-[150px]  object-cover"
+          className="max-w-[120px]  object-cover"
         />
-        <div className="flex justify-between w-[120px] m-4 mx-4 p-1">
+        <div className="flex justify-between w-full pr-6 m-4 mx-4 p-1">
           <FontAwesomeIcon
             icon={faTrashCan}
             className="cursor-pointer hover:opacity-80 hover:scale-110 transition-all"
@@ -181,7 +181,7 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
           )}
         </div>
       </div>
-      <div className="flex flex-col relative grow min-h-[80%] p-4">
+      <div className="flex flex-col relative grow min-h-[80%] p-2">
         <div className="text-lg mb-2">
           {isEdit ? (
             <div className="flex">
@@ -288,13 +288,13 @@ const ResidentInfo = ({ resident, changeHead, headId, setHead }) => {
         </div>
 
         {resident.id === headId ? (
-          <div className="absolute opacity-80 right-4 bottom-2 p-1 px-4 bg-primary text-white font-semibold border-primary border rounded-full">
+          <div className="absolute opacity-80 right-4 top-1 p-1 px-4 bg-primary text-white font-semibold border-primary border rounded-full">
             Chủ phòng
           </div>
         ) : resident.id !== headId && changeHead ? (
           <button
             onClick={handleChangeHead}
-            className="absolute opacity-80 right-4 bottom-2 p-1 px-4 bg-white text-primary font-semibold border-primary border rounded-full"
+            className="absolute opacity-80 right-4 top-1 p-1 px-4 bg-white text-primary font-semibold border-primary border rounded-full"
           >
             Chủ phòng
           </button>

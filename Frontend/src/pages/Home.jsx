@@ -3,11 +3,16 @@ import { AppContext } from "../context/AppContext";
 import { ResidentContext } from "../context/ResidentContext";
 import { FeeContext } from "../context/FeeContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPlus, faSortDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faPlus,
+  faSortDown,
+} from "@fortawesome/free-solid-svg-icons";
 import DashBoardInput from "../components/DashBoardInput";
-import { toast } from "react-toastify";
-import axios from "axios";
-import AddPaymentModal from "../components/AddPaymentModal";
+import { Chart } from "chart.js";
+import HomeChart from "../components/HomeChart";
+import AddPaymentModal from "../components/AddPaymentModal"
+
 
 const Home = () => {
   //data from context
@@ -16,14 +21,13 @@ const Home = () => {
   const { residents, rooms } = useContext(ResidentContext);
   const { allFees, getFeesData, displayedFees, changeDisplayedFee } =
     useContext(FeeContext);
-    console.log(displayedFees);
-    
+  console.log(displayedFees);
 
   //state for dashboard
   const [showModalFees, setShowModalFees] = useState(-1);
   const [showChart, setShowChart] = useState(false);
-  const [search, setSearch] = useState('')
-  const [filterRooms, setFilterRooms] = useState([])
+  const [search, setSearch] = useState("");
+  const [filterRooms, setFilterRooms] = useState([]);
 
   //state for open modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,7 +40,7 @@ const Home = () => {
     setModalRoom(room);
     setModalFee(fee);
     setIsModalOpen(true);
-    setModalPayInfo(paymentInfo)
+    setModalPayInfo(paymentInfo);
   };
 
   //function to handle modalFee (dropdown to choose fee)
@@ -50,13 +54,15 @@ const Home = () => {
     }
   };
 
-const applySearch = () => {
-  if (search) {
-    setFilterRooms(rooms.filter(r => r.name?.toLowerCase().includes(search)));
-  } else {
-    setFilterRooms(rooms)
-  }
-}
+  const applySearch = () => {
+    if (search) {
+      setFilterRooms(
+        rooms.filter((r) => r.name?.toLowerCase().includes(search))
+      );
+    } else {
+      setFilterRooms(rooms);
+    }
+  };
 
   const handleChangeFee = (feeid, index) => {
     changeDisplayedFee(feeid, index);
@@ -65,7 +71,7 @@ const applySearch = () => {
 
   useEffect(() => {
     applySearch();
-  }, [allFees, rooms, search])
+  }, [allFees, rooms, search]);
 
   return (
     <div className="relative w-full h-screen p-2 px-8">
@@ -76,7 +82,6 @@ const applySearch = () => {
           room={modalRoom}
           onClose={() => setIsModalOpen(false)}
           paymentInfo={modalPayInfo}
-
         />
       )}
 
@@ -87,9 +92,7 @@ const applySearch = () => {
             showChart ? "backdrop-blur-md shadow-md" : "hidden"
           } absolute z-50 right-1/2 translate-x-1/2 top-1/2 -translate-y-1/2 bg-white w-[80%] h-[80%] flex items-center justify-center`}
       >
-        <p className="text-gray-700 text-lg font-semibold">
-          Tính năng đang được hoàn thiện, vui lòng quay lại sau
-        </p>
+        <HomeChart />
       </section>
 
       <section className="flex justify-between py-4 items-center">

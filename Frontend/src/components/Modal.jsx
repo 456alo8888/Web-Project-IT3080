@@ -100,8 +100,8 @@ const Modal = ({ onClose, idFeeModal }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 ">
-      <div className="bg-white min-w-[420px] translate-x-[100px] p-6 pb-8 shadow-lg relative">
+    <div onClick={onClose} className="fixed inset-0 flex items-center justify-center z-50 ">
+      <div onClick={e => e.stopPropagation()} className="bg-white min-w-[420px] translate-x-[100px] p-6 pb-8 shadow-lg relative">
         {/* Close Button */}
         <button
           onClick={onClose}
