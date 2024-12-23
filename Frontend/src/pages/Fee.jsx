@@ -419,7 +419,7 @@ const Fee = () => {
                   className="p-2 px-4 bg-gray-50 border-b-2 focus:border-secondary outline-none text-gray-500 transition-all"
                   required
                 >
-                  <option value="1">file CSV</option>
+                  <option value="1">Theo file CSV</option>
                   <option value="2">Theo diện tích</option>
                   <option value="3">Theo số xe</option>
                 </select>

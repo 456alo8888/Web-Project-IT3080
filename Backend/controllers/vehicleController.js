@@ -146,11 +146,7 @@ export async function getVehiclesOfRoom(req, res) {
         }
       ],
     });
-
-    if (!vehicles.length) {
-      return res.status(404).json({ success: false, message: "Không tìm thấy phương tiện" });
-    }
-
+    
     const result = vehicles.map(vehicle => ({
       id: vehicle.id,
       typeId: vehicle.typeId,
