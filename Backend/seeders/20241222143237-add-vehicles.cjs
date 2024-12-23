@@ -1,4 +1,5 @@
 const { fakerVI: faker } = require('@faker-js/faker');
+let fakeVehicles = require('../misc/vehicle_fake.json');
 
 module.exports = {
   /**
@@ -15,6 +16,8 @@ module.exports = {
     const vehicleTypeIds = await queryInterface.sequelize.query('SELECT id FROM vehicle_types');
     const vehicleTypeIdsList = vehicleTypeIds[0]; // Extract vehicle type IDs from the query result
 
+    fakeVehicles = fakeVehicles.filter(e => e.image.length < 200);
+
     // Create 200 vehicles and assign them to rooms and vehicle types
     for (let i = 0; i < 200; i++) {
       const roomId = faker.helpers.arrayElement(roomIdsList).id;
@@ -23,7 +26,7 @@ module.exports = {
         room_id: roomId,
         type_id: type,
         license_plate: faker.vehicle.vin().toUpperCase().slice(0, 10),
-        image: faker.image.urlLoremFlickr({ category: 'vehicles' }),
+        image: faker.helpers.arrayElement(fakeVehicles).image,
         insurance_end_date: faker.date.future(),
         created_at: new Date(),
         updated_at: new Date(),
