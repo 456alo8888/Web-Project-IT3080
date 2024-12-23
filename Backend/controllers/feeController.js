@@ -7,8 +7,8 @@ const {
   Fee, FeeOptional, FeeNonOptional, 
   Admin, 
   FeeType, Bill, 
-  Room, 
-  Resident, 
+  Room, RoomType,
+  Resident, Vehicle,
   Receipt, DonationReceipt 
 } = db;
 
@@ -38,17 +38,17 @@ async function createOptionalFee(req, res, adminId, deadline) {
   })
 }
 
-async function createNonOptionalFee(req, res, adminId, deadline) {
-  const { feeList: feeListRaw, typeId, month, year } = req.body;
-  if (feeListRaw == null || typeId == null || month == null || year == null) {
+const FeeCalculationMethod = {
+  csv: 1,
+  area: 2,
+  vehicleCount: 3
+};
+
+async function createNonOptionalFee(req, res, adminId, deadline, feeCalculationMethod) {
+  const { typeId, month, year } = req.body;
+  if (typeId == null || month == null || year == null) {
     return res.status(400).json({message: 'Thiếu thông tin' });
   }
-
-  const feeList = JSON.parse(feeListRaw);
-  if (!Array.isArray(feeList)) {
-    return res.status(400).json({ message: 'Danh sách phí sai định dạng'});
-  }
-
   if (month < 1 || month > 12 || year < 2000 || year > 3000) {
     return res.status(400).json({ message: 'Sai ngày tháng'});
   }
@@ -57,9 +57,64 @@ async function createNonOptionalFee(req, res, adminId, deadline) {
   if (!feeType) {
     return res.status(400).json({ message: 'Sai loại phí' });
   }
-
   const name = `${feeType.name} - ${month}/${year}`;
 
+  let feeList = null;
+  if (feeCalculationMethod === FeeCalculationMethod.csv) {
+
+
+    if (req.body.feeList == null) {
+      return res.status(400).json({ message: 'Thiếu danh sách phí'});
+    }
+    feeList = JSON.parse(req.body.feeList);
+    if (!Array.isArray(feeList)) {
+      return res.status(400).json({ message: 'Danh sách phí sai định dạng'});
+    }
+
+
+  } else {
+
+    if (req.body.valuePerUnit == null) {
+      return res.status(400).json({ message: 'Thiếu giá trị tính phí'});
+    }
+    if (req.body.valuePerUnit <= 0) {
+      return res.status(400).json({ message: 'Giá trị tính phí phải lớn hơn 0'});
+    }
+    feeList = (await Room.findAll({
+      include: [
+        {
+          model: RoomType,
+          attributes: ['area']
+        },
+        {
+            model: Resident,
+            attributes: ['id']
+        },
+        {
+            model: Vehicle,
+            attributes: ['id'],
+        },
+      ]
+    }))
+    .filter(r => (r.Residents.length > 0)) // Must have people in room to make fee
+    .filter(r => (
+      feeCalculationMethod !== FeeCalculationMethod.vehicleCount 
+      || r.Vehicles.length > 0
+    )) // Must have vehicle(s) if this method is used
+    .map(r => ({
+      id: r.id,
+      value: feeCalculationMethod === FeeCalculationMethod.area
+        ? r.RoomType.area * req.body.valuePerUnit
+        : feeCalculationMethod === FeeCalculationMethod.vehicleCount
+          ? r.Vehicles.length * req.body.valuePerUnit
+          : null
+    }));
+  }
+
+  const isListValid = feeList.every(f => (f.id != null && f.value != null && !isNaN(f.value)));
+  if (!isListValid) {
+    return res.status(400).json({ message: 'Danh sách phí sai định dạng' });
+  }
   const fee = await Fee.create({
     name,
     isOptional: false,
@@ -68,22 +123,11 @@ async function createNonOptionalFee(req, res, adminId, deadline) {
     houseCount: feeList.length,
     paidCount: 0,
   });
-
-
-  let listValid = true;
-  const bills = feeList.map(f => {
-    if (f.id == null || f.value == null) {
-      listValid = false;
-    }
-    return {
-      roomId: f.id,
-      feeId: fee.id,
-      value: f.value,
-    }
-  });
-  if (!listValid) {
-    return res.status(400).json({ message: 'Danh sách phí sai định dạng' });
-  }
+  const bills = feeList.map(f => ({
+    roomId: f.id,
+    value: f.value,
+    feeId: fee.id,
+  }));
 
   await FeeNonOptional.create({
     id: fee.id,
@@ -118,9 +162,16 @@ export async function createFee(req, res) {
       return res.status(400).json({ message: 'Admin không tồn tại'});
     }
 
-    return isOptional === 'true'
-      ? await createOptionalFee(req, res, adminId, deadline) 
-      : await createNonOptionalFee(req, res, adminId, deadline);
+    if (isOptional === 'true') {
+      return await createOptionalFee(req, res, adminId, deadline);
+    } else {
+      const feeCalculationMethod = req.body.basedOnSize === 'true' 
+        ? FeeCalculationMethod.area
+        : req.body.basedOnVehicleCount === 'true'
+          ? FeeCalculationMethod.vehicleCount
+          : FeeCalculationMethod.csv;
+      return await createNonOptionalFee(req, res, adminId, deadline, feeCalculationMethod);
+    }
 
   } catch (error) {
     console.error(error);

@@ -17,6 +17,7 @@ export default (sequelize, DataTypes) => {
       Room.hasMany(models.DonationReceipt);
       Room.hasMany(models.Vehicle);
       Room.belongsTo(models.Resident, { as: 'headResident' });
+      Room.belongsTo(models.RoomType, { foreignKey: 'typeId' });
     }
   }
 
