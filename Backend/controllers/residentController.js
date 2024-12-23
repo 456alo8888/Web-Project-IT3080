@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary"
 import db from "../models/index.js"
-const { Resident, Room } = db
+const { Resident, Room, RoomType } = db
 
 function isNumeric(str) {
     return /^\d+$/.test(str); // Checks if the string contains only digits
@@ -305,6 +305,21 @@ const roomResident = async (req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+
+export async function getRoomTypes(req, res) {
+    try {
+        const roomTypes = await RoomType.findAll({
+            attributes: ['id', 'name', 'area'],
+        });
+
+        res.status(200).json({
+            data: roomTypes,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: error });
+    }
+}
 
 export { createResident, deleteResident, updateResident, roomList, changeHeadResident, roomResident };
 

@@ -4,7 +4,8 @@ import { getRoomPaymentsInfo } from '../controllers/feeController.js'
 import { 
   roomList, 
   changeHeadResident, 
-  roomResident 
+  roomResident,
+  getRoomTypes
 } from '../controllers/residentController.js'
 import { 
   getVehicleTypes,
@@ -15,7 +16,8 @@ import {
 
 const roomRouter = express.Router()
 
-roomRouter.get('/', upload.none(), roomList)
+roomRouter.get('/', upload.none(), roomList);
+roomRouter.get('/types', upload.none(), getRoomTypes);
 roomRouter.put('/:id/head-resident',upload.none(), changeHeadResident);
 roomRouter.get('/:id' , upload.none(), roomResident);
 roomRouter.get('/:id/pay', upload.none(), getRoomPaymentsInfo);
