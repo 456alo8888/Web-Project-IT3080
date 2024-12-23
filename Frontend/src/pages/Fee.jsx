@@ -191,7 +191,13 @@ const Fee = () => {
       formData.append("month", month);
       formData.append("year", year);
       formData.append("valuePerUnit", valuePerUnit);
-      formData.append("feeList", JSON.stringify(feepayInfo));
+      if (priceCalType == 1) {
+        formData.append("feeList", JSON.stringify(feepayInfo));
+      } else if (priceCalType == 2) {
+        formData.append("basedOnSize", true);
+      } else if (priceCalType == 3) {
+        formData.append("basedOnVehicleCount", true);
+      }
     }
 
     try {
