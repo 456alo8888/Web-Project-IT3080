@@ -24,6 +24,7 @@ export default (sequelize, DataTypes) => {
     {
       roomName: DataTypes.STRING,
       headResidentId: DataTypes.INTEGER,
+      typeId: DataTypes.INTEGER,
     },
     {
       sequelize,

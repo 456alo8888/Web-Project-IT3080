@@ -252,6 +252,7 @@ const roomList = async (req, res) => {
                 name: room.roomName,
                 residentCount: room.Residents?.length ?? 0,
                 headResidentName: room.headResident?.name ?? null,
+                typeId: room.typeId
             };
         });
 
