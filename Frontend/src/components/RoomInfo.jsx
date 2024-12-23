@@ -5,28 +5,7 @@ import { toast } from "react-toastify";
 import { ResidentContext } from "../context/ResidentContext";
 
 const RoomInfo = ({ room }) => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const [vehicles, setVehicles] = useState("");
   const { roomTypes } = useContext(ResidentContext);
-
-  const getVehicles = async () => {
-    try {
-      const { data, status } = await axios.get(
-        backendUrl + `/api/rooms/${room.id}/vehicles`
-      );
-
-      setVehicles(data);
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
-    }
-  };
-
-  useEffect(() => {
-    getVehicles();
-
-    return () => {};
-  }, []);
 
   return (
     <Link
@@ -35,11 +14,7 @@ const RoomInfo = ({ room }) => {
     >
       <div className="flex gap-8">
         <div>
-          <span className="font-medium text-gray-800">ID phòng : </span>
-          <span>{room.id}</span>
-        </div>
-        <div>
-          <span className="font-medium text-primary">Tên phòng : </span>
+          <span className="font-medium text-primary">Phòng : </span>
           <span className="text-lg font-medium">{room.name}</span>
         </div>
       </div>
@@ -58,17 +33,20 @@ const RoomInfo = ({ room }) => {
         </div>
         <div>
           <span className="font-medium text-gray-800">Số xe : </span>
-          <span>{vehicles.count || 0}</span>
+          <span>{room.vehicleCount ?? 0}</span>
         </div>
       </div>
       <div className="flex gap-8">
         <div>
-          <span className="font-medium text-gray-800">Loại phòng : </span>
-          <span>{roomTypes.find((e) => e.id == room?.typeId)?.name}</span>
+          <span className="font-medium text-gray-800">Loại : </span>
+          <span className="font-medium text-primary">
+            {roomTypes.find((e) => e.id == room?.typeId)?.name}
+          </span>
         </div>
         <div>
           <span className="font-medium text-gray-800">Diện tích : </span>
           <span>{roomTypes.find((e) => e.id == room?.typeId)?.area}</span>
+          <span> m<sup>2</sup></span>
         </div>
       </div>
     </Link>

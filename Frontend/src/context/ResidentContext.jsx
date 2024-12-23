@@ -40,7 +40,7 @@ const ResidentContextProvider = (props) => {
     try {
       const { data, status } = await axios.get(backendUrl + "/api/rooms/types");
 
-      setVehicleTypes(data.data.sort((a, b) => Number(a.id) - Number(b.id)));
+      setRoomTypes(data.data.sort((a, b) => Number(a.id) - Number(b.id)));
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);

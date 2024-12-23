@@ -10,6 +10,7 @@ import {
   deleteFee,
   addRoomPaymentOfFee,
 } from '../controllers/feeController.js'
+import { getFeeStatistics } from '../controllers/statsController.js'
 
 const feeRouter = express.Router()
 
@@ -21,5 +22,6 @@ feeRouter.post('/csv', upload.single('file'), parseCsv)
 feeRouter.get('/status', upload.none(), getFeesStatus)
 feeRouter.patch('/non-optional/:id', upload.none(), updateNonOptionalFee)
 feeRouter.get('/non-optional/types', upload.none(), getNonOptionalTypes)
+feeRouter.get('/stats', upload.none(), getFeeStatistics)
 
 export default feeRouter

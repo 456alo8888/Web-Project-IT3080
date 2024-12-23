@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary"
 import db from "../models/index.js"
-const { Resident, Room } = db
+const { Resident, Room, RoomType, Vehicle } = db
 
 function isNumeric(str) {
     return /^\d+$/.test(str); // Checks if the string contains only digits
@@ -241,7 +241,11 @@ const roomList = async (req, res) => {
                 {
                     model: Resident,
                     attributes: ['id']
-                }
+                },
+                {
+                    model: Vehicle,
+                    attributes: ['id'],
+                },
             ]
         });
         // Format the response
@@ -251,7 +255,9 @@ const roomList = async (req, res) => {
                 id: room.id,
                 name: room.roomName,
                 residentCount: room.Residents?.length ?? 0,
+                vehicleCount: room.Vehicles?.length ?? 0,
                 headResidentName: room.headResident?.name ?? null,
+                typeId: room.typeId
             };
         });
 
@@ -305,6 +311,21 @@ const roomResident = async (req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+
+export async function getRoomTypes(req, res) {
+    try {
+        const roomTypes = await RoomType.findAll({
+            attributes: ['id', 'name', 'area'],
+        });
+
+        res.status(200).json({
+            data: roomTypes,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: error });
+    }
+}
 
 export { createResident, deleteResident, updateResident, roomList, changeHeadResident, roomResident };
 

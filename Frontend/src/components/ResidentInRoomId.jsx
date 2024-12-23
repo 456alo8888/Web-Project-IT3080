@@ -23,56 +23,7 @@ const ResidentInRoomId = () => {
   const [changeHead, SetChangeHead] = useState(false);
   const [headId, setHeadId] = useState(31);
   const [roomResident, setRoomResident] = useState([]);
-  const [roomVehicles, setRoomVehicles] = useState([
-    {
-        "id": 324,
-        "typeId": 3,
-        "type": "Xe máy",
-        "licensePlate": "87-P1 8787",
-        "imageUrl": "https://i.pinimg.com/236x/0d/8e/35/0d8e35653e1afe16621aa5982335b876.jpg",
-        "insuranceEndDate": null
-    },
-    {
-        "id": 323,
-        "typeId": 1,
-        "type": "Xe điện",
-        "licensePlate": "87-P1 87444",
-        "imageUrl": "https://i.pinimg.com/236x/ca/64/33/ca64331fdcc52074b299c577f880746c.jpg",
-        "insuranceEndDate": "2024-11-23T15:30:00Z"
-    },
-    {
-        "id": 324,
-        "typeId": 3,
-        "type": "Xe máy",
-        "licensePlate": "87-P1 8787",
-        "imageUrl": "https://i.pinimg.com/236x/0d/8e/35/0d8e35653e1afe16621aa5982335b876.jpg",
-        "insuranceEndDate": null
-    },
-    {
-        "id": 323,
-        "typeId": 1,
-        "type": "Xe điện",
-        "licensePlate": "87-P1 87444",
-        "imageUrl": "https://i.pinimg.com/236x/ca/64/33/ca64331fdcc52074b299c577f880746c.jpg",
-        "insuranceEndDate": "2024-11-23T15:30:00Z"
-    },
-    {
-        "id": 324,
-        "typeId": 3,
-        "type": "Xe máy",
-        "licensePlate": "87-P1 8787",
-        "imageUrl": "https://i.pinimg.com/236x/0d/8e/35/0d8e35653e1afe16621aa5982335b876.jpg",
-        "insuranceEndDate": null
-    },
-    {
-        "id": 323,
-        "typeId": 1,
-        "type": "Xe điện",
-        "licensePlate": "87-P1 87444",
-        "imageUrl": "https://i.pinimg.com/236x/ca/64/33/ca64331fdcc52074b299c577f880746c.jpg",
-        "insuranceEndDate": "2024-11-23T15:30:00Z"
-    },
-]);
+  const [roomVehicles, setRoomVehicles] = useState([]);
 
   const [showVehicleForm, setShowVehicleForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -130,27 +81,32 @@ const ResidentInRoomId = () => {
 
   useEffect(() => {
     getRoomResident();
+    getRoomVehicles();
   }, [rooms]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!vehicleImage) {
+      return toast.error("Chưa chọn ảnh");
+    }
+    if (insuranceEndDate.length == 0) {
+      return toast.error("Chưa chọn ngày hết hạn bảo hiểm");
+    }
+    setIsLoading(true);
+    // const { firstName, middleName, lastName } = splitFullName(name);
+
+    const formData = new FormData();
+
+    formData.append("image", vehicleImage);
+    formData.append("licensePlate", licensePlate);
+    formData.append("typeId", typeId);
+    formData.append("insuranceEndDate", insuranceEndDate);
+      
     try {
-      if (!vehicleImage) {
-        return toast.error("Chưa chọn ảnh cư dân");
-      }
-      setIsLoading(true);
-      // const { firstName, middleName, lastName } = splitFullName(name);
-
-      const formData = new FormData();
-
-      formData.append("image", vehicleImage);
-      formData.append("licensePlate", licensePlate);
-      formData.append("typeId", typeId);
-      formData.append("insuranceEndDate", insuranceEndDate);
 
       const response = await axios.post(
-        backendUrl + `api/rooms/${id}/vehicles`,
+        backendUrl + `/api/rooms/${id}/vehicles`,
         formData,
         { headers: { updateresidenttoken } }
       );
@@ -162,6 +118,7 @@ const ResidentInRoomId = () => {
         setVehicleImage("");
         setInsuranceEndDate("");
         setLicensePlate("");
+        await getRoomVehicles();
       } else if (response.status === 400) {
         toast.error(response.data.message);
       }
@@ -199,6 +156,7 @@ const ResidentInRoomId = () => {
   };
 
   function formatDate(date) {
+    console.log(date);
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0'); // Lấy ngày (dd)
     const month = String(d.getMonth() + 1).padStart(2, '0'); // Lấy tháng (mm)
@@ -273,9 +231,9 @@ const ResidentInRoomId = () => {
                 required
                 className="p-2 px-4 w-full border bg-gray-50 focus:border-secondary outline-none rounded-md text-gray-500 transition-all"
               >
-                {vehicleTypes.map((type) => {
-                  <option value={type.id}>{type.name}</option>;
-                })}
+                {vehicleTypes.map((type) => (
+                  <option value={type.id}>{type.name}</option>
+                ))}
               </select>
             </div>
           </div>
