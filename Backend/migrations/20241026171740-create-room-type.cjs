@@ -27,16 +27,6 @@ module.exports = {
         allowNull: false,
       },
     });
-
-    await queryInterface.addColumn('rooms', 'type_id', {
-      type: Sequelize.INTEGER,
-      references: {
-        model: 'room_types',
-        key: 'id'
-      },
-      allowNull: true,
-      onDelete: 'SET NULL'
-    });
   },
 
   async down (queryInterface, Sequelize) {
@@ -46,7 +36,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('rooms', 'type_id');
     await queryInterface.dropTable('room_types');
   }
 };

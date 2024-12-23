@@ -19,6 +19,15 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      type_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'room_types',
+          key: 'id'
+        },
+        onDelete: 'RESTRICT',
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
