@@ -86,7 +86,7 @@ async function getResidentCount() {
 
 // Helper function to get finished room count
 async function getFinishedRoomCount() {
-  return -1;
+  return 0; // TODO: fix this later
 }
 
 // Helper function to get non-finished room count
