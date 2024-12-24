@@ -10,7 +10,7 @@ const RoomInfo = ({ room }) => {
   return (
     <Link
       to={`/resident/${room.id}`}
-      className="flex flex-col gap-2 text-base text-gray-500 min-h-[160px] p-4 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green"
+      className="flex flex-col gap-2 text-base text-gray-500 min-h-[190px] p-4 rounded-lg border-2 bg-gray-100 transition-all hover:border-primary hover:shadow-custom-green"
     >
       <div className="flex gap-8">
         <div>

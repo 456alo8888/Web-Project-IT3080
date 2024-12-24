@@ -299,7 +299,7 @@ const ResidentForm = () => {
 
       <section
         className={`grid ${
-          !!updateresidenttoken ? "grid-cols-[repeat(auto-fill,minmax(310px,1fr))] " : "grid-cols-1"
+          !!updateresidenttoken ? "grid-cols-[repeat(auto-fill,minmax(300px,1fr))] " : "grid-cols-1"
         } gap-8 gap-x-6 p-8 h-[85%] z-0 overflow-y-auto bg-white border rounded-xl transition-all duration-700 ${
           showResidentForm
             ? "blur-sm bg-gray-300 opacity-60 pointer-events-none"

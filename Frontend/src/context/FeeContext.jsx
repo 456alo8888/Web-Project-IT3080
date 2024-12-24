@@ -71,7 +71,7 @@ const FeeContextProvider = (props) => {
   const loadStaticData = async () => {
     try {
       const { data, status } = await axios.get(
-        `${backendUrl}/api/fees/stats` + searchParams
+        `${backendUrl}/api/fees/stats`
       );
 
       setStaticData(data);
@@ -110,7 +110,7 @@ const FeeContextProvider = (props) => {
       allFeesData = allFeesData.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
-      allFeesData.length > 0 && setAllFees(allFeesData);
+      allFeesData.length >= 0 && setAllFees(allFeesData);
       const displayedData = await loadDisplayedFeesInfo(
         allFeesData.slice(0, 5).map((f) => f.id)
       );
@@ -135,7 +135,7 @@ const FeeContextProvider = (props) => {
   useEffect(
     () => {
       getFeesData();
-      loadStaticData
+      loadStaticData()
     },
     [
       /* rooms */
