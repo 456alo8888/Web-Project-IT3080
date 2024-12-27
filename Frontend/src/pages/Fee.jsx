@@ -14,6 +14,7 @@ import axios from "axios";
 import { FeeContext } from "../context/FeeContext";
 import Modal from "../components/Modal";
 import { Form } from "react-router-dom";
+import QRCodeModal from "../components/QRCodeModal";
 
 const Fee = () => {
   const [search, setSearch] = useState("");
@@ -24,7 +25,7 @@ const Fee = () => {
   //data from context
   const { backendUrl, createfeetoken, updatefeetoken, token, adminId } =
     useContext(AppContext);
-  const { residents, rooms } = useContext(ResidentContext);
+  const { roomTypes } = useContext(ResidentContext);
   const { allFees, getFeesData } = useContext(FeeContext);
 
   //for loading submit
@@ -40,7 +41,17 @@ const Fee = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [idFeeModal, setIdFeeModal] = useState({});
+  const [toggles, setToggles] = useState([]);
+  
 
+  // Function to toggle a specific index
+  const toggleValue = (index) => {
+    setToggles((prevToggles) =>
+      prevToggles.map((value, i) => (i === index ? !value : value))
+  );
+    
+  console.log(toggles);
+  };
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -140,6 +151,9 @@ const Fee = () => {
   useEffect(() => {
     getFeesData();
     loadFeeTypes();
+    if (roomTypes && roomTypes.length > 0) {
+      setToggles(roomTypes.map(() => false));
+    }
   }, [token]);
 
   //for createFee
@@ -178,6 +192,17 @@ const Fee = () => {
     }
 
     const formData = new FormData();
+    let typePara = ''
+    console.log(toggles);
+    
+    toggles?.forEach((type, idx) => {
+      if (type == true) {
+        // Add a delimiter if `typePara` is not empty
+        typePara += (typePara ? "&" : "") + `roomTypes=${roomTypes[idx].id}`;
+      }
+    });
+    console.log(typePara);
+    
 
     const isOptional = feeType !== "BAT_BUOC";
     formData.append("isOptional", isOptional);
@@ -201,7 +226,7 @@ const Fee = () => {
     }
 
     try {
-      const { data } = await axios.post(backendUrl + "/api/fees", formData, {
+      const { data } = await axios.post(backendUrl + `/api/fees?${typePara}`, formData, {
         headers: { createfeetoken },
       });
       toast.success(data.message);
@@ -412,7 +437,7 @@ const Fee = () => {
                 (ngàn đồng)
               </span>{" "}
             </p>
-            {feeType == 'BAT_BUOC' &&
+            {feeType == "BAT_BUOC" && (
               <div>
                 <p className="text-base text-gray-500 font-medium">
                   Cách tính Phí
@@ -430,7 +455,7 @@ const Fee = () => {
                   <option value="3">Theo số xe</option>
                 </select>
               </div>
-            }
+            )}
             {feeType === "BAT_BUOC" && priceCalType == 1 ? (
               <>
                 <div className="file-uploader">
@@ -477,6 +502,30 @@ const Fee = () => {
                 placeholder="ex: 10000"
               />
             )}
+          </div>
+          <div className="flex gap-4">
+            <p className="font-medium text-lg text-gray-500">Loại phòng:</p>
+            <div className="grid grid-cols-2 gap-2">
+              {roomTypes.map((type, idx) => (
+                <div key={idx}>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={toggles[idx]}
+                      onChange={(e) => toggleValue(idx)}
+                      className="transition-all h-4 w-4 accent-primary text-grey-200 border-gray-300 rounded-full "
+                    />
+                    <span
+                      className={`${
+                        toggles[idx] ? "text-primary" : "text-gray-500"
+                      } ml-2 transition-all`}
+                    >
+                      {type.name}
+                    </span>
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
 
           <button
@@ -562,9 +611,11 @@ const Fee = () => {
                 index % 2 === 0 ? "bg-white" : "bg-gray-50"
               }`}
             >
-              <div className="max-w-[130px] break-words text-sm text-gray-400">
-                {" "}
-                {fee.id}{" "}
+              <div className="max-w-[130px] flex items-center gap-4 break-words text-sm text-gray-400">
+                <div>{fee.id}</div>
+                <div>
+                  <QRCodeModal data={fee}></QRCodeModal>
+                </div>
               </div>
               <div className="text-gray-500 font-medium "> {fee.name} </div>
               <div className="">
